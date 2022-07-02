@@ -1,0 +1,17 @@
+{
+  "algorithm": "A128GCM",
+  "keyEncryption": {
+    "algorithm": "ECDH-ES+A128KW",
+    "keyId": "example.com:p256",
+    "ephemeralKey": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "auWhfGK8gCQo4ahhqvYh4BA-v2uT_q2-8OByGHtN-5c",
+      "y": "LYh8KAza6Ci68rcHtna8x2WioAMP7RnJKPLC1LvGHEI"
+    },
+    "encryptedKey": "dCwGRPKrJjDzqJGOAbWqF8hD2iAfaZRS"
+  },
+  "iv": "QviJjryoA7cM--8Z",
+  "tag": "6DNEXPSK881_9Xy4nHE_Rw",
+  "cipherText": "w7u0-d2U3gMkaJW90RE7L3jSpQO4JA"
+}
