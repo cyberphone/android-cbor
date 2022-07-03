@@ -30,8 +30,6 @@ public class RawReader {
     public static byte[] secretKey;
     public static String secretKeyId;
 
-    static KeyPair currentKeyPair;
-
     static byte[] getRawResource(int resource) throws Exception {
         return ArrayUtil.getByteArrayFromInputStream(appContext.getResources()
                 .openRawResource(resource));
@@ -52,7 +50,7 @@ public class RawReader {
     RawReader(Context appContext) throws Exception {
         this.appContext = appContext;
         ecKeyId = "ecKey256";
-        currentKeyPair = getKeyPair(R.raw.ecprivatekey_cbor);
+        ecKeyPair = getKeyPair(R.raw.ecprivatekey_cbor);
         rsaKeyId = "rsaKey2048";
         rsaKeyPair = getKeyPair(R.raw.rsaprivatekey_cbor);
         dataToBeEncrypted = getRawResource(R.raw.data2beencrypted_txt);
