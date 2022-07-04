@@ -50,12 +50,12 @@ public class RawReader {
     RawReader(Context appContext) throws Exception {
         this.appContext = appContext;
         ecKeyId = "ecKey256";
-        ecKeyPair = getKeyPair(R.raw.ecprivatekey_cbor);
+        ecKeyPair = getKeyPair(R.raw.ecprivatekey_cbor_txt);
         rsaKeyId = "rsaKey2048";
-        rsaKeyPair = getKeyPair(R.raw.rsaprivatekey_cbor);
+        rsaKeyPair = getKeyPair(R.raw.rsaprivatekey_cbor_txt);
         dataToBeEncrypted = getRawResource(R.raw.data2beencrypted_txt);
         ecCertPath = CBORCryptoUtils.decodeCertificateArray(
-                getCBORResource(R.raw.ec_certpath_cbor).getArray());
+                getCBORResource(R.raw.ec_certpath_cbor_txt).getArray());
         secretKey = HexaDecimal.decode(getStringResource(R.raw.secretkey_hex));
         secretKeyId = getStringResource(R.raw.secret_key_id_txt);
     }
