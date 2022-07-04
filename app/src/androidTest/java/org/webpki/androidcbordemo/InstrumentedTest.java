@@ -20,9 +20,12 @@ import org.webpki.cbor.CBORAsymKeySigner;
 import org.webpki.cbor.CBORAsymKeyValidator;
 import org.webpki.cbor.CBORByteString;
 import org.webpki.cbor.CBORCryptoConstants;
+import org.webpki.cbor.CBORHmacValidator;
+import org.webpki.cbor.CBORMap;
 import org.webpki.cbor.CBORObject;
 import org.webpki.cbor.CBORSymKeyDecrypter;
 import org.webpki.cbor.CBORTextString;
+import org.webpki.cbor.CBORValidator;
 import org.webpki.cbor.CBORX509Signer;
 import org.webpki.cbor.CBORX509Validator;
 
@@ -30,9 +33,11 @@ import org.webpki.crypto.AsymSignatureAlgorithms;
 import org.webpki.crypto.ContentEncryptionAlgorithms;
 import org.webpki.crypto.KeyAlgorithms;
 import org.webpki.crypto.KeyEncryptionAlgorithms;
+
 import org.webpki.util.ArrayUtil;
 
 import java.io.IOException;
+
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -40,6 +45,7 @@ import java.security.KeyStore;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
+
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 
@@ -112,9 +118,51 @@ public class InstrumentedTest {
         }).decrypt(encrypted)));
     }
 
+    void signatureTestVector(int resource, CBORValidator validator) throws Exception {
+        CBORMap signedObject = CBORObject.decode(RawReader.getRawResource(resource)).getMap();
+        validator.validate(SIGNATURE_LABEL, signedObject);
+    }
+
+    @Test
+    public void signatures() throws Exception {
+        signatureTestVector(R.raw.a256_hs256_kid_cbor,
+                            new CBORHmacValidator(RawReader.secretKey));
+        signatureTestVector(R.raw.p256_es256_imp_cbor,
+                new CBORAsymKeyValidator(RawReader.ecKeyPair.getPublic()));
+        signatureTestVector(R.raw.p256_es256_imp_cbor,
+                new CBORAsymKeyValidator((optionalPublicKey, optionalKeyId, algorithm) -> {
+                    assertTrue("imp",
+                            optionalKeyId == null && optionalPublicKey == null);
+                    return RawReader.ecKeyPair.getPublic();
+                }));
+        signatureTestVector(R.raw.p256_es256_kid_cbor,
+                new CBORAsymKeyValidator((optionalPublicKey, optionalKeyId, algorithm) -> {
+                    assertTrue("kid",
+                            RawReader.ecKeyId.equals(optionalKeyId.getTextString()) &&
+                                    optionalPublicKey == null);
+                    return RawReader.ecKeyPair.getPublic();
+                }));
+        signatureTestVector(R.raw.p256_es256_pub_cbor,
+                new CBORAsymKeyValidator((optionalPublicKey, optionalKeyId, algorithm) -> {
+                    assertTrue("kid",
+                            optionalKeyId == null &&
+                                    RawReader.ecKeyPair.getPublic().equals(optionalPublicKey));
+                    return RawReader.ecKeyPair.getPublic();
+                }));
+        signatureTestVector(R.raw.r2048_rs256_cer_cbor,
+                new CBORX509Validator((certificatePath, algorithm) ->
+                        assertTrue("cert", certificatePath[0].getPublicKey().equals(
+                                RawReader.rsaKeyPair.getPublic()))));
+    }
+
     void encryptionTestVector(int resource,
-                              String optionalKeyId,
-                              PublicKey optionalPublicKey) throws Exception {
+                              String keyId,
+                              PublicKey publicKey) throws Exception {
+        CBORMap encryptionObject = CBORObject.decode(RawReader.getRawResource(resource)).getMap();
+        PrivateKey privateKey = encryptionObject
+                .getObject(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
+                     .getMap().hasKey(CBORCryptoConstants.EPHEMERAL_KEY_LABEL)?
+                RawReader.ecKeyPair.getPrivate() : RawReader.rsaKeyPair.getPrivate();
         assertTrue("Testv",
                 ArrayUtil.compare(dataToEncrypt,
                   new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.KeyLocator() {
@@ -124,9 +172,27 @@ public class InstrumentedTest {
                                                KeyEncryptionAlgorithms keyEncryptionAlgorithm,
                                                ContentEncryptionAlgorithms contentEncryptionAlgorithm)
                               throws IOException, GeneralSecurityException {
-                          return RawReader.ecKeyPair.getPrivate();
+                          assertTrue("PUB",
+                                  (publicKey == null && optionalPublicKey == null) ||
+                                          (publicKey != null && publicKey.equals(optionalPublicKey)));
+                          assertTrue("KID", (keyId == null && optionalKeyId == null) ||
+                                  (keyId != null && keyId.equals(optionalKeyId.getTextString())));
+                          return privateKey;
                       }
-                  }).decrypt(CBORObject.decode(RawReader.getRawResource(resource)))));
+                  }).decrypt(encryptionObject)));
+        byte[] tag = encryptionObject.readByteStringAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
+        encryptionObject.setObject(CBORCryptoConstants.TAG_LABEL, new CBORByteString(tag));
+        new CBORAsymKeyDecrypter(privateKey).decrypt(encryptionObject);
+
+        tag = encryptionObject.readByteStringAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
+        tag[5]++;
+        encryptionObject.setObject(CBORCryptoConstants.TAG_LABEL, new CBORByteString(tag));
+        try {
+            new CBORAsymKeyDecrypter(privateKey).decrypt(encryptionObject);
+            fail("never");
+        } catch (Exception e) {
+
+        }
     }
 
     @Test
@@ -141,7 +207,8 @@ public class InstrumentedTest {
                 null, RawReader.ecKeyPair.getPublic());
         encryptionTestVector(R.raw.ecdh_es_a256kw_a256gcm_kid_cbor,
                 "example.com:p256", null);
-
+        encryptionTestVector(R.raw.r2048_rsa_oaep_256_a256gcm_kid_cbor,
+                "example.com:r2048", null);
         assertTrue("Testv",
                 ArrayUtil.compare(dataToEncrypt,
         new CBORSymKeyDecrypter(new CBORSymKeyDecrypter.KeyLocator() {
