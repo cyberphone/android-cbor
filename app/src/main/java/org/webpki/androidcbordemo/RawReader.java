@@ -43,6 +43,10 @@ public class RawReader {
         return CBORDiagnosticParser.parse(getStringResource(resource));
     }
 
+    static String getCBORText(int resource) throws Exception {
+        return CBORObject.decode(getRawResource(resource)).toString();
+    }
+
     static KeyPair getKeyPair(int resource) throws Exception {
         return CBORKeyPair.decode(getCBORResource(resource));
     }
