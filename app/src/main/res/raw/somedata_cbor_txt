@@ -1,0 +1,6 @@
+{
+  "escapeMe": "\u20ac$\u000F\u000aA'\u0042\u0022\u005c\\\"",
+  "bytes": h'7fdd851a3b9d2dafc5f0d00030e22b9343900cd42ede4948568a4a2ee655291a',
+  "numbers": [1e+30,4.5,6,1000000000000000000000000000000000000000000],
+  "other": [null, true, false]
+}
