@@ -265,8 +265,8 @@ public class CBORDiagnosticParser {
                     reportError("Tag syntax error");
                 }
                 readChar();
-                CBORTag cborTag = 
-                        new CBORTag(Long.parseLong(number), getObject());
+                CBORTag cborTag =
+                        new CBORTag(Long.parseUnsignedLong(number), getObject());
                 scanFor(")");
                 return cborTag;
             }

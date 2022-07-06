@@ -178,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
         String msg = "Error description not available";
         try {
             msg = htmlIze(baos.toString("utf-8"));
+            msg = msg.replace("Exception: ", "Exception:\n");
         } catch (Exception e2) {
         }
         loadHtml("", "ERROR", "<pre style='color:red'>" + msg + "</pre>");
@@ -259,35 +260,38 @@ public class MainActivity extends AppCompatActivity {
             CBORObject signedData = CBORDiagnosticParser.parse(cborData);
             CBORMap coreMap = CBORCryptoUtils.unwrapContainerMap(signedData);
             CBORObject csfLabel = null;
+            publicKey = null;
+            certificatePath = null;
+            algorithm = 0;
+            keyId = null;
             for (CBORObject key : coreMap.getKeys()) {
-                publicKey = null;
-                certificatePath = null;
-                algorithm = 0;
-                keyId = null;
                 CBORObject value = coreMap.getObject(key);
                 if (value.getType() != CBORTypes.MAP) continue;
                 CBORMap csfCandidate = value.getMap();
                 if (!csfCandidate.hasKey(CBORCryptoConstants.ALGORITHM_LABEL)) continue;
                 value = csfCandidate.getObject(CBORCryptoConstants.ALGORITHM_LABEL);
                 if (value.getType() != CBORTypes.INTEGER) continue;
-                algorithm = value.getInt();
+                int tempAlgorithm = value.getInt();
+                CBORObject tempKeyId = null;
                 if (csfCandidate.hasKey(CBORCryptoConstants.KEY_ID_LABEL)) {
-                    keyId = csfCandidate.getObject(CBORCryptoConstants.KEY_ID_LABEL);
+                    tempKeyId = csfCandidate.getObject(CBORCryptoConstants.KEY_ID_LABEL);
                 }
                 if (!csfCandidate.hasKey(CBORCryptoConstants.SIGNATURE_LABEL)) continue;
                 value = csfCandidate.getObject(CBORCryptoConstants.SIGNATURE_LABEL);
                 if (value.getType() != CBORTypes.BYTE_STRING) continue;
+                PublicKey tempPublicKey = null;
                 if (csfCandidate.hasKey(CBORCryptoConstants.PUBLIC_KEY_LABEL)) {
                     try {
-                        publicKey = CBORPublicKey.decode(
+                        tempPublicKey = CBORPublicKey.decode(
                                 csfCandidate.getObject(CBORCryptoConstants.PUBLIC_KEY_LABEL));
                     } catch (Exception e) {
                         continue;
                     }
                 }
+                X509Certificate[] tempCertificatePath = null;
                 if (csfCandidate.hasKey(CBORCryptoConstants.CERT_PATH_LABEL)) {
                     try {
-                        certificatePath = CBORCryptoUtils.decodeCertificateArray(
+                        tempCertificatePath = CBORCryptoUtils.decodeCertificateArray(
                                 csfCandidate.getObject(CBORCryptoConstants.CERT_PATH_LABEL).getArray());
                     } catch (Exception e) {
                         continue;
@@ -297,6 +301,10 @@ public class MainActivity extends AppCompatActivity {
                     throw new IOException("Multiple CSFs?");
                 }
                 csfLabel = key;
+                keyId = tempKeyId;
+                publicKey = tempPublicKey;
+                algorithm = tempAlgorithm;
+         //       certificatePath = tempCertificatePath;
             }
             if (csfLabel == null) {
                 throw new IOException("Didn't find any CSF object!");
@@ -490,7 +498,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void decryptData(String cborEncryptionObject) {
-        loadHtml("", "Decrypt JCF Encoded Data",
+        loadHtml("", "Decrypt CEF Encoded Data",
                 "<textarea id='cborData' style='width:100%;height:60%;word-break:break-all'>" +
                 htmlIze(cborEncryptionObject) +
                 "</textarea>" +
