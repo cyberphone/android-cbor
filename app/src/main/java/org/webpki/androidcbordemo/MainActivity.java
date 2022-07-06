@@ -34,35 +34,51 @@ import androidx.webkit.WebViewAssetLoader;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.webpki.cbor.CBORAsymKeyDecrypter;
+import org.webpki.cbor.CBORAsymKeyEncrypter;
+import org.webpki.cbor.CBORAsymKeySigner;
 import org.webpki.cbor.CBORAsymKeyValidator;
 import org.webpki.cbor.CBORCryptoConstants;
 import org.webpki.cbor.CBORCryptoUtils;
+import org.webpki.cbor.CBORDecrypter;
+import org.webpki.cbor.CBOREncrypter;
+import org.webpki.cbor.CBORHmacSigner;
 import org.webpki.cbor.CBORHmacValidator;
 import org.webpki.cbor.CBORInteger;
 import org.webpki.cbor.CBORMap;
 import org.webpki.cbor.CBORObject;
 import org.webpki.cbor.CBORPublicKey;
+import org.webpki.cbor.CBORSigner;
+import org.webpki.cbor.CBORSymKeyDecrypter;
+import org.webpki.cbor.CBORSymKeyEncrypter;
+import org.webpki.cbor.CBORTextString;
 import org.webpki.cbor.CBORTypes;
 import org.webpki.cbor.CBORValidator;
+import org.webpki.cbor.CBORX509Signer;
 import org.webpki.cbor.CBORX509Validator;
+
 import org.webpki.crypto.AsymSignatureAlgorithms;
 import org.webpki.crypto.HmacAlgorithms;
-import org.webpki.crypto.AlgorithmPreferences;
 import org.webpki.crypto.ContentEncryptionAlgorithms;
 import org.webpki.crypto.KeyEncryptionAlgorithms;
 import org.webpki.crypto.KeyTypes;
-import org.webpki.util.HexaDecimal;
 
+import org.webpki.util.HexaDecimal;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+
+import java.math.BigInteger;
+
 import java.security.GeneralSecurityException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.KeyPair;
 
+import java.security.cert.X509Certificate;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
-import java.security.cert.X509Certificate;
 
 /**
  * This is a demonstration and test application for the WebPKI CBOR, CSF and CEF components.
@@ -189,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
             version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         } catch (Exception e) {
         }
-        setTitle("JSON, JSF and JEF Demo V" + version);
+        setTitle("CBOR, CSF and CEF Demo V" + version);
      }
 
     void addCommandButton(StringBuilder buffer, String button, String executor) {
@@ -287,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
             }
             boolean hmacFlag = false;
             for (HmacAlgorithms hmacAlg : HmacAlgorithms.values()) {
-                if (hmacAlg.getCoseAlgorithmId() == algorithm) {
+                if (hmacAlg != HmacAlgorithms.HMAC_SHA1 && hmacAlg.getCoseAlgorithmId() == algorithm) {
                     hmacFlag = true;
                     break;
                 }
@@ -351,12 +367,12 @@ public class MainActivity extends AppCompatActivity {
         loadHtml("function getRadio() {\n" +
                         "  return document.querySelector('input[name = \"keyType\"]:checked').value;\n" +
                         "}",
-                "Sign JSON Data using JSF",
+                "Sign CBOR Data using CSF",
                 "<textarea id='cborData' style='width:100%;height:40%;word-break:break-all'>" +
                 htmlIze(
                         "{\n" +
                         "  \"timeStamp\": \"2019-03-16T11:23:06Z\",\n" +
-                        "  \"escapeMe\": \"\\u20ac$\\u000F\\u000aA'\\u0042\\u0022\\u005c\\\\\\\"\\/\",\n" +
+                        "  \"escapeMe\": \"\\u20ac$\\u000F\\u000aA'\\u0042\\u0022\\u005c\\\\\\\"\",\n" +
                         "  \"numbers\": [1e+30,4.5,6]\n" +
                         "}") +
                 "</textarea>" +
@@ -370,24 +386,49 @@ public class MainActivity extends AppCompatActivity {
     public void doSign(String cborData, String keyType) {
         try {
             SIG_TYPES sigType = SIG_TYPES.valueOf(keyType);
-            JSONObjectWriter writer = new JSONObjectWriter(JSONParser.parse(cborData));
+            final CBORObject dataToBeSigned = CBORDiagnosticParser.parse(cborData);
+            CBORMap cborMap = CBORCryptoUtils.unwrapContainerMap(dataToBeSigned);
+            CBORObject csfLabel = new CBORInteger(0);
+            if (cborMap.size() > 0) {
+                csfLabel = cborMap.getKeys()[cborMap.size() - 1];
+                if (csfLabel.getType() == CBORTypes.INTEGER) {
+                    BigInteger value = csfLabel.getBigInteger();
+                    if (value.compareTo(BigInteger.ZERO) >= 0) {
+                        value.add(BigInteger.ONE);
+                    } else {
+                        value.subtract(BigInteger.ONE);
+                    }
+                    csfLabel = new CBORInteger(value);
+                } else {
+                    csfLabel = new CBORTextString("signature");
+                }
+            }
+            CBORSigner signer;
             switch (sigType) {
                 case EC_KEY:
                 case RSA_KEY:
                     KeyPair keyPair = sigType == SIG_TYPES.RSA_KEY ?
                                               RawReader.rsaKeyPair : RawReader.ecKeyPair;
-                    writer.setSignature(new JSONAsymKeySigner(keyPair.getPrivate())
-                            .setPublicKey(keyPair.getPublic()));
+                    signer = new CBORAsymKeySigner(keyPair.getPrivate())
+                            .setPublicKey(keyPair.getPublic());
                     break;
                 case PKI:
-                    writer.setSignature(new JSONX509Signer(RawReader.ecKeyPair.getPrivate(),
-                                                           RawReader.ecCertPath));
+                    signer = new CBORX509Signer(RawReader.ecKeyPair.getPrivate(),
+                                                RawReader.ecCertPath);
                     break;
                 default:
-                    writer.setSignature(new JSONHmacSigner(RawReader.secretKey,
-                                                             HmacAlgorithms.HMAC_SHA256).setKeyId(RawReader.secretKeyId));
+                    signer = new CBORHmacSigner(RawReader.secretKey,
+                                                HmacAlgorithms.HMAC_SHA256)
+                            .setKeyId(RawReader.secretKeyId);
             }
-            verifySignature(writer.toString());
+            signer.setIntercepter(new CBORSigner.Intercepter() {
+                @Override
+                public CBORObject wrap(CBORMap mapToSign) throws
+                        IOException, GeneralSecurityException {
+                    return dataToBeSigned;
+                }
+            });
+            verifySignature(signer.sign(csfLabel, cborMap).toString());
         } catch (Exception e) {
             errorViev(e);
         }
@@ -406,7 +447,7 @@ public class MainActivity extends AppCompatActivity {
         loadHtml("function getRadio() {\n" +
                         "  return document.querySelector('input[name = \"keyType\"]:checked').value;\n" +
                         "}",
-                "Encrypt <i>Arbitary</i> Data using JEF",
+                "Encrypt <i>Arbitary</i> Data using CEF",
                 "<textarea id='cborData' style='width:100%;height:40%;word-break:break-all'>" +
                 htmlIze(
                         "{\n" +
@@ -425,33 +466,33 @@ public class MainActivity extends AppCompatActivity {
         try {
             byte[] unencryptedData = arbitraryData.getBytes("UTF-8");
             ENC_TYPES encType = ENC_TYPES.valueOf(keyType);
-            JSONObjectWriter writer = null;
+            CBOREncrypter encrypter;
             switch (encType) {
                 case EC_KEY:
                 case RSA_KEY:
-                    PublicKey publicKey = (encType == ENC_TYPES.RSA_KEY ?
-                                                   RawReader.rsaKeyPair : RawReader.ecKeyPair).getPublic();
-                    writer = JSONObjectWriter.createEncryptionObject(unencryptedData,
-                                                                     ContentEncryptionAlgorithms.A128GCM,
-                                                                     new JSONAsymKeyEncrypter(publicKey,
-                                                                     encType == ENC_TYPES.RSA_KEY ?
-                             KeyEncryptionAlgorithms.RSA_OAEP_256 : KeyEncryptionAlgorithms.ECDH_ES_A256KW));
+                    encrypter = new CBORAsymKeyEncrypter(
+                            (encType == ENC_TYPES.RSA_KEY ?
+                                     RawReader.rsaKeyPair : RawReader.ecKeyPair).getPublic(),
+                            encType == ENC_TYPES.RSA_KEY ?
+                    KeyEncryptionAlgorithms.RSA_OAEP_256 : KeyEncryptionAlgorithms.ECDH_ES_A256KW,
+                                                          ContentEncryptionAlgorithms.A128GCM)
+                        .setPublicKeyOption(true);
                     break;
                 default:
-                    writer = JSONObjectWriter.createEncryptionObject(unencryptedData,
-                                                                     ContentEncryptionAlgorithms.A128CBC_HS256,
-                                                                     new JSONSymKeyEncrypter(RawReader.secretKey).setKeyId(RawReader.secretKeyId));
+                    encrypter = new CBORSymKeyEncrypter(RawReader.secretKey,
+                                                        ContentEncryptionAlgorithms.A128CBC_HS256)
+                        .setKeyId(RawReader.secretKeyId);
             }
-            decryptData(writer.toString());
+            decryptData(encrypter.encrypt(unencryptedData).toString());
         } catch (Exception e) {
             errorViev(e);
         }
     }
 
-    void decryptData(String jsonEncryptionObject) {
-        loadHtml("", "Decrypt JEF Encoded Data",
+    void decryptData(String cborEncryptionObject) {
+        loadHtml("", "Decrypt JCF Encoded Data",
                 "<textarea id='cborData' style='width:100%;height:60%;word-break:break-all'>" +
-                htmlIze(jsonEncryptionObject) +
+                htmlIze(cborEncryptionObject) +
                 "</textarea>" +
                 executeButton("doDecrypt(document.getElementById(\"cborData\").value)"));
     }
@@ -459,29 +500,38 @@ public class MainActivity extends AppCompatActivity {
     @JavascriptInterface
     public void decryptData() throws Exception {
         // Show a pre-defined encrypted object as default
-        decryptData(RawReader.getStringResource(R.raw.a128cbc_hs256_json));
+        decryptData(RawReader.getCBORText(R.raw.a256_a128cbc_hs256_kid_cbor));
     }
 
     @JavascriptInterface
-    public void doDecrypt(String jsonEncryptionObject) {
+    public void doDecrypt(String cborEncryptionObject) {
         try {
-            JSONObjectReader jefObject = JSONParser.parse(jsonEncryptionObject);
-            JSONCryptoHelper.Options options = new JSONCryptoHelper.Options()
-                .setPublicKeyOption(jefObject.hasProperty(JSONCryptoHelper.KEY_ENCRYPTION_JSON) ?
-     JSONCryptoHelper.PUBLIC_KEY_OPTIONS.OPTIONAL : JSONCryptoHelper.PUBLIC_KEY_OPTIONS.PLAIN_ENCRYPTION)
-                .setKeyIdOption(JSONCryptoHelper.KEY_ID_OPTIONS.OPTIONAL);
-            JSONDecryptionDecoder encryptionObject = jefObject.getEncryptionObject(options);
-            String decryptedData = null;
-            if (encryptionObject.isSharedSecret()) {
-                decryptedData = new String(encryptionObject.getDecryptedData(RawReader.secretKey),"UTF-8");
+            CBORObject jefObject = CBORDiagnosticParser.parse(cborEncryptionObject);
+            CBORMap jefMap = CBORCryptoUtils.unwrapContainerMap(jefObject);
+            CBORDecrypter decrypter;
+            String encryptionInfo;
+            if (jefMap.hasKey(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)) {
+                encryptionInfo = "ASYMMETRIC";
+                decrypter = new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.KeyLocator() {
+                    @Override
+                    public PrivateKey locate(PublicKey optionalPublicKey,
+                                             CBORObject optionalKeyId,
+                                             KeyEncryptionAlgorithms keyEncryptionAlgorithm,
+                                             ContentEncryptionAlgorithms contentEncryptionAlgorithm)
+                            throws IOException, GeneralSecurityException {
+                        return (keyEncryptionAlgorithm.isRsa() ?
+                                          RawReader.rsaKeyPair : RawReader.ecKeyPair).getPrivate();
+                    }
+                });
             } else {
-                KeyPair keyPair = encryptionObject.getKeyEncryptionAlgorithm().isRsa() ?
-                                                                  RawReader.rsaKeyPair : RawReader.ecKeyPair;
-                decryptedData = new String(encryptionObject.getDecryptedData(keyPair.getPrivate()),"UTF-8");
+                encryptionInfo = "SYMMETRIC";
+                decrypter = new CBORSymKeyDecrypter(RawReader.secretKey);
             }
+            String decryptedData = new String(decrypter.decrypt(jefObject), "utf-8");
             loadHtml("",
                     "Decrypted Data",
-                    "<p><i>Decryption type:</i> " + (encryptionObject.isSharedSecret() ? "SYMMETRIC_KEY" : "ASYMMETRIC_KEY") + "</p><pre style='color:blue'>" + htmlIze(decryptedData) + "</pre>");
+                    "<p><i>Decryption type:</i> " + encryptionInfo +
+                            "</p><pre style='color:blue'>" + htmlIze(decryptedData) + "</pre>");
         } catch (Exception e) {
             errorViev(e);
         }
