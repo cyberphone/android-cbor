@@ -34,19 +34,24 @@ import androidx.webkit.WebViewAssetLoader;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.webpki.cbor.CBORArray;
 import org.webpki.cbor.CBORAsymKeyDecrypter;
 import org.webpki.cbor.CBORAsymKeyEncrypter;
 import org.webpki.cbor.CBORAsymKeySigner;
 import org.webpki.cbor.CBORAsymKeyValidator;
+import org.webpki.cbor.CBORBoolean;
+import org.webpki.cbor.CBORByteString;
 import org.webpki.cbor.CBORCryptoConstants;
 import org.webpki.cbor.CBORCryptoUtils;
 import org.webpki.cbor.CBORDecrypter;
 import org.webpki.cbor.CBORDiagnosticParser;
 import org.webpki.cbor.CBOREncrypter;
+import org.webpki.cbor.CBORFloatingPoint;
 import org.webpki.cbor.CBORHmacSigner;
 import org.webpki.cbor.CBORHmacValidator;
 import org.webpki.cbor.CBORInteger;
 import org.webpki.cbor.CBORMap;
+import org.webpki.cbor.CBORNull;
 import org.webpki.cbor.CBORObject;
 import org.webpki.cbor.CBORPublicKey;
 import org.webpki.cbor.CBORSigner;
@@ -55,6 +60,8 @@ import org.webpki.cbor.CBORSymKeyEncrypter;
 import org.webpki.cbor.CBORTextString;
 import org.webpki.cbor.CBORTypes;
 import org.webpki.cbor.CBORValidator;
+import org.webpki.cbor.CBORX509Decrypter;
+import org.webpki.cbor.CBORX509Encrypter;
 import org.webpki.cbor.CBORX509Signer;
 import org.webpki.cbor.CBORX509Validator;
 
@@ -81,14 +88,17 @@ import java.security.cert.X509Certificate;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * This is a demonstration and test application for the WebPKI CBOR, CSF and CEF components.
  */
 public class MainActivity extends AppCompatActivity {
 
-    enum SIG_TYPES {EC_KEY, RSA_KEY, PKI, SYMMETRIC_KEY}
-
-    enum ENC_TYPES {EC_KEY, RSA_KEY, SYMMETRIC_KEY}
+    enum KEY_TYPES {EC_KEY, RSA_KEY, PKI, SYMMETRIC_KEY}
 
     static final String HTML_HEADER =
         "<html><head><style type='text/css'>" +
@@ -240,10 +250,38 @@ public class MainActivity extends AppCompatActivity {
                  executeButton("doVerify(document.getElementById(\"cborData\").value)"));
     }
 
+    CBORMap getStandardMessage() throws IOException {
+        int index = 0;
+        SimpleDateFormat sdf = new SimpleDateFormat("'CBOR Sample' yyyy-MM-dd'T'HH:mm:ss'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return new CBORMap()
+                .setObject(++index, new CBORTextString(sdf.format(new Date().getTime())))
+                .setObject(++index, new CBORByteString(
+                        new byte[]{(byte)0x50, (byte)0x42, (byte)0x12, (byte)0x3a, (byte)0x65,
+                                   (byte)0x93, (byte)0x60, (byte)0x16, (byte)0x3a, (byte)0xd8,
+                                   (byte)0x84, (byte)0x71, (byte)0xf8, (byte)0xc0, (byte)0x89,
+                                   (byte)0x91, (byte)0x3b}))
+                .setObject(++index, new CBORInteger(new BigInteger("-653625362513652165356656")))
+                .setObject(++index, new CBORArray()
+                        .addObject(new CBORNull())
+                        .addObject(new CBORBoolean(true))
+                        .addObject(new CBORBoolean(false))
+                        )
+                .setObject(++index, new CBORArray()
+                        .addObject(new CBORFloatingPoint(0.0))
+                        .addObject(new CBORFloatingPoint(2.0000001e+38))
+                        .addObject(new CBORFloatingPoint(Double.NEGATIVE_INFINITY))
+                )
+                ;
+    }
+
     @JavascriptInterface
     public void verifySignature() throws Exception {
         // Show a pre-defined signed object as default
-        verifySignature(RawReader.getCBORText(R.raw.p256_es256_pub_cbor));
+        CBORMap dataToSign = getStandardMessage();
+        verifySignature(new CBORAsymKeySigner(RawReader.ecKeyPair.getPrivate())
+                .setPublicKey(RawReader.ecKeyPair.getPublic())
+                .sign(dataToSign.size() + 1, dataToSign).toString());
     }
 
     PublicKey publicKey;
@@ -365,12 +403,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @JavascriptInterface
-    public void signData() {
+    public void signData() throws IOException {
         StringBuilder choices = new StringBuilder();
-        for (SIG_TYPES sigType : SIG_TYPES.values()) {
+        for (KEY_TYPES sigType : KEY_TYPES.values()) {
             choices.append("<tr><td><input type='radio' name='keyType' value='")
                    .append(sigType.toString())
-                   .append(sigType == SIG_TYPES.EC_KEY ? "' checked>" : "'>")
+                   .append(sigType == KEY_TYPES.EC_KEY ? "' checked>" : "'>")
                    .append(sigType.toString())
                    .append("</td></tr>");
         }
@@ -379,12 +417,7 @@ public class MainActivity extends AppCompatActivity {
                         "}",
                 "Sign CBOR Data using CSF",
                 "<textarea id='cborData' style='width:100%;height:40%;word-break:break-all'>" +
-                htmlIze(
-                        "{\n" +
-                        "  \"timeStamp\": \"2019-03-16T11:23:06Z\",\n" +
-                        "  \"escapeMe\": \"\\u20ac$\\u000F\\u000aA'\\u0042\\u0022\\u005c\\\\\\\"\",\n" +
-                        "  \"numbers\": [1e+30,4.5,6]\n" +
-                        "}") +
+                htmlIze(getStandardMessage().toString()) +
                 "</textarea>" +
                 "<table style='margin-top:10pt;margin-left:auto;margin-right:auto;font-size:10pt'>" +
                 choices.toString() +
@@ -395,7 +428,7 @@ public class MainActivity extends AppCompatActivity {
     @JavascriptInterface
     public void doSign(String cborData, String keyType) {
         try {
-            SIG_TYPES sigType = SIG_TYPES.valueOf(keyType);
+            KEY_TYPES sigType = KEY_TYPES.valueOf(keyType);
             final CBORObject dataToBeSigned = CBORDiagnosticParser.parse(cborData);
             CBORMap cborMap = CBORCryptoUtils.unwrapContainerMap(dataToBeSigned);
             CBORObject csfLabel = new CBORInteger(0);
@@ -414,7 +447,7 @@ public class MainActivity extends AppCompatActivity {
             switch (sigType) {
                 case EC_KEY:
                 case RSA_KEY:
-                    KeyPair keyPair = sigType == SIG_TYPES.RSA_KEY ?
+                    KeyPair keyPair = sigType == KEY_TYPES.RSA_KEY ?
                                               RawReader.rsaKeyPair : RawReader.ecKeyPair;
                     signer = new CBORAsymKeySigner(keyPair.getPrivate())
                             .setPublicKey(keyPair.getPublic());
@@ -444,10 +477,10 @@ public class MainActivity extends AppCompatActivity {
     @JavascriptInterface
     public void encryptData() {
         StringBuilder choices = new StringBuilder();
-        for (ENC_TYPES encType : ENC_TYPES.values()) {
+        for (KEY_TYPES encType : KEY_TYPES.values()) {
             choices.append("<tr><td><input type='radio' name='keyType' value='")
                     .append(encType.toString())
-                    .append(encType == ENC_TYPES.EC_KEY ? "' checked>" : "'>")
+                    .append(encType == KEY_TYPES.EC_KEY ? "' checked>" : "'>")
                     .append(encType.toString())
                     .append("</td></tr>");
         }
@@ -472,18 +505,23 @@ public class MainActivity extends AppCompatActivity {
     public void doEncrypt(String arbitraryData, String keyType) {
         try {
             byte[] unencryptedData = arbitraryData.getBytes("UTF-8");
-            ENC_TYPES encType = ENC_TYPES.valueOf(keyType);
+            KEY_TYPES encType = KEY_TYPES.valueOf(keyType);
             CBOREncrypter encrypter;
             switch (encType) {
                 case EC_KEY:
                 case RSA_KEY:
                     encrypter = new CBORAsymKeyEncrypter(
-                            (encType == ENC_TYPES.RSA_KEY ?
+                            (encType == KEY_TYPES.RSA_KEY ?
                                      RawReader.rsaKeyPair : RawReader.ecKeyPair).getPublic(),
-                            encType == ENC_TYPES.RSA_KEY ?
+                            encType == KEY_TYPES.RSA_KEY ?
                     KeyEncryptionAlgorithms.RSA_OAEP_256 : KeyEncryptionAlgorithms.ECDH_ES_A256KW,
                                                           ContentEncryptionAlgorithms.A128GCM)
                         .setPublicKeyOption(true);
+                    break;
+                case PKI:
+                    encrypter = new CBORX509Encrypter(RawReader.ecCertPath,
+                                                      KeyEncryptionAlgorithms.ECDH_ES_A256KW,
+                                                      ContentEncryptionAlgorithms.A128GCM);
                     break;
                 default:
                     encrypter = new CBORSymKeyEncrypter(RawReader.secretKey,
@@ -518,18 +556,33 @@ public class MainActivity extends AppCompatActivity {
             CBORDecrypter decrypter;
             String encryptionInfo;
             if (jefMap.hasKey(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)) {
-                encryptionInfo = "ASYMMETRIC";
-                decrypter = new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.KeyLocator() {
-                    @Override
-                    public PrivateKey locate(PublicKey optionalPublicKey,
-                                             CBORObject optionalKeyId,
-                                             KeyEncryptionAlgorithms keyEncryptionAlgorithm,
-                                             ContentEncryptionAlgorithms contentEncryptionAlgorithm)
-                            throws IOException, GeneralSecurityException {
-                        return (keyEncryptionAlgorithm.isRsa() ?
-                                          RawReader.rsaKeyPair : RawReader.ecKeyPair).getPrivate();
-                    }
-                });
+                if (jefMap.getObject(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
+                        .getMap().hasKey(CBORCryptoConstants.CERT_PATH_LABEL)) {
+
+                    decrypter = new CBORX509Decrypter(new CBORX509Decrypter.KeyLocator() {
+                        @Override
+                        public PrivateKey locate(X509Certificate[] certificatePath,
+                                                 KeyEncryptionAlgorithms keyEncryptionAlgorithm,
+                                                 ContentEncryptionAlgorithms contentEncryptionAlgorithm)
+                                throws IOException, GeneralSecurityException {
+                            return RawReader.ecKeyPair.getPrivate();
+                        }
+                    });
+                    encryptionInfo = "PKI";
+                } else {
+                    encryptionInfo = "ASYMMETRIC";
+                    decrypter = new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.KeyLocator() {
+                        @Override
+                        public PrivateKey locate(PublicKey optionalPublicKey,
+                                                 CBORObject optionalKeyId,
+                                                 KeyEncryptionAlgorithms keyEncryptionAlgorithm,
+                                                 ContentEncryptionAlgorithms contentEncryptionAlgorithm)
+                                throws IOException, GeneralSecurityException {
+                            return (keyEncryptionAlgorithm.isRsa() ?
+                                    RawReader.rsaKeyPair : RawReader.ecKeyPair).getPrivate();
+                        }
+                    });
+                }
             } else {
                 encryptionInfo = "SYMMETRIC";
                 decrypter = new CBORSymKeyDecrypter(RawReader.secretKey);
