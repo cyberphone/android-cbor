@@ -41,6 +41,7 @@ import org.webpki.cbor.CBORAsymKeyValidator;
 import org.webpki.cbor.CBORCryptoConstants;
 import org.webpki.cbor.CBORCryptoUtils;
 import org.webpki.cbor.CBORDecrypter;
+import org.webpki.cbor.CBORDiagnosticParser;
 import org.webpki.cbor.CBOREncrypter;
 import org.webpki.cbor.CBORHmacSigner;
 import org.webpki.cbor.CBORHmacValidator;
@@ -304,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
                 keyId = tempKeyId;
                 publicKey = tempPublicKey;
                 algorithm = tempAlgorithm;
-         //       certificatePath = tempCertificatePath;
+                certificatePath = tempCertificatePath;
             }
             if (csfLabel == null) {
                 throw new IOException("Didn't find any CSF object!");
@@ -350,7 +351,8 @@ public class MainActivity extends AppCompatActivity {
                 });
                 signatureType = "ASYMMETRIC";
             }
-            validator.validate(csfLabel, signedData);
+            // Clone the data to make sure the not-read check can do its work
+            validator.validate(csfLabel, CBORObject.decode(signedData.encode()));
 
             loadHtml("",
                     "Valid Signature!",
@@ -401,11 +403,8 @@ public class MainActivity extends AppCompatActivity {
                 csfLabel = cborMap.getKeys()[cborMap.size() - 1];
                 if (csfLabel.getType() == CBORTypes.INTEGER) {
                     BigInteger value = csfLabel.getBigInteger();
-                    if (value.compareTo(BigInteger.ZERO) >= 0) {
-                        value.add(BigInteger.ONE);
-                    } else {
-                        value.subtract(BigInteger.ONE);
-                    }
+                    value = value.compareTo(BigInteger.ZERO) >= 0 ?
+                        value.add(BigInteger.ONE) : value.subtract(BigInteger.ONE);
                     csfLabel = new CBORInteger(value);
                 } else {
                     csfLabel = new CBORTextString("signature");

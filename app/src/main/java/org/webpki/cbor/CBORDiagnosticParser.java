@@ -14,24 +14,13 @@
  *  limitations under the License.
  *
  */
-package org.webpki.androidcbordemo;
+package org.webpki.cbor;
 
 import java.io.IOException;
 
 import java.math.BigInteger;
 
 import java.util.ArrayList;
-
-import org.webpki.cbor.CBORArray;
-import org.webpki.cbor.CBORInteger;
-import org.webpki.cbor.CBORBoolean;
-import org.webpki.cbor.CBORByteString;
-import org.webpki.cbor.CBORFloatingPoint;
-import org.webpki.cbor.CBORMap;
-import org.webpki.cbor.CBORNull;
-import org.webpki.cbor.CBORObject;
-import org.webpki.cbor.CBORTag;
-import org.webpki.cbor.CBORTextString;
 
 /**
  * Class for converting diagnostic CBOR to CBOR.
@@ -62,7 +51,7 @@ public class CBORDiagnosticParser {
      * Parse Diagnostic CBOR sequence to array of CBOR.
      * 
      * @param cborDiagnostic String holding diagnostic (textual) CBOR
-     * @return CBORObject
+     * @return CBORObject[] Non-empty array of CBOR objects
      * @throws IOException
      */
     public static CBORObject[] parseSequence(String cborDiagnostic) throws IOException {
@@ -150,6 +139,7 @@ public class CBORDiagnosticParser {
         return false;
     }
     
+    @SuppressWarnings("fallthrough")
     private CBORObject getRawObject() throws IOException {
         switch (readChar()) {
         
@@ -265,7 +255,7 @@ public class CBORDiagnosticParser {
                     reportError("Tag syntax error");
                 }
                 readChar();
-                CBORTag cborTag =
+                CBORTag cborTag = 
                         new CBORTag(Long.parseUnsignedLong(number), getObject());
                 scanFor(")");
                 return cborTag;

@@ -3,6 +3,7 @@ package org.webpki.androidcbordemo;
 import android.content.Context;
 
 import org.webpki.cbor.CBORCryptoUtils;
+import org.webpki.cbor.CBORDiagnosticParser;
 import org.webpki.cbor.CBORKeyPair;
 import org.webpki.cbor.CBORObject;
 
