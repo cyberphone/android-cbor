@@ -25,6 +25,8 @@ import org.webpki.crypto.EncryptionCore;
 
 import static org.webpki.cbor.CBORCryptoConstants.*;
 
+import org.webpki.cbor.CBORCryptoUtils.Intercepter;
+
 /**
  * Base class for encrypting data.
  * <p>
@@ -42,48 +44,6 @@ import static org.webpki.cbor.CBORCryptoConstants.*;
  */
 public abstract class CBOREncrypter {
 
-    /**
-     * Interface for customizing encryption map objects.
-     * <p>
-     * Implementations of this interface must be set by calling
-     * {@link CBOREncrypter#setIntercepter(Intercepter)}.
-     * </p>
-     */
-    public interface Intercepter {
-
-        /**
-         * Optionally wraps a map in a tag.
-         * <p>
-         * See {@link CBORCryptoUtils#unwrapContainerMap(CBORObject)} for details
-         * on the syntax for wrapped maps.
-         * </p>
-         * 
-         * @param encryptionObject Unwrapped map
-         * @return Original (default) or wrapped map
-         * @throws IOException
-         * @throws GeneralSecurityException
-         */
-        default CBORObject wrap(CBORMap encryptionObject) 
-                throws IOException, GeneralSecurityException {
-            return encryptionObject;
-        }
-
-        /**
-         * Optionally adds custom data to the map.
-         * <p>
-         * Custom data may be any valid CBOR object.  This data is assigned
-         * to the CEF specific label {@link CBORCryptoConstants#CUSTOM_DATA_LABEL}.
-         * </p>
-         * 
-         * @return <code>null</code> (default) or custom data object.
-         * @throws IOException
-         * @throws GeneralSecurityException
-         */
-        default CBORObject getCustomData() throws IOException, GeneralSecurityException {
-            return null;
-        }
-    }
-    
     // The default is to use a map without tagging and custom data.
     Intercepter intercepter = new Intercepter() { };
     
@@ -176,30 +136,29 @@ public abstract class CBOREncrypter {
      */
     public CBORObject encrypt(byte[] dataToEncrypt) throws IOException, GeneralSecurityException {
 
-        // Create an empty encryption object.
-        CBORMap encryptionObject = new CBORMap();
+        // Create an empty encryption container object.
+        CBORMap cefContainer = new CBORMap();
 
         // The object may be wrapped in a tag as well.
-        CBORObject outerObject = intercepter.wrap(encryptionObject);
+        CBORObject outerObject = intercepter.wrap(cefContainer);
 
         // Get optional custom data.
         CBORObject customData = intercepter.getCustomData();
         if (customData != null) {
-            encryptionObject.setObject(CUSTOM_DATA_LABEL, customData);
+            cefContainer.setObject(CUSTOM_DATA_LABEL, customData);
         }
 
         // Add the mandatory content encryption algorithm.
-        encryptionObject.setObject(ALGORITHM_LABEL,
-                                   new CBORInteger(
-                                           contentEncryptionAlgorithm.getCoseAlgorithmId()));
+        cefContainer.setObject(ALGORITHM_LABEL,
+                               new CBORInteger(contentEncryptionAlgorithm.getCoseAlgorithmId()));
 
         // Possible key encryption kicks in here.
         CBORMap innerObject;
         if (this instanceof CBORSymKeyEncrypter) {
-            innerObject = encryptionObject;
+            innerObject = cefContainer;
         } else {
             innerObject = new CBORMap();
-            encryptionObject.setObject(KEY_ENCRYPTION_LABEL, innerObject);
+            cefContainer.setObject(KEY_ENCRYPTION_LABEL, innerObject);
         }
 
         // Get the content encryption key which also may be encrypted.
@@ -233,13 +192,13 @@ public abstract class CBOREncrypter {
         // Complement the encryption object with the result of the content encryption.
         
         // Authentication Data (tag).
-        encryptionObject.setObject(TAG_LABEL, new CBORByteString(result.getTag()));
+        cefContainer.setObject(TAG_LABEL, new CBORByteString(result.getTag()));
 
         // Initialization Vector.
-        encryptionObject.setObject(IV_LABEL, new CBORByteString(iv));
+        cefContainer.setObject(IV_LABEL, new CBORByteString(iv));
 
         // The encrypted data.
-        encryptionObject.setObject(CIPHER_TEXT_LABEL, new CBORByteString(result.getCipherText()));
+        cefContainer.setObject(CIPHER_TEXT_LABEL, new CBORByteString(result.getCipherText()));
 
         // Finally, the thing we all longed(?) for!
         return outerObject;

@@ -24,6 +24,8 @@ import org.webpki.crypto.SignatureAlgorithms;
 
 import static org.webpki.cbor.CBORCryptoConstants.*;
 
+import org.webpki.cbor.CBORCryptoUtils.Intercepter;
+
 /**
  * Base class for signing data.
  * <p>
@@ -41,32 +43,6 @@ import static org.webpki.cbor.CBORCryptoConstants.*;
  */
 public abstract class CBORSigner {
  
-    /**
-     * Interface for customizing signature map objects.
-     * <p>
-     * Implementations of this interface must be set by calling
-     * {@link CBORSigner#setIntercepter(Intercepter)}.
-     * </p>
-     */
-    public interface Intercepter {
-
-        /**
-         * Optionally wraps a map in a tag.
-         * <p>
-         * See {@link CBORCryptoUtils#unwrapContainerMap(CBORObject)} for details
-         * on the syntax for wrapped maps.
-         * </p>
-         * 
-         * @param mapToSign Unwrapped map
-         * @return Original (default) or wrapped map
-         * @throws IOException
-         * @throws GeneralSecurityException
-         */
-        default CBORObject wrap(CBORMap mapToSign) throws IOException, GeneralSecurityException {
-            return mapToSign;
-        }
-    }
-    
     // The default is to use a map without tagging and custom data.
     Intercepter intercepter = new Intercepter() { };
 
@@ -188,32 +164,37 @@ public abstract class CBORSigner {
      */
     public CBORObject sign(CBORObject key, CBORMap mapToSign) throws IOException, 
                                                                      GeneralSecurityException {
+        // Create an empty signature container object.
+        CBORMap csfContainer = new CBORMap();
 
         // There may be a tag holding the map to be signed.
         CBORObject objectToSign = intercepter.wrap(mapToSign);
 
-        // Create empty signature object.
-        CBORMap signatureObject = new CBORMap();
-        
+        // Get optional custom data.
+        CBORObject customData = intercepter.getCustomData();
+        if (customData != null) {
+            csfContainer.setObject(CUSTOM_DATA_LABEL, customData);
+        }
+
         // Add the mandatory signature algorithm.
-        signatureObject.setObject(ALGORITHM_LABEL, 
-                                  new CBORInteger(getAlgorithm().getCoseAlgorithmId()));
+        csfContainer.setObject(ALGORITHM_LABEL, 
+                               new CBORInteger(getAlgorithm().getCoseAlgorithmId()));
         
         // Add a keyId if there is one.
         if (optionalKeyId != null) {
-            signatureObject.setObject(KEY_ID_LABEL, optionalKeyId);
+            csfContainer.setObject(KEY_ID_LABEL, optionalKeyId);
         }
         
         // Asymmetric key signatures add specific items to the signature container.
-        additionalItems(signatureObject);
+        additionalItems(csfContainer);
         
         // Add the prepared signature object to the map object we want to sign. 
-        mapToSign.setObject(key, signatureObject);
+        mapToSign.setObject(key, csfContainer);
 
         // Finally, sign all but the signature label and associated value.
         // internalEncode() is supposed to produce a deterministic representation
         // of the CBOR data to be signed.
-        signatureObject.setByteString(SIGNATURE_LABEL, coreSigner(objectToSign.internalEncode()));
+        csfContainer.setByteString(SIGNATURE_LABEL, coreSigner(objectToSign.internalEncode()));
 
         // Return the now signed object.
         return objectToSign;

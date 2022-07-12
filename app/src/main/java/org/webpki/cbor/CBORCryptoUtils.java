@@ -100,6 +100,54 @@ public class CBORCryptoUtils {
     }
 
     /**
+     * Interface for customizing map objects.
+     * <p>
+     * Implementations of this interface must be set by calling
+     * {@link CBORSigner#setIntercepter(Intercepter)} and
+     * {@link CBOREncrypter#setIntercepter(Intercepter)} for
+     * signatures and encryption respectively.
+     * </p>
+     */
+    public interface Intercepter {
+
+        /**
+         * Optionally wraps a map in a tag.
+         * <p>
+         * See {@link CBORCryptoUtils#unwrapContainerMap(CBORObject)} for details
+         * on the syntax for wrapped maps.
+         * </p>
+         * 
+         * @param map Unwrapped map
+         * @return Original (default implementation) or wrapped map
+         * @throws IOException
+         * @throws GeneralSecurityException
+         */
+        default CBORObject wrap(CBORMap map) 
+                throws IOException, GeneralSecurityException {
+            return map;
+        }
+
+        /**
+         * Optionally adds custom data to the map.
+         * <p>
+         * Custom data may be any valid CBOR object.  This data is assigned
+         * to the CSF/CEF specific label {@link CBORCryptoConstants#CUSTOM_DATA_LABEL}.
+         * </p>
+         * <p>
+         * If this method returns <code>null</code>, the assumption is that there is no
+         * custom data.
+         * </p>
+         * 
+         * @return <code>null</code> (default implementation) or custom data object.
+         * @throws IOException
+         * @throws GeneralSecurityException
+         */
+        default CBORObject getCustomData() throws IOException, GeneralSecurityException {
+            return null;
+        }
+    }
+ 
+    /**
      * Unwraps a container map object.
  
      * <p>
@@ -123,13 +171,11 @@ public class CBORCryptoUtils {
      * Both wrapping methods are intrinsically
      * supported by {@link CBORValidator} and
      * {@link CBORDecrypter}
-     * for signatures and encryptions respectively.
+     * for signatures and encryption respectively.
      * </p>
      * <p>
      * To enable the <i>creation</i> of wrapped data you must implement
-     * {@link CBORSigner.Intercepter#wrap(CBORMap)} and
-     * {@link CBOREncrypter.Intercepter#wrap(CBORMap)}
-     * for signatures and encryptions respectively.
+     * {@link Intercepter#wrap(CBORMap)}.
      * </p>
      * 
      * @param container A map optionally enclosed in a tag 
@@ -150,6 +196,24 @@ public class CBORCryptoUtils {
             } else container = tagged;
         }
         return container.getMap();
+    }
+    
+    static CBORObject getOptionalKeyId(CBORMap holderMap) throws IOException {
+
+        // Get the key Id if there is one and scan() to make sure checkForUnread() won't fail
+        return holderMap.hasKey(KEY_ID_LABEL) ?
+            holderMap.getObject(KEY_ID_LABEL).scan() : null;
+    }
+    
+    static void scanCustomData(CBORMap holderMap, boolean enableCustomData) throws IOException {
+ 
+        // Access a possible customData element in order satisfy checkForUnread().
+        if (holderMap.hasKey(CUSTOM_DATA_LABEL)) {
+            if (!enableCustomData) {
+                throw new IOException("Custom data found but not enabled");
+            }
+            holderMap.getObject(CUSTOM_DATA_LABEL).scan();
+        }
     }
     
     static byte[] setupBasicKeyEncryption(PublicKey publicKey,
@@ -224,14 +288,14 @@ public class CBORCryptoUtils {
                                            byte[] signatureValue) 
             throws GeneralSecurityException, IOException {
 
-        // Verify that the public key matches the signature algorithm.
+        // Verify that the public key matches the signature algorithm
         KeyAlgorithms keyAlgorithm = KeyAlgorithms.getKeyAlgorithm(publicKey);
         if (signatureAlgorithm.getKeyType() != keyAlgorithm.getKeyType()) {
             throw new GeneralSecurityException("Algorithm " + signatureAlgorithm + 
                                                " does not match key type " + keyAlgorithm);
         }
         
-        // Finally, verify the signature.
+        // Finally, verify the signature
         if (!new SignatureWrapper(signatureAlgorithm, publicKey)
                  .update(signedData)
                  .verify(signatureValue)) {

@@ -461,7 +461,7 @@ public class MainActivity extends AppCompatActivity {
                                                 HmacAlgorithms.HMAC_SHA256)
                             .setKeyId(RawReader.secretKeyId);
             }
-            signer.setIntercepter(new CBORSigner.Intercepter() {
+            signer.setIntercepter(new CBORCryptoUtils.Intercepter() {
                 @Override
                 public CBORObject wrap(CBORMap mapToSign) throws
                         IOException, GeneralSecurityException {
