@@ -20,6 +20,7 @@ import org.webpki.cbor.CBORAsymKeySigner;
 import org.webpki.cbor.CBORAsymKeyValidator;
 import org.webpki.cbor.CBORByteString;
 import org.webpki.cbor.CBORCryptoConstants;
+import org.webpki.cbor.CBORCryptoUtils;
 import org.webpki.cbor.CBORHmacValidator;
 import org.webpki.cbor.CBORMap;
 import org.webpki.cbor.CBORObject;
@@ -158,10 +159,12 @@ public class InstrumentedTest {
     void encryptionTestVector(int resource,
                               String keyId,
                               PublicKey publicKey) throws Exception {
-        CBORMap encryptionObject = CBORObject.decode(RawReader.getRawResource(resource)).getMap();
-        PrivateKey privateKey = encryptionObject
+        CBORObject encryptionObject = CBORObject.decode(RawReader.getRawResource(resource));
+        CBORMap cefContainer = CBORCryptoUtils.unwrapContainerMap(encryptionObject,
+                                                                  CBORCryptoUtils.POLICY.OPTIONAL);
+        PrivateKey privateKey = cefContainer
                 .getObject(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
-                     .getMap().hasKey(CBORCryptoConstants.EPHEMERAL_KEY_LABEL)?
+                     .getMap().hasKey(CBORCryptoConstants.EPHEMERAL_KEY_LABEL) ?
                 RawReader.ecKeyPair.getPrivate() : RawReader.rsaKeyPair.getPrivate();
         assertTrue("Testv",
                 ArrayUtil.compare(dataToEncrypt,
@@ -179,16 +182,20 @@ public class InstrumentedTest {
                                   (keyId != null && keyId.equals(optionalKeyId.getTextString())));
                           return privateKey;
                       }
-                  }).decrypt(encryptionObject)));
-        byte[] tag = encryptionObject.readByteStringAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
-        encryptionObject.setObject(CBORCryptoConstants.TAG_LABEL, new CBORByteString(tag));
-        new CBORAsymKeyDecrypter(privateKey).decrypt(encryptionObject);
+                  }).setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL).decrypt(encryptionObject)));
+        byte[] tag = cefContainer.readByteStringAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
+        cefContainer.setObject(CBORCryptoConstants.TAG_LABEL, new CBORByteString(tag));
+        new CBORAsymKeyDecrypter(privateKey)
+                .setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL)
+                .decrypt(encryptionObject);
 
-        tag = encryptionObject.readByteStringAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
+        tag = cefContainer.readByteStringAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
         tag[5]++;
-        encryptionObject.setObject(CBORCryptoConstants.TAG_LABEL, new CBORByteString(tag));
+        cefContainer.setObject(CBORCryptoConstants.TAG_LABEL, new CBORByteString(tag));
         try {
-            new CBORAsymKeyDecrypter(privateKey).decrypt(encryptionObject);
+            new CBORAsymKeyDecrypter(privateKey)
+                    .setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL)
+                    .decrypt(encryptionObject);
             fail("never");
         } catch (Exception e) {
 
@@ -204,6 +211,8 @@ public class InstrumentedTest {
         encryptionTestVector(R.raw.ecdh_es_a128cbc_hs256_imp_cbor,
                 null, null);
         encryptionTestVector(R.raw.ecdh_es_a192kw_a256cbc_hs512_pub_cbor,
+                null, RawReader.ecKeyPair.getPublic());
+        encryptionTestVector(R.raw.p256_ecdh_es_a256kw_a256gcm_tag2dim_pub_cbor,
                 null, RawReader.ecKeyPair.getPublic());
         encryptionTestVector(R.raw.ecdh_es_a256kw_a256gcm_kid_cbor,
                 RawReader.ecKeyId, null);
@@ -242,7 +251,8 @@ public class InstrumentedTest {
                 KeyProperties.PURPOSE_SIGN | KeyProperties.PURPOSE_VERIFY)
                 .setAlgorithmParameterSpec(new RSAKeyGenParameterSpec(2048,RSAKeyGenParameterSpec.F4))
                 .setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
-                .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PSS, KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
+                .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PSS,
+                                      KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
                 .setCertificateNotBefore(new Date(System.currentTimeMillis() - 600000L))
                 .setCertificateSubject(new X500Principal("CN=Android, SerialNumber=5678"))
                 .build());

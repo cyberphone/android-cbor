@@ -297,7 +297,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             // Normally you SHOULD know what to expect so this code is a bit over-the-top
             CBORObject signedData = CBORDiagnosticParser.parse(cborData);
-            CBORMap coreMap = CBORCryptoUtils.unwrapContainerMap(signedData);
+            CBORMap coreMap = CBORCryptoUtils.unwrapContainerMap(signedData,
+                                                                 CBORCryptoUtils.POLICY.OPTIONAL);
             CBORObject csfLabel = null;
             publicKey = null;
             certificatePath = null;
@@ -390,7 +391,8 @@ public class MainActivity extends AppCompatActivity {
                 signatureType = "ASYMMETRIC";
             }
             // Clone the data to make sure the not-read check can do its work
-            validator.validate(csfLabel, CBORObject.decode(signedData.encode()));
+            validator.setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL)
+                     .validate(csfLabel, CBORObject.decode(signedData.encode()));
 
             loadHtml("",
                     "Valid Signature!",
@@ -430,7 +432,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             KEY_TYPES sigType = KEY_TYPES.valueOf(keyType);
             final CBORObject dataToBeSigned = CBORDiagnosticParser.parse(cborData);
-            CBORMap cborMap = CBORCryptoUtils.unwrapContainerMap(dataToBeSigned);
+            CBORMap cborMap = CBORCryptoUtils.unwrapContainerMap(dataToBeSigned,
+                                                                 CBORCryptoUtils.POLICY.OPTIONAL);
             CBORObject csfLabel = new CBORInteger(0);
             if (cborMap.size() > 0) {
                 csfLabel = cborMap.getKeys()[cborMap.size() - 1];
@@ -552,7 +555,8 @@ public class MainActivity extends AppCompatActivity {
     public void doDecrypt(String cborEncryptionObject) {
         try {
             CBORObject jefObject = CBORDiagnosticParser.parse(cborEncryptionObject);
-            CBORMap jefMap = CBORCryptoUtils.unwrapContainerMap(jefObject);
+            CBORMap jefMap = CBORCryptoUtils.unwrapContainerMap(jefObject,
+                                                                CBORCryptoUtils.POLICY.OPTIONAL);
             CBORDecrypter decrypter;
             String encryptionInfo;
             if (jefMap.hasKey(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)) {
