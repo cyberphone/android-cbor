@@ -234,7 +234,7 @@ public enum KeyAlgorithms implements CryptoAlgorithms {
                 KeyTypes.XEC);
 
     private final String sksName;                    // As expressed in SKS
-    private final String joseName;                   // As expressed in JOSE.  Only applicable EC curves
+    private final String joseName;                   // As expressed in JOSE.  Only applicable for EC curves
     private final String jceName;                    // As expressed for JCE
     private final int lengthInBits;                  // You guessed it :-)
     private final AsymSignatureAlgorithms prefAlg;   // A sort of a "guide"
@@ -358,7 +358,7 @@ public enum KeyAlgorithms implements CryptoAlgorithms {
             }
             throw new IllegalArgumentException("Unsupported RSA key size: " + lengthInBits);
         }
-        return OkpSupport.getOkpKeyAlgorithm(key);
+        return OkpSupport.getKeyAlgorithm(key);
     }
 
     // Public keys read from specific security providers are not comparable to 
@@ -376,8 +376,8 @@ public enum KeyAlgorithms implements CryptoAlgorithms {
                     new RSAPublicKeySpec(((RSAPublicKey)publicKey).getModulus(),
                                          ((RSAPublicKey)publicKey).getPublicExponent()));
         }
-        KeyAlgorithms keyAlgorithm = OkpSupport.getOkpKeyAlgorithm(publicKey);
-        return OkpSupport.raw2PublicOkpKey(OkpSupport.public2RawOkpKey(publicKey, keyAlgorithm),
+        KeyAlgorithms keyAlgorithm = OkpSupport.getKeyAlgorithm(publicKey);
+        return OkpSupport.raw2PublicKey(OkpSupport.public2RawKey(publicKey, keyAlgorithm),
                                            keyAlgorithm);
     }
 
