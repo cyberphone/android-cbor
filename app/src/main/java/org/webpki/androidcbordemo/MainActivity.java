@@ -403,6 +403,7 @@ public class MainActivity extends AppCompatActivity {
             }
             // Clone the data to make sure the not-read check can do its work
             validator.setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
+                     .setCustomDataPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
                      .validate(csfLabel, CBORObject.decode(signedData.encode()));
 
             loadHtml("",
