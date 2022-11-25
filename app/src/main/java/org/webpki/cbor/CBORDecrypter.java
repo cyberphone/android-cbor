@@ -24,6 +24,7 @@ import org.webpki.crypto.ContentEncryptionAlgorithms;
 import org.webpki.crypto.EncryptionCore;
 
 import org.webpki.cbor.CBORCryptoUtils.POLICY;
+import org.webpki.cbor.CBORCryptoUtils.Collector;
 
 import static org.webpki.cbor.CBORCryptoConstants.*;
 
@@ -48,6 +49,7 @@ public abstract class CBORDecrypter {
             throws IOException, GeneralSecurityException;
 
     POLICY customDataPolicy = POLICY.FORBIDDEN;
+    Collector customDataCallBack;
     
     /**
      * Sets custom extension data policy.
@@ -55,26 +57,38 @@ public abstract class CBORDecrypter {
      * By default custom data elements ({@link CBORCryptoConstants#CUSTOM_DATA_LABEL}) 
      * are rejected ({@link CBORCryptoUtils.POLICY#FORBIDDEN}).
      * </p>
+     * <p>
+     * See <a href='doc-files/crypto-options.html'>crypto options</a> for details.
+     * </p>
      * @param customDataPolicy Define level of support
+     * @param customDataCallBack Interface for reading custom data
      * @return <code>this</code>
      */
-    public CBORDecrypter setCustomDataPolicy(POLICY customDataPolicy) {
+    public CBORDecrypter setCustomDataPolicy(POLICY customDataPolicy, 
+                                             Collector customDataCallBack) {
         this.customDataPolicy = customDataPolicy;
+        this.customDataCallBack = customDataCallBack;
         return this;
     }
 
     POLICY tagPolicy = POLICY.FORBIDDEN;
+    Collector tagCallBack;
 
     /**
      * Sets tag wrapping policy.
      * <p>
-     * See {@link CBORCryptoUtils#unwrapContainerMap(CBORObject, POLICY tagPolicy)} for details.
+     * By default wrapped containers are rejected ({@link CBORCryptoUtils.POLICY#FORBIDDEN}).
+     * </p>
+     * <p>
+     * See <a href='doc-files/crypto-options.html'>crypto options</a> for details.
      * </p>
      * @param tagPolicy Define level of support
+     * @param tagCallBack Interface for reading tag
      * @return <code>this</code>
      */
-    public CBORDecrypter setTagPolicy(POLICY tagPolicy) {
+    public CBORDecrypter setTagPolicy(POLICY tagPolicy, Collector tagCallBack) {
         this.tagPolicy = tagPolicy;
+        this.tagCallBack = tagCallBack;
         return this;
     }    
  
@@ -84,17 +98,7 @@ public abstract class CBORDecrypter {
      * This method presumes that <code>encryptionObject</code> holds
      * an encryption object according to CEF.
      * </p>
-     * <p>
-     * Note that if <code>encryptionObject</code> holds a CBOR
-     * <code>tag</code> object the <code>tag</code> must in turn contain the actual
-     * encryption object.
-     * Such a <code>tag</code> is also included in the authenticated data.
-     * See {@link CBORCryptoUtils#unwrapContainerMap(CBORObject, POLICY tagPolicy)} for details.
-     * </p>
-     * <p>
-     * Possible custom data ({@link CBORCryptoConstants#CUSTOM_DATA_LABEL})
-     * must be read directly from the <code>encryptionObject</code>.
-     * </p>
+     * 
      * @param encryptionObject CBOR encryption object
      * @return Decrypted data
      * @throws IOException
@@ -104,7 +108,9 @@ public abstract class CBORDecrypter {
                                                               GeneralSecurityException {
 
         // There may be a tag holding the encryption container object (main map).
-        CBORMap cefContainer = CBORCryptoUtils.unwrapContainerMap(encryptionObject, tagPolicy);
+        CBORMap cefContainer = CBORCryptoUtils.unwrapContainerMap(encryptionObject,
+                                                                  tagPolicy,
+                                                                  tagCallBack);
 
         // Get the mandatory content encryption algorithm.
         ContentEncryptionAlgorithms contentEncryptionAlgorithm =
@@ -116,10 +122,10 @@ public abstract class CBORDecrypter {
                 cefContainer : cefContainer.getObject(KEY_ENCRYPTION_LABEL).getMap();
               
         // Fetch optional keyId.
-        CBORObject optionalKeyId = CBORCryptoUtils.getOptionalKeyId(innerObject);
+        CBORObject optionalKeyId = CBORCryptoUtils.getKeyId(innerObject);
 
         // Special handling of custom data.
-        CBORCryptoUtils.scanCustomData(cefContainer, customDataPolicy);
+        CBORCryptoUtils.getCustomData(cefContainer, customDataPolicy, customDataCallBack);
 
         // Get the content encryption key which also may be encrypted.
         byte[] contentDecryptionKey = getContentEncryptionKey(innerObject,
@@ -143,7 +149,7 @@ public abstract class CBORDecrypter {
         // CBOR implementation supports fully canonical (deterministic)
         // parsing and code generation! This implementation shows that
         // this is quite simple.
-        byte[] authData = encryptionObject.internalEncode();
+        byte[] authData = encryptionObject.encode();
         
         // Be nice and restore the object as well.
         cefContainer.setByteString(IV_LABEL, iv);

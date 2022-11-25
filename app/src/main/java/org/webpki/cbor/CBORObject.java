@@ -86,27 +86,19 @@ public abstract class CBORObject {
 
     static final long MASK_LOWER_32           = 0x00000000ffffffffl;
     
-    abstract CBORTypes internalGetType();
-
     /**
      * Returns core CBOR type.
      * 
      * @return The CBOR core type
      */
-    public CBORTypes getType() {
-        return internalGetType();
-    }
+    public abstract CBORTypes getType();
  
-    abstract byte[] internalEncode();
-
     /**
      * Encodes CBOR object.
      * 
      * @return Byte data
      */
-    public byte[] encode() {
-        return internalEncode();
-    }
+    public abstract byte[] encode();
     
     abstract void internalToString(DiagnosticNotation outputBuffer);
 
@@ -150,8 +142,8 @@ public abstract class CBORObject {
     }
 
     void checkTypeAndMarkAsRead(CBORTypes requestedCborType) throws IOException {
-        if (internalGetType() != requestedCborType) {
-            reportError("Is type: " + internalGetType() + ", requested: " + requestedCborType);
+        if (getType() != requestedCborType) {
+            reportError("Is type: " + getType() + ", requested: " + requestedCborType);
         }
         readFlag = true;
     }
@@ -272,8 +264,8 @@ public abstract class CBORObject {
      * @throws IOException
      */
     public boolean isNull() throws IOException {
-        checkTypeAndMarkAsRead(internalGetType());
-        return internalGetType() == CBORTypes.NULL;
+        checkTypeAndMarkAsRead(getType());
+        return getType() == CBORTypes.NULL;
     }
     
     /**
@@ -392,7 +384,7 @@ public abstract class CBORObject {
     }
 
     private void traverse(CBORObject holderObject, boolean check) throws IOException {
-        switch (internalGetType()) {
+        switch (getType()) {
             case MAP:
                 CBORMap cborMap = (CBORMap) this;
                 for (CBORObject key : cborMap.keys.keySet()) {
@@ -435,8 +427,9 @@ public abstract class CBORObject {
         private static final byte[] ZERO_BYTE = {0};
 
         private InputStream inputStream;
-        private boolean deterministicCheck;
         private boolean sequenceFlag;
+        private boolean deterministicMode;
+        private boolean constrainedMapKeys;
         private boolean atFirstByte = true;
         private int maxLength;
         private int byteCount;
@@ -444,10 +437,12 @@ public abstract class CBORObject {
         private CBORDecoder(InputStream inputStream,
                             boolean sequenceFlag,
                             boolean acceptNonDeterministic,
+                            boolean constrainedMapKeys,
                             int maxLength) throws IOException {
             this.inputStream = inputStream;
             this.sequenceFlag = sequenceFlag;
-            this.deterministicCheck = !acceptNonDeterministic;
+            this.deterministicMode = !acceptNonDeterministic;
+            this.constrainedMapKeys = constrainedMapKeys;
             this.maxLength = maxLength;
             if (maxLength < 1) {
                 reportError("Invalid \"maxLength\"");
@@ -511,7 +506,7 @@ public abstract class CBORObject {
         private CBORFloatingPoint checkDoubleConversion(int tag, long bitFormat, long rawDouble)
                 throws IOException {
             CBORFloatingPoint value = new CBORFloatingPoint(Double.longBitsToDouble(rawDouble));
-            if ((value.tag != tag || value.bitFormat != bitFormat) && deterministicCheck) {
+            if ((value.tag != tag || value.bitFormat != bitFormat) && deterministicMode) {
                 reportError(String.format(
                         "Non-deterministic encoding of floating point value, tag: %2x", tag & 0xff));
             }
@@ -528,7 +523,7 @@ public abstract class CBORObject {
                     byte[] byteArray = getObject().getByteString();
                     if (byteArray.length == 0) {
                         byteArray = ZERO_BYTE;  // Zero length byte string => n == 0.
-                    } else if (byteArray[0] == 0 && deterministicCheck) {
+                    } else if (byteArray[0] == 0 && deterministicMode) {
                         reportError("Non-deterministic encoding: leading zero byte");
                     }
                     BigInteger bigInteger = 
@@ -536,7 +531,7 @@ public abstract class CBORObject {
                             new BigInteger(-1, byteArray).subtract(BigInteger.ONE)
                                                :
                             new BigInteger(1, byteArray);
-                    if (CBORInteger.fitsAnInteger(bigInteger) && deterministicCheck) {
+                    if (CBORInteger.fitsAnInteger(bigInteger) && deterministicMode) {
                         reportError("Non-deterministic encoding: bignum fits integer");
                     }
                     return new CBORInteger(bigInteger);
@@ -625,14 +620,23 @@ public abstract class CBORObject {
                 // If the upper half (for 2, 4, 8 byte N) of N or a single byte
                 // N is zero, a shorter variant should have been used.
                 // In addition, a single byte N must be > 23. 
-                if (((n & mask) == 0 || (n > 0 && n < 24)) && deterministicCheck) {
+                if (((n & mask) == 0 || (n > 0 && n < 24)) && deterministicMode) {
                     reportError("Non-deterministic encoding of N");
                 }
             }
             // N successfully decoded, now switch on major type (upper three bits).
             switch (tag & 0xe0) {
                 case MT_TAG:
-                    return new CBORTag(n, getObject());
+                    CBORObject tagData = getObject();
+                    if (n == CBORTag.RESERVED_TAG_COTE) {
+                        CBORArray holder = tagData.getArray();
+                        if (holder.size() != 2 ||
+                            holder.getObject(0).getType() != CBORTypes.TEXT_STRING) {
+                            CBORObject.reportError("Tag syntax " +  CBORTag.RESERVED_TAG_COTE +
+                                                   "([\"string\", CBOR object]) expected");
+                        }
+                    }
+                    return new CBORTag(n, tagData);
 
                 case MT_UNSIGNED:
                     return new CBORInteger(n, true);
@@ -655,11 +659,13 @@ public abstract class CBORObject {
     
                 case MT_MAP:
                     CBORMap cborMap = new CBORMap();
+                    cborMap.deterministicMode = deterministicMode;
+                    cborMap.constrainedMapKeys = constrainedMapKeys;
                     for (int q = checkLength(n); --q >= 0; ) {
                         cborMap.setObject(getObject(), getObject());
-                        cborMap.parsingMode = deterministicCheck;
                     }
-                    cborMap.parsingMode = false;
+                    // Programmatically added elements sort automatically. 
+                    cborMap.deterministicMode = false;
                     return cborMap;
     
                 default:
@@ -673,19 +679,25 @@ public abstract class CBORObject {
      * Decodes CBOR data with options.
      * 
      * @param inputStream Stream holding CBOR data
-     * @param sequenceFlag Stop reading after parsing a valid CBOR object (no object returns <code>null</code>)
+     * @param sequenceFlag Stop reading after parsing a valid CBOR object
+     * (no object returns <code>null</code>)
      * @param nonDeterministic Do not check data for deterministic representation
-     * @param maxLength Holds maximum input size in bytes(if <code>null</code> => {@link Integer#MAX_VALUE} is assumed)
+     * @param constrainedMapKeys Limit map keys to text string and integer types,
+     * including flagging mixing of these types in map
+     * @param maxLength Holds maximum input size in 
+     * bytes or <code>null</code> ({@link Integer#MAX_VALUE} is assumed)
      * @return CBORObject
      * @throws IOException
      */
     public static CBORObject decode(InputStream inputStream,
                                     boolean sequenceFlag,
                                     boolean nonDeterministic,
+                                    boolean constrainedMapKeys,
                                     Integer maxLength) throws IOException {
         CBORDecoder cborDecoder = new CBORDecoder(inputStream, 
                                                   sequenceFlag, 
                                                   nonDeterministic,
+                                                  constrainedMapKeys,
                                                   maxLength == null ? Integer.MAX_VALUE : maxLength);
         CBORObject cborObject = cborDecoder.getObject();
         if (sequenceFlag) {
@@ -704,7 +716,8 @@ public abstract class CBORObject {
      * This method is identical to:
      * <pre>  decode(new ByteArrayInputStream(encodedCborData),
      *        false, 
-     *        false, 
+     *        false,
+     *        false,
      *        encodedCborData.length);
      *</pre>
      * </p>
@@ -716,7 +729,8 @@ public abstract class CBORObject {
     public static CBORObject decode(byte[] encodedCborData) throws IOException {
         return decode(new ByteArrayInputStream(encodedCborData),
                       false, 
-                      false, 
+                      false,
+                      false,
                       encodedCborData.length);
     }
 
@@ -772,7 +786,7 @@ public abstract class CBORObject {
     @Override
     public boolean equals(Object object) {
         try {
-            return ArrayUtil.compare(((CBORObject) object).internalEncode(), internalEncode());
+            return ArrayUtil.compare(((CBORObject) object).encode(), encode());
         } catch (Exception e) {
             return false;
         }

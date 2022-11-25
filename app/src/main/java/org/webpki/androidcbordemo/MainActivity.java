@@ -292,13 +292,24 @@ public class MainActivity extends AppCompatActivity {
     String signatureType;
     String keyInfo;
 
+    public static CBORMap unwrapOptionalTag(CBORObject rawContainer) throws IOException {
+        // It might be tagged
+        if (rawContainer.getType() == CBORTypes.TAG) {
+            CBORObject container = rawContainer.getTag().getObject();
+            if (container.getType() == CBORTypes.ARRAY) {
+                container = container.getArray().getObject(1);
+            }
+            return container.getMap();
+        }
+        return rawContainer.getMap();
+    }
+
     @JavascriptInterface
     public void doVerify(String cborData) {
         try {
             // Normally you SHOULD know what to expect so this code is a bit over-the-top
             CBORObject signedData = CBORDiagnosticParser.parse(cborData);
-            CBORMap coreMap = CBORCryptoUtils.unwrapContainerMap(signedData,
-                                                                 CBORCryptoUtils.POLICY.OPTIONAL);
+            CBORMap coreMap = unwrapOptionalTag(signedData);
             CBORObject csfLabel = null;
             publicKey = null;
             certificatePath = null;
@@ -391,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
                 signatureType = "ASYMMETRIC";
             }
             // Clone the data to make sure the not-read check can do its work
-            validator.setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL)
+            validator.setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
                      .validate(csfLabel, CBORObject.decode(signedData.encode()));
 
             loadHtml("",
@@ -432,8 +443,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             KEY_TYPES sigType = KEY_TYPES.valueOf(keyType);
             final CBORObject dataToBeSigned = CBORDiagnosticParser.parse(cborData);
-            CBORMap cborMap = CBORCryptoUtils.unwrapContainerMap(dataToBeSigned,
-                                                                 CBORCryptoUtils.POLICY.OPTIONAL);
+            CBORMap cborMap = unwrapOptionalTag(dataToBeSigned);
             CBORObject csfLabel = new CBORInteger(0);
             if (cborMap.size() > 0) {
                 csfLabel = cborMap.getKeys()[cborMap.size() - 1];
@@ -554,13 +564,12 @@ public class MainActivity extends AppCompatActivity {
     @JavascriptInterface
     public void doDecrypt(String cborEncryptionObject) {
         try {
-            CBORObject jefObject = CBORDiagnosticParser.parse(cborEncryptionObject);
-            CBORMap jefMap = CBORCryptoUtils.unwrapContainerMap(jefObject,
-                                                                CBORCryptoUtils.POLICY.OPTIONAL);
+            CBORObject cefObject = CBORDiagnosticParser.parse(cborEncryptionObject);
+            CBORMap cefMap = unwrapOptionalTag(cefObject);
             CBORDecrypter decrypter;
             String encryptionInfo;
-            if (jefMap.hasKey(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)) {
-                if (jefMap.getObject(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
+            if (cefMap.hasKey(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)) {
+                if (cefMap.getObject(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
                         .getMap().hasKey(CBORCryptoConstants.CERT_PATH_LABEL)) {
 
                     decrypter = new CBORX509Decrypter(new CBORX509Decrypter.KeyLocator() {
@@ -591,7 +600,7 @@ public class MainActivity extends AppCompatActivity {
                 encryptionInfo = "SYMMETRIC";
                 decrypter = new CBORSymKeyDecrypter(RawReader.secretKey);
             }
-            String decryptedData = new String(decrypter.decrypt(jefObject), "utf-8");
+            String decryptedData = new String(decrypter.decrypt(cefObject), "utf-8");
             loadHtml("",
                     "Decrypted Data",
                     "<p><i>Decryption type:</i> " + encryptionInfo +

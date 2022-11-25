@@ -32,7 +32,7 @@ import org.webpki.cbor.CBORCryptoUtils.Intercepter;
  * <p>
  * This implementation supports encryptions using 
  * <a title='CEF' target='_blank'
- * href='https://cyberphone.github.io/javaapi/org/webpki/cbor/doc-files/encryption.html'>CEF</a>
+ * href='doc-files/encryption.html'>CEF</a>
  * (CBOR Encryption Format) packaging, while algorithms are derived from COSE.
  * </p>
  * <p>
@@ -124,10 +124,6 @@ public abstract class CBOREncrypter {
 
     /**
      * Encrypts data.
-     * <p>
-     * Note that a {@link CBORTag} may embed the encryption object.
-     * See {@link CBORCryptoUtils#unwrapContainerMap(CBORObject, POLICY tagPolicy)} for details.
-     * </p>
      * 
      * @param dataToEncrypt The data to encrypt
      * @return CBOR encryption object
@@ -176,7 +172,7 @@ public abstract class CBOREncrypter {
         // CBOR implementation supports fully canonical (deterministic)
         // parsing and code generation! This implementation shows that
         // this is quite simple.
-        byte[] authData = outerObject.internalEncode();
+        byte[] authData = outerObject.encode();
         
         // Create an initialization vector.
         byte[] iv = EncryptionCore.createIv(contentEncryptionAlgorithm);

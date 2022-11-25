@@ -160,8 +160,7 @@ public class InstrumentedTest {
                               String keyId,
                               PublicKey publicKey) throws Exception {
         CBORObject encryptionObject = CBORObject.decode(RawReader.getRawResource(resource));
-        CBORMap cefContainer = CBORCryptoUtils.unwrapContainerMap(encryptionObject,
-                                                                  CBORCryptoUtils.POLICY.OPTIONAL);
+        CBORMap cefContainer = MainActivity.unwrapOptionalTag(encryptionObject);
         PrivateKey privateKey = cefContainer
                 .getObject(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
                      .getMap().hasKey(CBORCryptoConstants.EPHEMERAL_KEY_LABEL) ?
@@ -182,11 +181,11 @@ public class InstrumentedTest {
                                   (keyId != null && keyId.equals(optionalKeyId.getTextString())));
                           return privateKey;
                       }
-                  }).setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL).decrypt(encryptionObject)));
+                  }).setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null).decrypt(encryptionObject)));
         byte[] tag = cefContainer.readByteStringAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
         cefContainer.setObject(CBORCryptoConstants.TAG_LABEL, new CBORByteString(tag));
         new CBORAsymKeyDecrypter(privateKey)
-                .setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL)
+                .setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
                 .decrypt(encryptionObject);
 
         tag = cefContainer.readByteStringAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
@@ -194,7 +193,7 @@ public class InstrumentedTest {
         cefContainer.setObject(CBORCryptoConstants.TAG_LABEL, new CBORByteString(tag));
         try {
             new CBORAsymKeyDecrypter(privateKey)
-                    .setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL)
+                    .setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
                     .decrypt(encryptionObject);
             fail("never");
         } catch (Exception e) {

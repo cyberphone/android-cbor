@@ -40,15 +40,16 @@ import org.webpki.util.ArrayUtil;
  */
 public class CBORMap extends CBORObject {
 
-    boolean parsingMode;
+    boolean deterministicMode;
+    boolean constrainedMapKeys;
     CBORObject lastKey;
 
     private static Comparator<CBORObject> comparator = new Comparator<CBORObject>() {
 
         @Override
         public int compare(CBORObject o1, CBORObject o2) {
-            byte[] key1 = o1.internalEncode();
-            byte[] key2 = o2.internalEncode();
+            byte[] key1 = o1.encode();
+            byte[] key2 = o2.encode();
             int minIndex = Math.min(key1.length, key2.length);
             for (int i = 0; i < minIndex; i++) {
                 int diff = (key1[i] & 0xff) - (key2[i] & 0xff);
@@ -62,8 +63,8 @@ public class CBORMap extends CBORObject {
     };
 
     Map<CBORObject, CBORObject> keys = new TreeMap<>(comparator);
-    
-    /**
+
+   /**
      * Creates an empty CBOR <code>map</code>.
      */
     public CBORMap() {
@@ -71,7 +72,7 @@ public class CBORMap extends CBORObject {
     
 
     @Override
-    CBORTypes internalGetType() {
+    public CBORTypes getType() {
         return CBORTypes.MAP;
     }
     
@@ -133,11 +134,20 @@ public class CBORMap extends CBORObject {
      */
     public CBORMap setObject(CBORObject key, CBORObject value) throws IOException {
         if (keys.put(key, value) != null) {
-            reportError("Duplicate key: " + key.toString());
+            reportError("Duplicate key: " + key);
         }
-        if (parsingMode) {
-            if (comparator.compare(lastKey, key) > 0) {
+        if (constrainedMapKeys &&
+            key.getType() != CBORTypes.TEXT_STRING &&
+            (key.getType() != CBORTypes.INTEGER || !CBORInteger.fitsAnInteger(
+                    key.getBigInteger()))) {
+            reportError(STDERR_CONSTRAINED_MAP_KEYS + key);
+        }
+        if (lastKey != null) {
+            if (deterministicMode && comparator.compare(lastKey, key) > 0) {
                 reportError("Non-deterministic sort order for map key: " + key);
+            }
+            if (constrainedMapKeys && lastKey.getType() != key.getType()) {
+                reportError(STDERR_CONSTRAINED_MAP_KEYS + key);
             }
         }
         lastKey = key;
@@ -321,12 +331,12 @@ public class CBORMap extends CBORObject {
     }
     
     @Override
-    byte[] internalEncode() {
+    public byte[] encode() {
         byte[] encoded = encodeTagAndN(MT_MAP, keys.size());
         for (CBORObject key : keys.keySet()) {
             encoded = ArrayUtil.add(encoded,
-                                    ArrayUtil.add(key.internalEncode(), 
-                                                  keys.get(key).internalEncode()));
+                                    ArrayUtil.add(key.encode(), 
+                                                  keys.get(key).encode()));
         }
         return encoded;
     }
@@ -348,4 +358,7 @@ public class CBORMap extends CBORObject {
         }
         cborPrinter.endMap(notFirst);
     }
+    
+    static final String STDERR_CONSTRAINED_MAP_KEYS = 
+            "Constraind mode type error for map key: ";
 }

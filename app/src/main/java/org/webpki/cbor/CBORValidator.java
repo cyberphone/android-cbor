@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import org.webpki.cbor.CBORCryptoUtils.POLICY;
+import org.webpki.cbor.CBORCryptoUtils.Collector;
 
 import static org.webpki.cbor.CBORCryptoConstants.*;
 
@@ -46,33 +47,47 @@ public abstract class CBORValidator {
                                  byte[] signedData) throws IOException, GeneralSecurityException;
  
     POLICY customDataPolicy = POLICY.FORBIDDEN;
+    Collector customDataCollector;
+    
 
     /**
-     * Sets custom extension data policy.
+     * Sets custom data policy.
      * <p>
      * By default custom data elements ({@link CBORCryptoConstants#CUSTOM_DATA_LABEL}) 
-     * are rejected.
+     * are rejected ({@link CBORCryptoUtils.POLICY#FORBIDDEN}).
+     * </p>
+     * <p>
+     * See <a href='doc-files/crypto-options.html'>crypto options</a> for details.
      * </p>
      * @param customDataPolicy Define level of support
+     * @param customDataCollector Interface for reading custom data
      * @return <code>this</code>
      */
-    public CBORValidator setCustomDataPolicy(POLICY customDataPolicy) {
+    public CBORValidator setCustomDataPolicy(POLICY customDataPolicy, 
+                                             Collector customDataCollector) {
         this.customDataPolicy = customDataPolicy;
+        this.customDataCollector = customDataCollector;
         return this;
     }
 
     POLICY tagPolicy = POLICY.FORBIDDEN;
+    Collector tagCollector;
 
     /**
      * Sets tag wrapping policy.
      * <p>
-     * See {@link CBORCryptoUtils#unwrapContainerMap(CBORObject, POLICY tagPolicy)} for details.
+     * By default tagged CSF containers are rejected ({@link CBORCryptoUtils.POLICY#FORBIDDEN}).
+     * </p>
+     * <p>
+     * See <a href='doc-files/crypto-options.html'>crypto options</a> for details.
      * </p>
      * @param tagPolicy Define level of support
+     * @param tagCollector Interface for reading tag
      * @return <code>this</code>
      */
-    public CBORValidator setTagPolicy(POLICY tagPolicy) {
+    public CBORValidator setTagPolicy(POLICY tagPolicy, Collector tagCollector) {
         this.tagPolicy = tagPolicy;
+        this.tagCollector = tagCollector;
         return this;
     }
 
@@ -81,12 +96,6 @@ public abstract class CBORValidator {
      * <p>
      * This method presumes that <code>signedObject</code> holds
      * an enveloped signature according to CSF.
-     * </p>
-     * <p>
-     * Note that if <code>signedObject</code> holds a CBOR
-     * <code>tag</code> object the <code>tag</code> must in turn contain the signed <code>map</code>.
-     * Such a <code>tag</code> is also included in the signed data.
-     * See {@link CBORCryptoUtils#unwrapContainerMap(CBORObject, POLICY tagPolicy)} for details.
      * </p>
      * 
      * @param key Key in map holding signature
@@ -99,7 +108,9 @@ public abstract class CBORValidator {
             throws IOException, GeneralSecurityException {
 
         // There may be a tag holding the signed map.
-        CBORMap signedMap = CBORCryptoUtils.unwrapContainerMap(signedObject, tagPolicy);
+        CBORMap signedMap = CBORCryptoUtils.unwrapContainerMap(signedObject,
+                                                               tagPolicy,
+                                                               tagCollector);
 
         // Fetch signature container object
         CBORMap csfContainer = signedMap.getObject(key).getMap();
@@ -108,18 +119,18 @@ public abstract class CBORValidator {
         byte[] signatureValue = csfContainer.readByteStringAndRemoveKey(SIGNATURE_LABEL);
 
         // Fetch optional keyId.
-        CBORObject optionalKeyId = CBORCryptoUtils.getOptionalKeyId(csfContainer);
+        CBORObject optionalKeyId = CBORCryptoUtils.getKeyId(csfContainer);
 
         // Special handling of custom data.
-        CBORCryptoUtils.scanCustomData(csfContainer, customDataPolicy);
+        CBORCryptoUtils.getCustomData(csfContainer, customDataPolicy, customDataCollector);
 
-        // Call algorithm specific validator. The code below presumes that internalEncode()
+        // Call algorithm specific validator. The code below presumes that encode()
         // returns a deterministic representation of the signed CBOR data.
         coreValidation(csfContainer,
                        csfContainer.getObject(ALGORITHM_LABEL).getInt(),
                        optionalKeyId, 
                        signatureValue,
-                       signedObject.internalEncode());
+                       signedObject.encode());
 
         // Check that nothing "extra" was supplied.
         csfContainer.checkForUnread();
