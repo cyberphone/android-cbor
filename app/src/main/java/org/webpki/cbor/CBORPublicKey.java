@@ -49,7 +49,7 @@ public class CBORPublicKey {
     
     private CBORPublicKey() {}
     
-    static final HashMap<KeyAlgorithms, CBORInteger> WEBPKI_2_COSE_CRV = new HashMap<>();
+    static final HashMap<KeyAlgorithms, CBORObject> WEBPKI_2_COSE_CRV = new HashMap<>();
 
     static {
         WEBPKI_2_COSE_CRV.put(KeyAlgorithms.P_256,   COSE_CRV_P_256);
@@ -166,8 +166,9 @@ public class CBORPublicKey {
         return new BigInteger(1, fixedBinary);
     }
 
-    static KeyAlgorithms getKeyAlgorithmFromCurveId(CBORObject curve) 
-            throws IOException, GeneralSecurityException {
+    static KeyAlgorithms getKeyAlgorithmFromCurveId(CBORMap keyMap, CBORObject curveLabel)
+                throws IOException, GeneralSecurityException {
+        CBORObject curve = keyMap.getObject(curveLabel);
         KeyAlgorithms keyAlgorithm = COSE_2_WEBPKI_CRV.get(curve.getInt());
         if (keyAlgorithm == null) {
             throw new GeneralSecurityException("No such key/curve algorithm: " + curve.getInt());
@@ -184,14 +185,11 @@ public class CBORPublicKey {
         return keyType;
     }
     
-    static PublicKey getPublicKey(CBORMap publicKeyMap) throws IOException, 
-                                                               GeneralSecurityException {
-        
-        KeyTypes keyType = getKeyType(publicKeyMap);
+    static PublicKey getPublicKey(CBORMap publicKeyMap) 
+            throws IOException, GeneralSecurityException {
         KeyAlgorithms keyAlg;
         PublicKey publicKey;
-
-        switch (keyType) {
+        switch (getKeyType(publicKeyMap)) {
             case RSA:
                 publicKey = KeyFactory.getInstance("RSA").generatePublic(new RSAPublicKeySpec(
                     getCryptoBinary(publicKeyMap, COSE_RSA_N_LABEL),
@@ -199,7 +197,7 @@ public class CBORPublicKey {
                 break;
     
             case EC:
-                keyAlg = getKeyAlgorithmFromCurveId(publicKeyMap.getObject(COSE_EC2_CRV_LABEL));
+                keyAlg = getKeyAlgorithmFromCurveId(publicKeyMap, COSE_EC2_CRV_LABEL);
                 if (keyAlg.getKeyType() != KeyTypes.EC) {
                     throw new GeneralSecurityException("Invalid EC curve: " + keyAlg.toString());
                 }
@@ -210,7 +208,7 @@ public class CBORPublicKey {
                 break;
     
             default:  // EDDSA and XEC
-                keyAlg = getKeyAlgorithmFromCurveId(publicKeyMap.getObject(COSE_OKP_CRV_LABEL));
+                keyAlg = getKeyAlgorithmFromCurveId(publicKeyMap, COSE_OKP_CRV_LABEL);
                 if (keyAlg.getKeyType() != KeyTypes.EDDSA && keyAlg.getKeyType() != KeyTypes.XEC) {
                     throw new GeneralSecurityException("Invalid OKP curve: " + keyAlg.toString());
                 }

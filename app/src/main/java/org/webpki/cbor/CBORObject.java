@@ -387,8 +387,8 @@ public abstract class CBORObject {
         switch (getType()) {
             case MAP:
                 CBORMap cborMap = (CBORMap) this;
-                for (CBORObject key : cborMap.keys.keySet()) {
-                     cborMap.keys.get(key).traverse(key, check);
+                for (CBORMap.Entry entry = cborMap.root; entry != null; entry = entry.next) {
+                     entry.value.traverse(entry.key, check);
                 }
                 break;
         
@@ -526,15 +526,15 @@ public abstract class CBORObject {
                     } else if (byteArray[0] == 0 && deterministicMode) {
                         reportError("Non-deterministic encoding: leading zero byte");
                     }
-                    BigInteger bigInteger = 
+                    CBORInteger cborInteger = new CBORInteger(
                         (tag == MT_BIG_SIGNED) ?
                             new BigInteger(-1, byteArray).subtract(BigInteger.ONE)
                                                :
-                            new BigInteger(1, byteArray);
-                    if (CBORInteger.fitsAnInteger(bigInteger) && deterministicMode) {
+                            new BigInteger(1, byteArray));
+                    if (cborInteger.fitsAnInteger() && deterministicMode) {
                         reportError("Non-deterministic encoding: bignum fits integer");
                     }
-                    return new CBORInteger(bigInteger);
+                    return cborInteger;
 
                 case MT_FLOAT16:
                     long float16 = getLongFromBytes(2);
@@ -628,11 +628,11 @@ public abstract class CBORObject {
             switch (tag & 0xe0) {
                 case MT_TAG:
                     CBORObject tagData = getObject();
-                    if (n == CBORTag.RESERVED_TAG_COTE) {
+                    if (n == CBORTag.RESERVED_TAG_COTX) {
                         CBORArray holder = tagData.getArray();
                         if (holder.size() != 2 ||
                             holder.getObject(0).getType() != CBORTypes.TEXT_STRING) {
-                            CBORObject.reportError("Tag syntax " +  CBORTag.RESERVED_TAG_COTE +
+                            CBORObject.reportError("Tag syntax " +  CBORTag.RESERVED_TAG_COTX +
                                                    "([\"string\", CBOR object]) expected");
                         }
                     }
@@ -733,7 +733,7 @@ public abstract class CBORObject {
                       false,
                       encodedCborData.length);
     }
-
+    
     class DiagnosticNotation {
  
         static final String INDENT = "  ";

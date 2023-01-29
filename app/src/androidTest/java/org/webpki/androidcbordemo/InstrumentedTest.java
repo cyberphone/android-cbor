@@ -312,13 +312,13 @@ public class InstrumentedTest {
         keyStore.load(null);
 
         Log.i("CERT", keyStore.getCertificate(KEY_2).toString());
-
         signedData =
                 new CBORAsymKeySigner(keyPair.getPrivate())
                         .setPublicKey(keyPair.getPublic())
                         .sign(SIGNATURE_LABEL,
                                 RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
         Log.i("SIGN", signedData.toString());
+
         new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
         signedData =
                 new CBORAsymKeySigner(keyPair.getPrivate())
@@ -334,11 +334,13 @@ public class InstrumentedTest {
                 new KeyProtection.Builder(KeyProperties.PURPOSE_SIGN)
                         .setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
                         .build());
+
         signedData =
-                new CBORX509Signer(keyPair.getPrivate(), RawReader.ecCertPath)
+                new CBORX509Signer(((KeyStore.PrivateKeyEntry) keyStore.getEntry(KEY_2, null)).getPrivateKey(), RawReader.ecCertPath)
                         .sign(SIGNATURE_LABEL,
                                 RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
         Log.i("CERTSIGN", signedData.toString());
+
         new CBORX509Validator(new CBORX509Validator.Parameters() {
             @Override
             public void verify(X509Certificate[] certificatePath,

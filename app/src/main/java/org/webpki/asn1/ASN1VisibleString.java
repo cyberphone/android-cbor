@@ -14,34 +14,20 @@
  *  limitations under the License.
  *
  */
-package org.webpki.crypto;
+package org.webpki.asn1;
 
-/**
- * Basic key types.
- */
-public enum KeyTypes {
-    RSA   ("RSA"), 
-    EC    ("EC"),
-    EDDSA ("OKP"), 
-    XEC   ("OKP"),
-    SYM   ("Sym");
-    
-    String joseKty;
-    
-    KeyTypes(String joseKty) {
-        this.joseKty = joseKty;
+import java.io.IOException;
+
+public class ASN1VisibleString extends ASN1String {
+    ASN1VisibleString(String value) {
+        super(VISIBLESTRING, value);
     }
-    
-    public static KeyTypes getKeyTypeFromKty(String joseKty) {
-        for (KeyTypes keyType : KeyTypes.values()) {
-            if (keyType.joseKty.equals(joseKty)) {
-                return keyType;
-            }
-        }
-        throw new IllegalArgumentException("Unknown kty: " + joseKty);
+
+    ASN1VisibleString(DerDecoder decoder) throws IOException {
+        super(decoder);
     }
-    
-    public String getJoseKty() {
-        return joseKty;
+
+    void toString(StringBuilder s, String prefix) {
+        s.append(getByteNumber()).append(prefix).append("VisibleString '").append(value()).append('\'');
     }
 }
