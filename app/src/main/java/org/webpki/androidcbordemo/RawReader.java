@@ -27,6 +27,7 @@ public class RawReader {
     public static KeyPair ecKeyPair;
 
     public static X509Certificate[] ecCertPath;
+    public static X509Certificate[] ed25519CertPath;
 
     public static byte[] secretKey;
     public static String secretKeyId;
@@ -61,6 +62,8 @@ public class RawReader {
         dataToBeEncrypted = getRawResource(R.raw.data2beencrypted_txt);
         ecCertPath = CBORCryptoUtils.decodeCertificateArray(
                 getCBORResource(R.raw.ec_certpath_cbor_txt).getArray());
+        ed25519CertPath = CBORCryptoUtils.decodeCertificateArray(
+                getCBORResource(R.raw.ed25519_certpath_cbor_txt).getArray());
         secretKey = HexaDecimal.decode(getStringResource(R.raw.secretkey_hex));
         secretKeyId = getStringResource(R.raw.secret_key_id_txt);
     }

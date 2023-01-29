@@ -51,6 +51,7 @@ import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 
 import java.security.spec.ECGenParameterSpec;
+import java.security.spec.NamedParameterSpec;
 import java.security.spec.RSAKeyGenParameterSpec;
 
 import java.util.Date;
@@ -150,10 +151,20 @@ public class InstrumentedTest {
                                     RawReader.ecKeyPair.getPublic().equals(optionalPublicKey));
                     return RawReader.ecKeyPair.getPublic();
                 }));
+
         signatureTestVector(R.raw.r2048_rs256_cer_cbor,
                 new CBORX509Validator((certificatePath, algorithm) ->
                         assertTrue("cert", certificatePath[0].getPublicKey().equals(
                                 RawReader.rsaKeyPair.getPublic()))));
+/*
+        signatureTestVector(R.raw.ed25519_ed25519_pub_cbor,
+                new CBORAsymKeyValidator((optionalPublicKey, optionalKeyId, algorithm) -> {
+                    assertTrue("kid",
+                            optionalKeyId == null);
+                    return optionalPublicKey;
+                }));
+*/
+        Log.i("KURT", RawReader.ed25519CertPath[0].toString());
     }
 
     void encryptionTestVector(int resource,
@@ -357,6 +368,8 @@ public class InstrumentedTest {
                 }
             }
         }).validate(SIGNATURE_LABEL, signedData);
+
+      //  kpg = KeyPairGenerator.getInstance(java.security.spec.NamedParameterSpec.ED25519);
     }
 
     @Test
