@@ -1,5 +1,6 @@
 package org.webpki.androidcbordemo;
 
+import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.security.keystore.KeyProtection;
@@ -369,7 +370,9 @@ public class InstrumentedTest {
             }
         }).validate(SIGNATURE_LABEL, signedData);
 
-      //  kpg = KeyPairGenerator.getInstance(java.security.spec.NamedParameterSpec.ED25519);
+        if (Build.VERSION.SDK_INT >= 33) {
+            kpg = KeyPairGenerator.getInstance("ED25519", ANDROID_KEYSTORE);
+        }
     }
 
     @Test

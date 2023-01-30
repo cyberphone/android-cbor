@@ -16,6 +16,8 @@
  */
 package org.webpki.crypto;
 
+import androidx.annotation.RequiresApi;
+
 import java.io.IOException;
 
 import java.security.GeneralSecurityException;
@@ -47,7 +49,7 @@ import org.webpki.util.HexaDecimal;
 /**
  * Support methods for "OKP" [<a href='https://datatracker.ietf.org/doc/html/rfc8037'>RFC&nbsp;8037</a>].
  * 
- * Source configured for the JDK 17+ provider.
+ * Source configured for Android 13+
  */
 public class OkpSupport {
     
@@ -125,6 +127,7 @@ public class OkpSupport {
         return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(pkcs8));
     }
 
+    @RequiresApi(api = 33)
     public static KeyAlgorithms getKeyAlgorithm(Key key) {
         if (key instanceof XECKey) {
             return KeyAlgorithms.getKeyAlgorithmFromId(
