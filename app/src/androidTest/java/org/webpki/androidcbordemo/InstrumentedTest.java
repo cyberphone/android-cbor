@@ -371,7 +371,23 @@ public class InstrumentedTest {
         }).validate(SIGNATURE_LABEL, signedData);
 
         if (Build.VERSION.SDK_INT >= 33) {
-            kpg = KeyPairGenerator.getInstance("ED25519", ANDROID_KEYSTORE);
+            kpg = KeyPairGenerator.getInstance("EC", ANDROID_KEYSTORE);
+            final String alias = "ed25519-alias";
+            KeyGenParameterSpec keySpec = new KeyGenParameterSpec.Builder(alias,
+                    KeyProperties.PURPOSE_SIGN | KeyProperties.PURPOSE_VERIFY)
+                    .setAlgorithmParameterSpec(new ECGenParameterSpec("ed25519"))
+                    .setDigests(KeyProperties.DIGEST_NONE).build();
+            kpg.initialize(keySpec);
+            keyPair = kpg.generateKeyPair();
+            signedData =
+                new CBORAsymKeySigner(keyPair.getPrivate())
+                        .setPublicKey(keyPair.getPublic())
+                        .sign(SIGNATURE_LABEL,
+                                RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
+            Log.i("ED25", signedData.toString());
+/* As of 2023-01-30 there is no validation support in Android :(
+            new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
+*/
         }
     }
 
