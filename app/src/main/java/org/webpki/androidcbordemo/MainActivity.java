@@ -39,14 +39,15 @@ import org.webpki.cbor.CBORAsymKeyDecrypter;
 import org.webpki.cbor.CBORAsymKeyEncrypter;
 import org.webpki.cbor.CBORAsymKeySigner;
 import org.webpki.cbor.CBORAsymKeyValidator;
+import org.webpki.cbor.CBORBigInteger;
 import org.webpki.cbor.CBORBoolean;
-import org.webpki.cbor.CBORByteString;
+import org.webpki.cbor.CBORBytes;
 import org.webpki.cbor.CBORCryptoConstants;
 import org.webpki.cbor.CBORCryptoUtils;
 import org.webpki.cbor.CBORDecrypter;
 import org.webpki.cbor.CBORDiagnosticParser;
 import org.webpki.cbor.CBOREncrypter;
-import org.webpki.cbor.CBORFloatingPoint;
+import org.webpki.cbor.CBORDouble;
 import org.webpki.cbor.CBORHmacSigner;
 import org.webpki.cbor.CBORHmacValidator;
 import org.webpki.cbor.CBORInteger;
@@ -57,7 +58,7 @@ import org.webpki.cbor.CBORPublicKey;
 import org.webpki.cbor.CBORSigner;
 import org.webpki.cbor.CBORSymKeyDecrypter;
 import org.webpki.cbor.CBORSymKeyEncrypter;
-import org.webpki.cbor.CBORTextString;
+import org.webpki.cbor.CBORString;
 import org.webpki.cbor.CBORTypes;
 import org.webpki.cbor.CBORValidator;
 import org.webpki.cbor.CBORX509Decrypter;
@@ -255,24 +256,24 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("'CBOR Sample' yyyy-MM-dd'T'HH:mm:ss'Z'");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         return new CBORMap()
-                .setObject(++index, new CBORTextString(sdf.format(new Date().getTime())))
-                .setObject(++index, new CBORByteString(
+                .setObject(new CBORInteger(++index),
+                           new CBORString(sdf.format(new Date().getTime())))
+                .setObject(new CBORInteger(++index),
+                           new CBORBytes(
                         new byte[]{(byte)0x50, (byte)0x42, (byte)0x12, (byte)0x3a, (byte)0x65,
                                    (byte)0x93, (byte)0x60, (byte)0x16, (byte)0x3a, (byte)0xd8,
                                    (byte)0x84, (byte)0x71, (byte)0xf8, (byte)0xc0, (byte)0x89,
                                    (byte)0x91, (byte)0x3b}))
-                .setObject(++index, new CBORInteger(new BigInteger("-653625362513652165356656")))
-                .setObject(++index, new CBORArray()
+                .setObject(new CBORInteger(++index),
+                           new CBORBigInteger(new BigInteger("-653625362513652165356656")))
+                .setObject(new CBORInteger(++index), new CBORArray()
                         .addObject(new CBORNull())
                         .addObject(new CBORBoolean(true))
-                        .addObject(new CBORBoolean(false))
-                        )
-                .setObject(++index, new CBORArray()
-                        .addObject(new CBORFloatingPoint(0.0))
-                        .addObject(new CBORFloatingPoint(2.0000001e+38))
-                        .addObject(new CBORFloatingPoint(Double.NEGATIVE_INFINITY))
-                )
-                ;
+                        .addObject(new CBORBoolean(false)))
+                .setObject(new CBORInteger(++index), new CBORArray()
+                        .addObject(new CBORDouble(0.0))
+                        .addObject(new CBORDouble(2.0000001e+38))
+                        .addObject(new CBORDouble(Double.NEGATIVE_INFINITY)));
     }
 
     @JavascriptInterface
@@ -281,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
         CBORMap dataToSign = getStandardMessage();
         verifySignature(new CBORAsymKeySigner(RawReader.ecKeyPair.getPrivate())
                 .setPublicKey(RawReader.ecKeyPair.getPublic())
-                .sign(dataToSign.size() + 1, dataToSign).toString());
+                .sign(new CBORInteger(dataToSign.size() + 1), dataToSign).toString());
     }
 
     PublicKey publicKey;
@@ -452,9 +453,9 @@ public class MainActivity extends AppCompatActivity {
                     BigInteger value = csfLabel.getBigInteger();
                     value = value.compareTo(BigInteger.ZERO) >= 0 ?
                         value.add(BigInteger.ONE) : value.subtract(BigInteger.ONE);
-                    csfLabel = new CBORInteger(value);
+                    csfLabel = new CBORBigInteger(value);
                 } else {
-                    csfLabel = new CBORTextString("signature");
+                    csfLabel = new CBORString("signature");
                 }
             }
             CBORSigner signer;
@@ -473,7 +474,7 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     signer = new CBORHmacSigner(RawReader.secretKey,
                                                 HmacAlgorithms.HMAC_SHA256)
-                            .setKeyId(RawReader.secretKeyId);
+                            .setKeyId(new CBORString(RawReader.secretKeyId));
             }
             signer.setIntercepter(new CBORCryptoUtils.Intercepter() {
                 @Override

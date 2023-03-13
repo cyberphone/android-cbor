@@ -27,7 +27,7 @@ package org.webpki.cbor;
  * 64-bit items (Java double).
  * </p>
  */
-public class CBORFloatingPoint extends CBORObject {
+public class CBORDouble extends CBORObject {
 
     double value;
     
@@ -40,9 +40,9 @@ public class CBORFloatingPoint extends CBORObject {
     /**
      * Creates a CBOR <code>floating point</code>.
      * 
-     * @param value
+     * @param value The double
      */
-    public CBORFloatingPoint(double value) {
+    public CBORDouble(double value) {
         this.value = value;
 
         // Initial assumption: the number is a plain vanilla 64-bit double.

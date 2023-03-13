@@ -21,23 +21,12 @@ import java.io.IOException;
 import org.webpki.util.ArrayUtil;
 
 /**
- * Class for holding CBOR maps.
- * <p>
- * In addition to supporting the generic {@link CBORObject} type for key identifiers,
- * there are convenience methods for 
- * retrieving (<code>getObject</code>), 
- * setting (<code>setObject</code>),
- * testing (<code>hasKey</code>), and
- * removing (<code>removeObject</code>)
- * objects using the Java <code>String</code> and <code>int</code> types for key identifiers.
- * The latter maps to the CBOR <code>text&nbsp;string</code> and <code>integer</code>
- * type respectively.
- * </p>
+ * Class for holding <code>CBOR</code> map.
  */
 public class CBORMap extends CBORObject {
 
     boolean deterministicMode;
-    boolean constrainedMapKeys;
+    boolean constrainedKeys;
     Entry root;
     private Entry lastEntry;
 
@@ -107,32 +96,10 @@ public class CBORMap extends CBORObject {
         return false;
     }
 
-    /**
-     * Checks map for key presence.
-     * <p>
-     * See {@link #hasKey(CBORObject)} for details.
-     * </p>
-     * 
-     * @param key Key
-     * @return <code>true</code> if the key is present
-     */
-    public boolean hasKey(int key) {
-        return hasKey(new CBORInteger(key));
+    private CBORObject getKey(CBORObject key) {
+        nullCheck(key);
+        return key;
     }
-    
-    /**
-     * Checks map for key presence.
-     * <p>
-     * See {@link #hasKey(CBORObject)} for details.
-     * </p>
-     * 
-     * @param key Key
-     * @return <code>true</code> if the key is present
-     */
-    public boolean hasKey(String key) {
-        return hasKey(new CBORTextString(key));
-    }
-    
     /**
      * Sets map object.
      * <p>
@@ -145,10 +112,10 @@ public class CBORMap extends CBORObject {
      * @throws IOException
      */
     public CBORMap setObject(CBORObject key, CBORObject value) throws IOException {
-        if (constrainedMapKeys &&
-            key.getType() != CBORTypes.TEXT_STRING &&
-            (key.getType() != CBORTypes.INTEGER || !((CBORInteger)key).fitsAnInteger())) {
-                reportError(STDERR_CONSTRAINED_MAP_KEYS + key);
+        key = getKey(key);
+        nullCheck(value);
+        if (constrainedKeys && !key.getType().permittedConstrainedKey) {
+            reportError(STDERR_CONSTRAINED_KEYS + key);
         }
         Entry newEntry = new Entry(key, value);
         if (root == null) {
@@ -156,8 +123,8 @@ public class CBORMap extends CBORObject {
         } else {
             // Note: the keys are always sorted, making the verification process simple.
             // This is also the reason why the Java "TreeMap" was not used. 
-            if (constrainedMapKeys && lastEntry.key.getType() != key.getType()) {
-                reportError(STDERR_CONSTRAINED_MAP_KEYS + key);
+            if (constrainedKeys && lastEntry.key.getType() != key.getType()) {
+                reportError(STDERR_CONSTRAINED_KEYS + key);
             }
             if (deterministicMode) {
                 // Normal case for parsing.
@@ -168,7 +135,8 @@ public class CBORMap extends CBORObject {
                 }
                 lastEntry.next = newEntry;
              } else {
-                // Now we have to test and sort.
+                // Programmatically created key or the result of unconstrained parsing.
+                // Then we need to test and sort (always produce deterministic CBOR).
                 Entry  precedingEntry = null;
                 int diff = 0;
                 for (Entry entry = root; entry != null; entry = entry.next) {
@@ -199,38 +167,6 @@ public class CBORMap extends CBORObject {
         return this;
     }
 
-    /**
-     * Sets map object.
-     * <p>
-     * See {@link #setObject(CBORObject, CBORObject)} for details.
-     * </p>
-     * 
-     * @param key Key
-     * @param value Object
-     * @return <code>this</code>
-     * @throws IOException
-     */
-    public CBORMap setObject(int key, CBORObject value) throws IOException {
-        setObject(new CBORInteger(key), value);
-        return this;
-    }
-
-    /**
-     * Sets map object.
-     * <p>
-     * See {@link #setObject(CBORObject, CBORObject)} for details.
-     * </p>
-     * 
-     * @param key Key
-     * @param value Object
-     * @return <code>this</code>
-     * @throws IOException
-     */
-    public CBORMap setObject(String key, CBORObject value) throws IOException {
-        setObject(new CBORTextString(key), value);
-        return this;
-    }
-    
      /**
      * Retrieves map object.
      * <p>
@@ -242,7 +178,7 @@ public class CBORMap extends CBORObject {
      * @throws IOException
      */
     public CBORObject getObject(CBORObject key) throws IOException {
-        byte[] testKey = key.encode();
+        byte[] testKey = getKey(key).encode();
         for (Entry entry = root; entry != null; entry = entry.next) {
             if (entry.compare(testKey) == 0) {
                 return entry.value;
@@ -252,34 +188,6 @@ public class CBORMap extends CBORObject {
         return null;
     }
 
-    /**
-     * Retrieves map object.
-     * <p>
-     * See {@link #getObject(CBORObject)} for details.
-     * </p>
-     * 
-     * @param key Key
-     * @return Object
-     * @throws IOException
-     */
-    public CBORObject getObject(int key) throws IOException {
-        return getObject(new CBORInteger(key));
-    }
-    
-    /**
-     * Retrieves map object.
-     * <p>
-     * See {@link #getObject(CBORObject)} for details.
-     * </p>
-     * 
-     * @param key Key
-     * @return Object
-     * @throws IOException
-     */
-    public CBORObject getObject(String key) throws IOException {
-        return getObject(new CBORTextString(key));
-    }
-    
     /**
      * Removes mapped object.
      * <p>
@@ -291,7 +199,7 @@ public class CBORMap extends CBORObject {
      * @throws IOException
      */
     public CBORMap removeObject(CBORObject key) throws IOException {
-        byte[] testKey = key.encode();
+        byte[] testKey = getKey(key).encode();
         Entry precedingEntry = null;
         for (Entry entry = root; entry != null; entry = entry.next) {
             int diff = entry.compare(testKey);
@@ -309,36 +217,6 @@ public class CBORMap extends CBORObject {
         }
         reportError(STDERR_MISSING_KEY + key);
         return null;
-    }
-
-    /**
-     * Removes mapped object.
-     * <p>
-     * See {@link #removeObject(CBORObject)} for details.
-     * </p>
-     * 
-     * @param key Key
-     * @return <code>this</code>
-     * @throws IOException
-     */
-    public CBORMap removeObject(int key) throws IOException {
-        removeObject(new CBORInteger(key));
-        return this;
-    }
-
-    /**
-     * Removes mapped object.
-     * <p>
-     * See {@link #removeObject(CBORObject)} for details.
-     * </p>
-     * 
-     * @param key Key
-     * @return <code>this</code>
-     * @throws IOException
-     */
-    public CBORMap removeObject(String key) throws IOException {
-        removeObject(new CBORTextString(key));
-        return this;
     }
 
     /**
@@ -371,8 +249,8 @@ public class CBORMap extends CBORObject {
      * @return byte string
      * @throws IOException
      */
-    public byte[] readByteStringAndRemoveKey(CBORObject key) throws IOException {
-        byte[] data = getObject(key).getByteString();
+    public byte[] readBytesAndRemoveKey(CBORObject key) throws IOException {
+        byte[] data = getObject(getKey(key)).getBytes();
         removeObject(key);
         return data;
     }
@@ -392,8 +270,8 @@ public class CBORMap extends CBORObject {
      * @return <code>this</code>
      * @throws IOException
      */
-    public CBORMap setByteString(CBORObject key, byte[] byteString) throws IOException {
-        return setObject(key, new CBORByteString(byteString));
+    public CBORMap setBytes(CBORObject key, byte[] byteString) throws IOException {
+        return setObject(key, new CBORBytes(byteString));
     }
     
     @Override
@@ -423,7 +301,7 @@ public class CBORMap extends CBORObject {
         cborPrinter.endMap(notFirst);
     }
     
-    static final String STDERR_CONSTRAINED_MAP_KEYS = 
+    static final String STDERR_CONSTRAINED_KEYS = 
             "Constrained mode type error for map key: ";
     
     static final String STDERR_NON_DET_SORT_ORDER =

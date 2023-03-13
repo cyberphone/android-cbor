@@ -129,6 +129,7 @@ public class OkpSupport {
 
     @RequiresApi(api = 33)
     public static KeyAlgorithms getKeyAlgorithm(Key key) {
+/*
         if (key instanceof XECKey) {
             return KeyAlgorithms.getKeyAlgorithmFromId(
                     ((NamedParameterSpec)((XECKey)key).getParams()).getName(),
@@ -140,5 +141,10 @@ public class OkpSupport {
                     AlgorithmPreferences.JOSE);
         }
         throw new IllegalArgumentException("Unknown OKP key type: " + key.getClass().getName());
+*/
+
+        // Ugly fix while waiting for Google to implement everything...
+        return KeyAlgorithms.ED25519;
+
     }
 }

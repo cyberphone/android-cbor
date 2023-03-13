@@ -19,14 +19,14 @@ import org.webpki.cbor.CBORAsymKeyDecrypter;
 import org.webpki.cbor.CBORAsymKeyEncrypter;
 import org.webpki.cbor.CBORAsymKeySigner;
 import org.webpki.cbor.CBORAsymKeyValidator;
-import org.webpki.cbor.CBORByteString;
+import org.webpki.cbor.CBORBytes;
 import org.webpki.cbor.CBORCryptoConstants;
 import org.webpki.cbor.CBORCryptoUtils;
 import org.webpki.cbor.CBORHmacValidator;
 import org.webpki.cbor.CBORMap;
 import org.webpki.cbor.CBORObject;
+import org.webpki.cbor.CBORString;
 import org.webpki.cbor.CBORSymKeyDecrypter;
-import org.webpki.cbor.CBORTextString;
 import org.webpki.cbor.CBORValidator;
 import org.webpki.cbor.CBORX509Signer;
 import org.webpki.cbor.CBORX509Validator;
@@ -81,7 +81,7 @@ public class InstrumentedTest {
     static String KEY_1 = "key-1";
     static String KEY_2 = "key-2";
 
-    static String SIGNATURE_LABEL = "signature";
+    static CBORString SIGNATURE_LABEL = new CBORString("signature");
 
     boolean useKeyId;
     int noPublicKey;
@@ -93,7 +93,7 @@ public class InstrumentedTest {
         boolean wantPublicKey = (noPublicKey++ % 3) != 0 && !useKeyId;
         CBORObject encrypted = new CBORAsymKeyEncrypter(keyPair.getPublic(), kea, cea)
                 .setPublicKeyOption(wantPublicKey)
-                .setKeyId(useKeyId ? new CBORTextString(KEY_1) : null)
+                .setKeyId(useKeyId ? new CBORString(KEY_1) : null)
                 .encrypt(dataToEncrypt);
         // Simple decryption
         assertTrue("enc1",
@@ -113,7 +113,7 @@ public class InstrumentedTest {
                 assertTrue("kea", kea == keyEncryptionAlgorithm);
                 assertTrue("cea", cea == contentEncryptionAlgorithm);
                 assertTrue("keyid", optionalKeyId == null ?
-                        !useKeyId : useKeyId == true && optionalKeyId.getTextString().equals(KEY_1));
+                        !useKeyId : useKeyId == true && optionalKeyId.getString().equals(KEY_1));
                 assertTrue("pub", wantPublicKey ?
                         optionalPublicKey.equals(keyPair.getPublic()) : optionalPublicKey == null);
                 return keyPair.getPrivate();
@@ -141,7 +141,7 @@ public class InstrumentedTest {
         signatureTestVector(R.raw.p256_es256_kid_cbor,
                 new CBORAsymKeyValidator((optionalPublicKey, optionalKeyId, algorithm) -> {
                     assertTrue("kid",
-                            RawReader.ecKeyId.equals(optionalKeyId.getTextString()) &&
+                            RawReader.ecKeyId.equals(optionalKeyId.getString()) &&
                                     optionalPublicKey == null);
                     return RawReader.ecKeyPair.getPublic();
                 }));
@@ -190,19 +190,19 @@ public class InstrumentedTest {
                                   (publicKey == null && optionalPublicKey == null) ||
                                           (publicKey != null && publicKey.equals(optionalPublicKey)));
                           assertTrue("KID", (keyId == null && optionalKeyId == null) ||
-                                  (keyId != null && keyId.equals(optionalKeyId.getTextString())));
+                                  (keyId != null && keyId.equals(optionalKeyId.getString())));
                           return privateKey;
                       }
                   }).setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null).decrypt(encryptionObject)));
-        byte[] tag = cefContainer.readByteStringAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
-        cefContainer.setObject(CBORCryptoConstants.TAG_LABEL, new CBORByteString(tag));
+        byte[] tag = cefContainer.readBytesAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
+        cefContainer.setObject(CBORCryptoConstants.TAG_LABEL, new CBORBytes(tag));
         new CBORAsymKeyDecrypter(privateKey)
                 .setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
                 .decrypt(encryptionObject);
 
-        tag = cefContainer.readByteStringAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
+        tag = cefContainer.readBytesAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
         tag[5]++;
-        cefContainer.setObject(CBORCryptoConstants.TAG_LABEL, new CBORByteString(tag));
+        cefContainer.setObject(CBORCryptoConstants.TAG_LABEL, new CBORBytes(tag));
         try {
             new CBORAsymKeyDecrypter(privateKey)
                     .setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
@@ -237,7 +237,7 @@ public class InstrumentedTest {
                                  ContentEncryptionAlgorithms contentEncryptionAlgorithm)
                     throws IOException, GeneralSecurityException {
                 assertTrue("kid",
-                        optionalKeyId.getTextString().equals(RawReader.secretKeyId));
+                        optionalKeyId.getString().equals(RawReader.secretKeyId));
                 return RawReader.secretKey;
             }
         }).decrypt(CBORObject.decode(
@@ -293,12 +293,12 @@ public class InstrumentedTest {
         new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
         byte[] signature =
         signedData.getMap().getObject(SIGNATURE_LABEL)
-                .getMap().readByteStringAndRemoveKey(CBORCryptoConstants.SIGNATURE_LABEL);
+                .getMap().readBytesAndRemoveKey(CBORCryptoConstants.SIGNATURE_LABEL);
         signature[5]++;
         try {
             signedData.getMap().getObject(SIGNATURE_LABEL)
                     .getMap().setObject(CBORCryptoConstants.SIGNATURE_LABEL,
-                                        new CBORByteString(signature));
+                                        new CBORBytes(signature));
             new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
             fail("must not");
         } catch (Exception e) { }
