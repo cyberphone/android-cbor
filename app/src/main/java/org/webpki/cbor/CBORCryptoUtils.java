@@ -187,7 +187,7 @@ public class CBORCryptoUtils {
             CBORTag tag = container.getTag();
             container = tag.object;
             if (tag.tagNumber == CBORTag.RESERVED_TAG_COTX) {
-                container = container.getArray().getObject(1);
+                container = container.getArray(2).getObject(1);
             }
             if (callBackOrNull != null) {
                 callBackOrNull.foundData(tag);
@@ -253,14 +253,13 @@ public class CBORCryptoUtils {
         if (!keyEncryptionAlgorithm.isRsa()) {
             // ECDH-ES requires the ephemeral public key
             keyEncryption.setObject(EPHEMERAL_KEY_LABEL,
-                                    CBORPublicKey.encode(
+                                    CBORPublicKey.convert(
                                         asymmetricEncryptionResult.getEphemeralKey()));
         }
         if (keyEncryptionAlgorithm.isKeyWrap()) {
             // Encrypted key
             keyEncryption.setObject(CIPHER_TEXT_LABEL,
-                                    new CBORBytes(
-                                        asymmetricEncryptionResult.getEncryptedKey()));
+                                    new CBORBytes(asymmetricEncryptionResult.getEncryptedKey()));
         }
         return asymmetricEncryptionResult.getContentEncryptionKey();
     }
@@ -284,7 +283,7 @@ public class CBORCryptoUtils {
             EncryptionCore.receiverKeyAgreement(true,
                                                 keyEncryptionAlgorithm,
                                                 contentEncryptionAlgorithm,
-                                                CBORPublicKey.decode(
+                                                CBORPublicKey.convert(
                                                     innerObject.getObject(EPHEMERAL_KEY_LABEL)),
                                                 privateKey,
                                                 encryptedKey);

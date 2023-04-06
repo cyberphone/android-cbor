@@ -22,9 +22,10 @@ import org.webpki.util.ArrayUtil;
 
 /**
  * Class for holding CBOR <code>big&nbsp;integer</code>.
- * 
+ * <p>
  * Note that the encoder is adaptive, selecting the shortest possible
  * representation in order to produce a fully deterministic result.
+ * </p>
  */
 public class CBORBigInteger extends CBORObject {
 
@@ -39,9 +40,9 @@ public class CBORBigInteger extends CBORObject {
     /**
      * Creates a CBOR integer value of any size.
      * <p>
-     * If <code>value</code> is within the CBOR <code>integer</code> range,
-     * the <code>integer</code> type will be used, otherwise serializations
-     * will use the <code>big&nbsp;integer</code> type.
+     * Note: if the <code>value</code> is within the CBOR <code>integer</code> range,
+     * <code>integer</code> encoding will be used, otherwise the <code>value</code>
+     * will be encoded as a CBOR <code>big&nbsp;integer</code>.
      * </p>
      * 
      * @param value Integer in BigInteger format

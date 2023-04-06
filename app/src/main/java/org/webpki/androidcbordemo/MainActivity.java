@@ -45,7 +45,7 @@ import org.webpki.cbor.CBORBytes;
 import org.webpki.cbor.CBORCryptoConstants;
 import org.webpki.cbor.CBORCryptoUtils;
 import org.webpki.cbor.CBORDecrypter;
-import org.webpki.cbor.CBORDiagnosticParser;
+import org.webpki.cbor.CBORDiagnosticNotationDecoder;
 import org.webpki.cbor.CBOREncrypter;
 import org.webpki.cbor.CBORDouble;
 import org.webpki.cbor.CBORHmacSigner;
@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
     public void doVerify(String cborData) {
         try {
             // Normally you SHOULD know what to expect so this code is a bit over-the-top
-            CBORObject signedData = CBORDiagnosticParser.parse(cborData);
+            CBORObject signedData = CBORDiagnosticNotationDecoder.decode(cborData);
             CBORMap coreMap = unwrapOptionalTag(signedData);
             CBORObject csfLabel = null;
             publicKey = null;
@@ -334,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
                 PublicKey tempPublicKey = null;
                 if (csfCandidate.hasKey(CBORCryptoConstants.PUBLIC_KEY_LABEL)) {
                     try {
-                        tempPublicKey = CBORPublicKey.decode(
+                        tempPublicKey = CBORPublicKey.convert(
                                 csfCandidate.getObject(CBORCryptoConstants.PUBLIC_KEY_LABEL));
                     } catch (Exception e) {
                         continue;
@@ -444,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
     public void doSign(String cborData, String keyType) {
         try {
             KEY_TYPES sigType = KEY_TYPES.valueOf(keyType);
-            final CBORObject dataToBeSigned = CBORDiagnosticParser.parse(cborData);
+            final CBORObject dataToBeSigned = CBORDiagnosticNotationDecoder.decode(cborData);
             CBORMap cborMap = unwrapOptionalTag(dataToBeSigned);
             CBORObject csfLabel = new CBORInteger(0);
             if (cborMap.size() > 0) {
@@ -566,7 +566,7 @@ public class MainActivity extends AppCompatActivity {
     @JavascriptInterface
     public void doDecrypt(String cborEncryptionObject) {
         try {
-            CBORObject cefObject = CBORDiagnosticParser.parse(cborEncryptionObject);
+            CBORObject cefObject = CBORDiagnosticNotationDecoder.decode(cborEncryptionObject);
             CBORMap cefMap = unwrapOptionalTag(cefObject);
             CBORDecrypter decrypter;
             String encryptionInfo;

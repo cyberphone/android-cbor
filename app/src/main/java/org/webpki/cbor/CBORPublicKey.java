@@ -43,7 +43,9 @@ import static org.webpki.cbor.CBORCryptoConstants.*;
 
 /**
  * Class handling CBOR/COSE public keys.
- * 
+ * <p>
+ * See {@link CBORKeyPair}.
+ * </p>
  */
 public class CBORPublicKey {
     
@@ -115,7 +117,7 @@ public class CBORPublicKey {
      * @throws IOException
      * @throws GeneralSecurityException
      */
-    public static CBORMap encode(PublicKey jcePublicKey) 
+    public static CBORMap convert(PublicKey jcePublicKey) 
             throws IOException, GeneralSecurityException {
         CBORMap cosePublicKey = new CBORMap();
         KeyAlgorithms keyAlg = KeyAlgorithms.getKeyAlgorithm(jcePublicKey);
@@ -124,26 +126,24 @@ public class CBORPublicKey {
                 RSAPublicKey rsaPublicKey = (RSAPublicKey) jcePublicKey;
                 cosePublicKey.setObject(COSE_KTY_LABEL, COSE_RSA_KTY)
                              .setBytes(COSE_RSA_N_LABEL,
-                                            cryptoBinary(rsaPublicKey.getModulus()))
+                                       cryptoBinary(rsaPublicKey.getModulus()))
                              .setBytes(COSE_RSA_E_LABEL, 
-                                            cryptoBinary(rsaPublicKey.getPublicExponent()));
+                                       cryptoBinary(rsaPublicKey.getPublicExponent()));
                 break;
     
             case EC:
                 ECPoint ecPoint = ((ECPublicKey) jcePublicKey).getW();
                 cosePublicKey.setObject(COSE_KTY_LABEL, COSE_EC2_KTY)
                              .setObject(COSE_EC2_CRV_LABEL, WEBPKI_2_COSE_CRV.get(keyAlg))
-                             .setBytes(COSE_EC2_X_LABEL,
-                                            curvePoint(ecPoint.getAffineX(), keyAlg))
-                             .setBytes(COSE_EC2_Y_LABEL,
-                                            curvePoint(ecPoint.getAffineY(), keyAlg));
+                             .setBytes(COSE_EC2_X_LABEL, curvePoint(ecPoint.getAffineX(), keyAlg))
+                             .setBytes(COSE_EC2_Y_LABEL, curvePoint(ecPoint.getAffineY(), keyAlg));
                 break;
      
             default:  // EDDSA and XEC
                 cosePublicKey.setObject(COSE_KTY_LABEL, COSE_OKP_KTY)
                              .setObject(COSE_OKP_CRV_LABEL, WEBPKI_2_COSE_CRV.get(keyAlg))
                              .setBytes(COSE_OKP_X_LABEL,
-                                            OkpSupport.public2RawKey(jcePublicKey, keyAlg));
+                                       OkpSupport.public2RawKey(jcePublicKey, keyAlg));
         }
         return cosePublicKey;
     }
@@ -226,7 +226,7 @@ public class CBORPublicKey {
      * @throws IOException
      * @throws GeneralSecurityException
      */
-    public static PublicKey decode(CBORObject cosePublicKey) 
+    public static PublicKey convert(CBORObject cosePublicKey) 
             throws IOException, GeneralSecurityException {
         CBORMap publicKeyMap = cosePublicKey.getMap();
         PublicKey publicKey = getPublicKey(publicKeyMap);

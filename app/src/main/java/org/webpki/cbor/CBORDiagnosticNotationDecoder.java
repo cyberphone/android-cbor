@@ -22,40 +22,44 @@ import java.math.BigInteger;
 
 import java.util.ArrayList;
 
+import java.util.Base64;
+
 /**
  * Class for converting diagnostic CBOR to CBOR.
  */
-public class CBORDiagnosticParser {
+public class CBORDiagnosticNotationDecoder {
+
+    private static final Base64.Decoder b64Decoder = Base64.getDecoder();
 
     char[] cborDiagnostic;
     int index;
     boolean sequence;
     
-    CBORDiagnosticParser(String cborDiagnostic, boolean sequence) {
+    CBORDiagnosticNotationDecoder(String cborDiagnostic, boolean sequence) {
         this.cborDiagnostic = cborDiagnostic.toCharArray();
         this.sequence = sequence;
     }
     
     /**
-     * Parse Diagnostic CBOR to CBOR.
+     * Decodes diagnostic notation CBOR to CBOR.
      * 
      * @param cborDiagnostic String holding diagnostic (textual) CBOR
-     * @return CBORObject
+     * @return {@link CBORObject}
      * @throws IOException
      */
-    public static CBORObject parse(String cborDiagnostic) throws IOException {
-        return new CBORDiagnosticParser(cborDiagnostic, false).readToEOF();
+    public static CBORObject decode(String cborDiagnostic) throws IOException {
+        return new CBORDiagnosticNotationDecoder(cborDiagnostic, false).readToEOF();
     }
 
     /**
-     * Parse Diagnostic CBOR sequence to array of CBOR.
+     * Decodes diagnostic notation CBOR sequence to CBOR.
      * 
      * @param cborDiagnostic String holding diagnostic (textual) CBOR
-     * @return CBORObject[] Non-empty array of CBOR objects
+     * @return {@link CBORObject}[] Non-empty array of CBOR objects
      * @throws IOException
      */
-    public static CBORObject[] parseSequence(String cborDiagnostic) throws IOException {
-        return new CBORDiagnosticParser(cborDiagnostic, true).readSequenceToEOF();
+    public static CBORObject[] decodeSequence(String cborDiagnostic) throws IOException {
+        return new CBORDiagnosticNotationDecoder(cborDiagnostic, true).readSequenceToEOF();
     }
 
     private void reportError(String error) throws IOException {
@@ -139,7 +143,6 @@ public class CBORDiagnosticParser {
         return false;
     }
     
-    @SuppressWarnings("fallthrough")
     private CBORObject getRawObject() throws IOException {
         switch (readChar()) {
         
@@ -173,11 +176,22 @@ public class CBORDiagnosticParser {
                 }
                 return map;
        
-            case '"':
-                return getString();
+            case '\'':
+                return getString(true);
                 
+            case '"':
+                return getString(false);
+
             case 'h':
-                return getBytes();
+                return getBytes(false);
+
+            case 'b':
+                if (nextChar() == '3') {
+                    scanFor("32'");
+                    reportError("b32 not implemented");
+                }
+                scanFor("64");
+                return getBytes(true);
                 
             case 't':
                 scanFor("rue");
@@ -192,10 +206,11 @@ public class CBORDiagnosticParser {
                 return new CBORNull();
 
             case '-':
-                if (nextChar() == 'I') {
-                    scanFor("Infinity");
-                    return new CBORDouble(Double.NEGATIVE_INFINITY);
+                if (readChar() == 'I') {
+                    scanFor("nfinity");
+                    return new CBORFloatingPoint(Double.NEGATIVE_INFINITY);
                 }
+                return getNumberOrTag(true);
 
             case '0':
             case '1':
@@ -207,17 +222,15 @@ public class CBORDiagnosticParser {
             case '7':
             case '8':
             case '9':
-
-            case '+':
-                return getNumberOrTag();
+               return getNumberOrTag(false);
 
             case 'N':
                 scanFor("aN");
-                return new CBORDouble(Double.NaN);
+                return new CBORFloatingPoint(Double.NaN);
 
             case 'I':
                 scanFor("nfinity");
-                return new CBORDouble(Double.POSITIVE_INFINITY);
+                return new CBORFloatingPoint(Double.POSITIVE_INFINITY);
                 
             default:
                 index--;
@@ -226,32 +239,63 @@ public class CBORDiagnosticParser {
         }
     }
 
-    private CBORObject getNumberOrTag() throws IOException {
+    private CBORObject getNumberOrTag(boolean negative) throws IOException {
         StringBuilder token = new StringBuilder();
         index--;
-        char c;
-        boolean floatingPoint = false;
-        do  {
-            token.append(readChar());
-            c = nextChar();
-            if (c == '.' || c == 'e' || c == 'E') {
-                floatingPoint = true;
-                c = '0';
+        boolean hexFlag = false;
+        if (readChar() == '0') {
+            if (nextChar() == 'x') {
+                hexFlag = true;
+                readChar();
             }
-        } while ((c >= '0' && c <= '9') || c == '+'  || c == '-');
+        }
+        if (!hexFlag) {
+            index--;
+        }
+        boolean floatingPoint = false;
+        while (true)  {
+            token.append(readChar());
+            switch (nextChar()) {
+                case 0:
+                case ' ':
+                case '\n':
+                case '\r':
+                case '\t':
+                case ',':
+                case ':':
+                case '>':
+                case ']':
+                case '}':
+                case '/':
+                case '#':
+                case '(':
+                case ')':
+                    break;
+                    
+                case '.':
+                    floatingPoint = true;
+                    continue;
+
+                default:
+                    continue;
+            }
+            break;
+        }
         String number = token.toString();
         try {
             if (floatingPoint) {
+                testForHex(hexFlag);
                 Double value = Double.valueOf(number);
                 // Implicit overflow is not permitted
                 if (value.isInfinite()) {
                     reportError("Floating point value out of range");
                 }
-                return new CBORDouble(value);
+                return new CBORFloatingPoint(negative ? -value : value);
             }
-            if (c == '(') {
-                // Do not accept '+', '-', or leading zeros
-                if (number.charAt(0) < '0' || (number.charAt(0) == '0' && number.length() > 1)) {
+            if (nextChar() == '(') {
+                // Do not accept '-', 0xhhh, or leading zeros
+                testForHex(hexFlag);
+                if (negative || (number.length() > 1 && number.charAt(0) == '0')) {
                     reportError("Tag syntax error");
                 }
                 readChar();
@@ -265,17 +309,24 @@ public class CBORDiagnosticParser {
                         reportError("Special tag " + CBORTag.RESERVED_TAG_COTX + " syntax error");
                     }
                 }
-                CBORTag cborTag = 
-                        new CBORTag(tagNumber, taggedObject);
+                CBORTag cborTag = new CBORTag(tagNumber, taggedObject);
                 scanFor(")");
                 return cborTag;
             }
+            BigInteger bigInteger = new BigInteger(number, hexFlag ? 16 : 10);
             // Slight quirk to get the proper CBOR integer type  
-            return CBORObject.decode(new CBORBigInteger(new BigInteger(number)).encode());
+            return CBORObject.decode(new CBORBigInteger(negative ? 
+                                             bigInteger.negate() : bigInteger).encode());
         } catch (IllegalArgumentException e) {
             reportError(e.getMessage());
         }
         return null; // For the compiler...
+    }
+
+    private void testForHex(boolean hexFlag) throws IOException {
+        if (hexFlag) {
+            reportError("Hexadecimal not permitted here");
+        }
     }
 
     private char nextChar() throws IOException {
@@ -298,13 +349,23 @@ public class CBORDiagnosticParser {
         }
     }
 
-    private CBORObject getString() throws IOException {
+    private CBORObject getString(boolean byteString) throws IOException {
         StringBuilder s = new StringBuilder();
         while (true) {
             char c;
             switch (c = readChar()) {
+                // Multiline extension
+                case '\n':
+                case '\r':
+                case '\t':
+                    break;
+
                 case '\\':
                     switch (c = readChar()) {
+                        case '\n':
+                            continue;
+
+                        case '\'':
                         case '"':
                         case '\\':
                             break;
@@ -342,7 +403,16 @@ public class CBORDiagnosticParser {
                     break;
  
                 case '"':
-                    return new CBORString(s.toString());
+                    if (!byteString) {
+                        return new CBORString(s.toString());
+                    }
+                    break;
+
+                case '\'':
+                    if (byteString) {
+                        return new CBORBytes(s.toString().getBytes("utf-8"));
+                    }
+                    break;
                     
                 default:
                     if (c < ' ') {
@@ -353,23 +423,40 @@ public class CBORDiagnosticParser {
         }
     }
     
-    private CBORObject getBytes() throws IOException {
+    private CBORObject getBytes(boolean b64) throws IOException {
         StringBuilder s = new StringBuilder();
         scanFor("'");
-        char c;
-        while ((c = readChar()) != '\'') {
-            s.append(hexCharToChar(c));
+        while(true) {
+            char c;
+            switch (c = readChar()) {
+                case '\'':
+                    break;
+               
+                case ' ':
+                case '\r':
+                case '\n':
+                case '\t':
+                    continue;
+
+                default:
+                    s.append(b64 ? c : hexCharToChar(c));
+                    continue;
+            }
+            break;
         }
-        String hex = s.toString();
-        int l = hex.length();
-        if ((l & 1) != 0) {
+        String encoded = s.toString();
+        if (b64) {
+            return new CBORBytes(b64Decoder.decode(encoded.replace('-', '+').replace('_', '/')));
+        }
+        int length = encoded.length();
+        if ((length & 1) != 0) {
             reportError("Uneven number of hex characters");
         }
-        byte[] bytes = new byte[l >> 1];
+        byte[] bytes = new byte[length >> 1];
         int q = 0;
         int i = 0;
-        while (q < l) {
-            bytes[i++] = (byte)((hex.charAt(q++) << 4) + hex.charAt(q++));
+        while (q < length) {
+            bytes[i++] = (byte)((encoded.charAt(q++) << 4) + encoded.charAt(q++));
         }
         return new CBORBytes(bytes);
     }
@@ -410,6 +497,12 @@ public class CBORDiagnosticParser {
                 case '/':
                     readChar();
                     while (readChar() != '/') {
+                    }
+                    continue;
+                    
+                case '#':
+                    readChar();
+                    while (index < cborDiagnostic.length && readChar() != '\n') {
                     }
                     continue;
 
