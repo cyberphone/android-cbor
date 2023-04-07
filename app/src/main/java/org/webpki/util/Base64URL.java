@@ -21,7 +21,7 @@ package org.webpki.util;
  * See RFC 4648 Table 2.
  */
 public class Base64URL {
-    
+
     private Base64URL() {}  // No instantiation please
 
     /**
