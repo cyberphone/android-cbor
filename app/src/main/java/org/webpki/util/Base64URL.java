@@ -29,6 +29,9 @@ public class Base64URL {
      * <p>
      * This method <b>does not</b> accept padding.
      * </p>
+     * <p>
+     * Note that line wraps are <b>not</p> permitted.
+     * </p>
      *
      * @param base64url Encoded data
      * @return Decoded data as a byte array
@@ -45,7 +48,10 @@ public class Base64URL {
      * <p>
      * This method accepts <i>optional</i> padding.
      * </p>
-     *
+     * <p>
+     * Note that line wraps are <b>not</p> permitted.
+     * </p>
+     * 
      * @param base64url Encoded data
      * @return Decoded data as a byte array
      */
@@ -56,7 +62,7 @@ public class Base64URL {
     /**
      * Converts a byte array to a base64url String.
      * <p>
-     * This method adds no padding.
+     * This method adds no padding or line wraps.
      * </p>
      *
      * @param byteArray Binary data
