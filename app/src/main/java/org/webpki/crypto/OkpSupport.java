@@ -35,22 +35,14 @@ import java.security.spec.X509EncodedKeySpec;
 
 import java.util.HashMap;
 
-import org.webpki.asn1.ASN1Integer;
-import org.webpki.asn1.ASN1ObjectID;
-import org.webpki.asn1.ASN1OctetString;
-import org.webpki.asn1.ASN1Sequence;
-import org.webpki.asn1.BaseASN1Object;
-import org.webpki.asn1.DerDecoder;
-import org.webpki.asn1.ParseUtil;
-
 import org.webpki.util.ArrayUtil;
 import org.webpki.util.HexaDecimal;
 
+// Source configured for Android 13+
+
 /**
  * Support methods for "OKP" [<a href='https://datatracker.ietf.org/doc/html/rfc8037'>RFC&nbsp;8037</a>].
- * 
- * Source configured for Android 13+
- */
+ */ 
 public class OkpSupport {
     
     private OkpSupport() {}
@@ -64,26 +56,38 @@ public class OkpSupport {
         okpKeyLength.put(KeyAlgorithms.X448,    56);
     }
 
-    static final HashMap<KeyAlgorithms,byte[]> okpPrefix = new HashMap<>();
+    static final HashMap<KeyAlgorithms,byte[]> pubKeyPrefix = new HashMap<>();
+    
+    static {
+        pubKeyPrefix.put(KeyAlgorithms.ED25519, 
+                         HexaDecimal.decode("302a300506032b6570032100"));
+        pubKeyPrefix.put(KeyAlgorithms.ED448,
+                         HexaDecimal.decode("3043300506032b6571033a00"));
+        pubKeyPrefix.put(KeyAlgorithms.X25519,
+                         HexaDecimal.decode("302a300506032b656e032100"));
+        pubKeyPrefix.put(KeyAlgorithms.X448,
+                         HexaDecimal.decode("3042300506032b656f033900"));
+    }
+
+    static final byte PRIV_KEY_LENGTH = 15;
+
+    static final HashMap<KeyAlgorithms,byte[]> privKeyPrefix = new HashMap<>();
 
     static {
-        try {
-            okpPrefix.put(KeyAlgorithms.ED25519, 
-                          HexaDecimal.decode("302a300506032b6570032100"));
-            okpPrefix.put(KeyAlgorithms.ED448,
-                          HexaDecimal.decode("3043300506032b6571033a00"));
-            okpPrefix.put(KeyAlgorithms.X25519,
-                          HexaDecimal.decode("302a300506032b656e032100"));
-            okpPrefix.put(KeyAlgorithms.X448,
-                          HexaDecimal.decode("3042300506032b656f033900"));
-        } catch (Exception e) {
-        }
+        privKeyPrefix.put(KeyAlgorithms.ED25519, 
+                          HexaDecimal.decode("302e020100300506032b657004220420"));
+        privKeyPrefix.put(KeyAlgorithms.ED448,
+                          HexaDecimal.decode("3047020100300506032b6571043b0439"));
+        privKeyPrefix.put(KeyAlgorithms.X25519,
+                          HexaDecimal.decode("302e020100300506032b656e04220420"));
+        privKeyPrefix.put(KeyAlgorithms.X448,
+                          HexaDecimal.decode("3046020100300506032b656f043a0438"));
     }
 
     public static byte[] public2RawKey(PublicKey publicKey, KeyAlgorithms keyAlgorithm)
             throws IOException {
         byte[] encoded = publicKey.getEncoded();
-        int prefixLength = okpPrefix.get(keyAlgorithm).length;
+        int prefixLength = pubKeyPrefix.get(keyAlgorithm).length;
         if (okpKeyLength.get(keyAlgorithm) != encoded.length - prefixLength) {
             throw new IOException("Wrong public key length for: " + keyAlgorithm.toString());
         }
@@ -100,36 +104,34 @@ public class OkpSupport {
         return KeyFactory.getInstance(keyAlgorithm.getJceName())
                 .generatePublic(
                         new X509EncodedKeySpec(
-                                ArrayUtil.add(okpPrefix.get(keyAlgorithm), x)));
+                                ArrayUtil.add(pubKeyPrefix.get(keyAlgorithm), x)));
     }
 
     public static byte[] private2RawKey(PrivateKey privateKey, KeyAlgorithms keyAlgorithm) 
             throws IOException {
-        byte[] rawKey = ParseUtil.octet(
-                DerDecoder.decode(
-                        ParseUtil.octet(
-                                ParseUtil.sequence(
-                                        DerDecoder.decode(privateKey.getEncoded())).get(2))));
-        if (okpKeyLength.get(keyAlgorithm) != rawKey.length) {
+        byte[] encoded = privateKey.getEncoded();
+        int keyLength = okpKeyLength.get(keyAlgorithm);
+        byte[] prefix = privKeyPrefix.get(keyAlgorithm);
+        if (encoded.length <= prefix.length || encoded[PRIV_KEY_LENGTH] != keyLength) {
             throw new IOException("Wrong private key length for: " + keyAlgorithm.toString());
         }
+        byte[] rawKey = new byte[keyLength];
+        System.arraycopy(encoded, prefix.length, rawKey, 0, keyLength);
         return rawKey;
     }
 
     public static PrivateKey raw2PrivateKey(byte[] d, KeyAlgorithms keyAlgorithm)
             throws IOException, GeneralSecurityException {
         KeyFactory keyFactory = KeyFactory.getInstance(keyAlgorithm.getJceName());
-        byte[] pkcs8 = new ASN1Sequence(new BaseASN1Object[] {
-            new ASN1Integer(0),
-            new ASN1Sequence(new ASN1ObjectID(keyAlgorithm.getECDomainOID())),
-            new ASN1OctetString(new ASN1OctetString(d).encode())
-        }).encode();
+        if (okpKeyLength.get(keyAlgorithm) != d.length) {
+            throw new IOException("Wrong private key length for: " + keyAlgorithm.toString());
+        }
+        byte[] pkcs8 = ArrayUtil.add(privKeyPrefix.get(keyAlgorithm), d);
         return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(pkcs8));
     }
 
     @RequiresApi(api = 33)
     public static KeyAlgorithms getKeyAlgorithm(Key key) {
-/*
         if (key instanceof XECKey) {
             return KeyAlgorithms.getKeyAlgorithmFromId(
                     ((NamedParameterSpec)((XECKey)key).getParams()).getName(),
@@ -140,11 +142,10 @@ public class OkpSupport {
                     ((EdECKey)key).getParams().getName(),
                     AlgorithmPreferences.JOSE);
         }
+        // Saturn ugly fix while waiting for for EdDSA support.
+        if (key.getAlgorithm().equals("1.3.101.112")) {
+            return KeyAlgorithms.ED25519;
+        }
         throw new IllegalArgumentException("Unknown OKP key type: " + key.getClass().getName());
-*/
-
-        // Ugly fix while waiting for Google to implement everything...
-        return KeyAlgorithms.ED25519;
-
     }
 }

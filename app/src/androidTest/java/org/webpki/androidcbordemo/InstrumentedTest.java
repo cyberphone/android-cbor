@@ -36,6 +36,7 @@ import org.webpki.crypto.ContentEncryptionAlgorithms;
 import org.webpki.crypto.KeyAlgorithms;
 import org.webpki.crypto.KeyEncryptionAlgorithms;
 
+import org.webpki.crypto.OkpSupport;
 import org.webpki.util.ArrayUtil;
 
 import java.io.IOException;
@@ -385,6 +386,11 @@ public class InstrumentedTest {
                         .sign(SIGNATURE_LABEL,
                                 RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
             Log.i("ED25", signedData.toString());
+            Log.i("ED25", KeyAlgorithms.getKeyAlgorithm(keyPair.getPublic()).toString());
+            Log.i("ED25", "L=" +OkpSupport.public2RawKey(keyPair.getPublic(),
+                                                         KeyAlgorithms.getKeyAlgorithm(
+                                                                 keyPair.getPublic())).length);
+            Log.i("ED25", "PK=" + keyPair.getPublic().getClass().getCanonicalName());
 /* As of 2023-01-30 there is no validation support in Android :(
             new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
 */

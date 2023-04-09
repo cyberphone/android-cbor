@@ -28,11 +28,11 @@ import java.security.cert.CertificateFactory;
 
 import java.security.GeneralSecurityException;
 
+// Source configured for the free-standing Android CBOR/JSON libraries.
+
 /**
- * X509 related operations.
- * 
- * Source configured for the free-standing Android JSON library.
- */
+ * X509 certificate related operations.
+ */ 
 public class CertificateUtil {
 
     private CertificateUtil() {}  // No instantiation please
