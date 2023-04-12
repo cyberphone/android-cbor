@@ -47,7 +47,7 @@ import org.webpki.cbor.CBORCryptoUtils;
 import org.webpki.cbor.CBORDecrypter;
 import org.webpki.cbor.CBORDiagnosticNotationDecoder;
 import org.webpki.cbor.CBOREncrypter;
-import org.webpki.cbor.CBORDouble;
+import org.webpki.cbor.CBORFloatingPoint;
 import org.webpki.cbor.CBORHmacSigner;
 import org.webpki.cbor.CBORHmacValidator;
 import org.webpki.cbor.CBORInteger;
@@ -271,9 +271,9 @@ public class MainActivity extends AppCompatActivity {
                         .addObject(new CBORBoolean(true))
                         .addObject(new CBORBoolean(false)))
                 .setObject(new CBORInteger(++index), new CBORArray()
-                        .addObject(new CBORDouble(0.0))
-                        .addObject(new CBORDouble(2.0000001e+38))
-                        .addObject(new CBORDouble(Double.NEGATIVE_INFINITY)));
+                        .addObject(new CBORFloatingPoint(0.0))
+                        .addObject(new CBORFloatingPoint(2.0000001e+38))
+                        .addObject(new CBORFloatingPoint(Double.NEGATIVE_INFINITY)));
     }
 
     @JavascriptInterface
