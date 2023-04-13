@@ -11,8 +11,7 @@ and will presumably be fixed in Android 14.
 The rest of the library is verified to work down to Android 7 (API 24).
 
 ### Usage
-To use the precompiled module you only to copy the AAR
-file located in 
+To use the precompiled module you copy the AAR file located in 
 https://github.com/cyberphone/android-cbor/tree/main/distribution
 to a ```libs``` folder in your application and then add the line
 ```code
