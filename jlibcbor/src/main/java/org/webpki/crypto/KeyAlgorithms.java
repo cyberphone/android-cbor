@@ -35,6 +35,8 @@ import java.security.spec.ECPublicKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 
 // Android specials...
+import android.os.Build;
+
 import android.util.Log;
 
 import java.security.KeyPairGenerator;
@@ -359,7 +361,10 @@ public enum KeyAlgorithms implements CryptoAlgorithms {
             }
             throw new IllegalArgumentException("Unsupported RSA key size: " + lengthInBits);
         }
-        return OkpSupport.getKeyAlgorithm(key);
+        if (Build.VERSION.SDK_INT >= 33) {
+            return OkpSupport.getKeyAlgorithm(key);
+        }
+        throw new IllegalArgumentException("Unsupported in API " +  Build.VERSION.SDK_INT);
     }
 
     // Public keys read from specific security providers are not comparable to 
@@ -377,9 +382,12 @@ public enum KeyAlgorithms implements CryptoAlgorithms {
                     new RSAPublicKeySpec(((RSAPublicKey)publicKey).getModulus(),
                                          ((RSAPublicKey)publicKey).getPublicExponent()));
         }
-        KeyAlgorithms keyAlgorithm = OkpSupport.getKeyAlgorithm(publicKey);
-        return OkpSupport.raw2PublicKey(OkpSupport.public2RawKey(publicKey, keyAlgorithm),
-                                           keyAlgorithm);
+        if (Build.VERSION.SDK_INT >= 33) {
+            KeyAlgorithms keyAlgorithm = OkpSupport.getKeyAlgorithm(publicKey);
+            return OkpSupport.raw2PublicKey(OkpSupport.public2RawKey(publicKey, keyAlgorithm),
+                                            keyAlgorithm);
+        }
+        throw new IllegalArgumentException("Unsupported in API " +  Build.VERSION.SDK_INT);
     }
 
     public static KeyAlgorithms getKeyAlgorithm(Key key) {
