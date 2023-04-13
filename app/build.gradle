@@ -4,13 +4,14 @@ plugins {
 
 android {
     defaultConfig {
-        applicationId "org.webpki.androidcbordemo"
         minSdk 24
-        compileSdkVersion 33
+        compileSdk 33
         targetSdk 33
+
         versionCode 1
         versionName "1.0"
 
+        applicationId "org.webpki.androidcbordemo"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

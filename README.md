@@ -12,4 +12,6 @@ The library is shipped in source and consists of the code in the following direc
 
 Although the library is fairly compact, most applications can eliminate files that do not apply.
 For example if you don't use encryption, you can remove all files ending with Encrypter and Decrypter.
+
+implementation files('libs/org.webpki-jlibcbor-1.0.0.aar')
  
