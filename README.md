@@ -31,4 +31,8 @@ to the ```dependencies``` section of the Gradle file.
 The library source code is available in:
 https://github.com/cyberphone/android-cbor/tree/main/jlibcbor.
 
+### Playground
+A feature-wise identical implementation can be tested on-line at:
+https://test.webpki.org/csf-lab/home
+
 Version 1.0.0, 2023-04-14
