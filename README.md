@@ -3,7 +3,7 @@ This repository contains a CBOR AAR library and an Android application.
 The latter is only intended for testing and demonstrating the cryptographic functions of the CBOR library.
 
 The CBOR library conforms to the API described in:
-https://cyberphone.github.io/android-cbor/distribution/apidoc/index.html.
+https://cyberphone.github.io/android-cbor/distribution/apidoc/org/webpki/cbor/package-summary.html.
 Note that Ed25519 only works on Android 13+ and that Ed25519 signatures
 cannot be validated, only generated.  This is due to limitations in Android
 and will presumably be fixed in Android 14.
