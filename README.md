@@ -30,3 +30,5 @@ to the ```dependencies``` section of the Gradle file.
 ### Source Code
 The library source code is available in:
 https://github.com/cyberphone/android-cbor/tree/main/jlibcbor.
+
+Version 1.0.0, 2023-04-14
