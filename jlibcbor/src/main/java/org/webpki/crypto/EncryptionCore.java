@@ -42,6 +42,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.webpki.util.ArrayUtil;
+import org.webpki.util.UTF8;
 
 // Source configured for Android.
 // Note that the Android version does currently not support OKP.
@@ -378,7 +379,7 @@ public class EncryptionCore {
 
     public static byte[] concatKdf(byte[] secret, String joseAlgorithmId, int keyLength) 
             throws IOException, GeneralSecurityException {
-        byte[] algorithmId = joseAlgorithmId.getBytes("utf-8");
+        byte[] algorithmId = UTF8.encode(joseAlgorithmId);
         final MessageDigest messageDigest = MessageDigest.getInstance(HASH_DIGEST_JCENAME);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         int reps = (keyLength + KDF_DIGEST_LENGTH - 1) / KDF_DIGEST_LENGTH;
