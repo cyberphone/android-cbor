@@ -22,6 +22,7 @@ import org.webpki.cbor.CBORAsymKeyValidator;
 import org.webpki.cbor.CBORBytes;
 import org.webpki.cbor.CBORCryptoConstants;
 import org.webpki.cbor.CBORCryptoUtils;
+import org.webpki.cbor.CBORDiagnosticNotationDecoder;
 import org.webpki.cbor.CBORHmacValidator;
 import org.webpki.cbor.CBORMap;
 import org.webpki.cbor.CBORObject;
@@ -35,9 +36,10 @@ import org.webpki.crypto.AsymSignatureAlgorithms;
 import org.webpki.crypto.ContentEncryptionAlgorithms;
 import org.webpki.crypto.KeyAlgorithms;
 import org.webpki.crypto.KeyEncryptionAlgorithms;
-
 import org.webpki.crypto.OkpSupport;
+
 import org.webpki.util.ArrayUtil;
+import org.webpki.util.HexaDecimal;
 
 import java.io.IOException;
 
@@ -421,5 +423,40 @@ public class InstrumentedTest {
     @Test
     public void useAppContext() {
         assertEquals("org.webpki.androidcbordemo", RawReader.appContext.getPackageName());
+    }
+
+    void utf8DecoderTest(String hex, boolean ok) {
+        byte[] cbor = HexaDecimal.decode(hex);
+        try {
+            byte[] roundTrip = CBORObject.decode(cbor).encode();
+            assertTrue("OK", ok);
+            assertTrue("Conv", ArrayUtil.compare(cbor, roundTrip));
+        } catch (Exception e) {
+            assertFalse("No good", ok);
+        }
+    }
+
+    void utf8EncoderTest(String string, boolean ok) {
+         try {
+            String encodedString = CBORDiagnosticNotationDecoder.decode(
+                    "\"" + string + "\"").getString();
+            assertTrue("OK", ok);
+            assertTrue("Conv", string.equals(encodedString));
+            byte[] encodedBytes = CBORDiagnosticNotationDecoder.decode(
+                    "'" + string + "'").getBytes();
+            assertTrue("OK", ok);
+            assertTrue("Conv2", ArrayUtil.compare(encodedBytes, string.getBytes("utf-8")));
+        } catch (Exception e) {
+            assertFalse("No good", ok);
+        }
+    }
+
+    @Test
+    public void utf8Test() {
+        utf8DecoderTest("62c328", false);
+        utf8DecoderTest("64f0288cbc", false);
+        utf8DecoderTest("64f0908cbc", true);
+        utf8EncoderTest("\uD83D", false);
+        utf8EncoderTest("\uD83D\uDE2D", true);
     }
 }
