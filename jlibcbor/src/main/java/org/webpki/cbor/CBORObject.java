@@ -792,7 +792,7 @@ public abstract class CBORObject {
      *         false, 
      *         false,
      *         false,
-     *         encodedCborData.length);
+     *         cborData.length);
      *</pre>
      * </p>
      * 
