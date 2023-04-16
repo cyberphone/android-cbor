@@ -7,9 +7,12 @@ import org.webpki.cbor.CBORDiagnosticNotationDecoder;
 import org.webpki.cbor.CBORKeyPair;
 import org.webpki.cbor.CBORObject;
 
-import org.webpki.util.ArrayUtil;
 import org.webpki.util.HexaDecimal;
+import org.webpki.util.UTF8;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyPair;
 
 import java.security.cert.X509Certificate;
@@ -32,13 +35,24 @@ public class RawReader {
     public static byte[] secretKey;
     public static String secretKeyId;
 
+    static byte[] getByteArrayFromInputStream(InputStream is) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(10000);
+        byte[] buffer = new byte[10000];
+        int bytes;
+        while ((bytes = is.read(buffer)) != -1) {
+            baos.write(buffer, 0, bytes);
+        }
+        is.close();
+        return baos.toByteArray();
+    }
+
     static byte[] getRawResource(int resource) throws Exception {
-        return ArrayUtil.getByteArrayFromInputStream(appContext.getResources()
+        return getByteArrayFromInputStream(appContext.getResources()
                 .openRawResource(resource));
     }
 
     static String getStringResource(int resource) throws Exception {
-        return new String(getRawResource(resource), "utf-8");
+        return UTF8.decode(getRawResource(resource));
     }
 
     static CBORObject getCBORResource(int resource) throws Exception {

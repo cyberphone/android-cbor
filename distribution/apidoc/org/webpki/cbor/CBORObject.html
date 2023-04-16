@@ -95,7 +95,7 @@ var activeTableTab = "active-table-tab";
 <div class="block">Checks for unread CBOR data.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#decode(byte%5B%5D)" class="member-name-link">decode</a><wbr>(byte[]&nbsp;encodedCborData)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#decode(byte%5B%5D)" class="member-name-link">decode</a><wbr>(byte[]&nbsp;cborData)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Decodes CBOR data.</div>
 </div>
@@ -618,12 +618,12 @@ var activeTableTab = "active-table-tab";
 <li>
 <section class="detail" id="decode(byte[])">
 <h3>decode</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">decode</span><wbr><span class="parameters">(byte[]&nbsp;encodedCborData)</span>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">decode</span><wbr><span class="parameters">(byte[]&nbsp;cborData)</span>
                          throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
 <div class="block">Decodes CBOR data.
  <p>
  This method is identical to:
- <pre>  decode(new ByteArrayInputStream(encodedCborData),
+ <pre>  decode(new ByteArrayInputStream(cborData),
          false, 
          false,
          false,
@@ -632,7 +632,7 @@ var activeTableTab = "active-table-tab";
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>encodedCborData</code> - </dd>
+<dd><code>cborData</code> - CBOR in its binary form</dd>
 <dt>Returns:</dt>
 <dd>CBORObject</dd>
 <dt>Throws:</dt>

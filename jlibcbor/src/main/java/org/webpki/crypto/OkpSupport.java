@@ -20,6 +20,8 @@ import androidx.annotation.RequiresApi;
 
 import java.io.IOException;
 
+import java.util.Arrays;
+
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -35,7 +37,6 @@ import java.security.spec.X509EncodedKeySpec;
 
 import java.util.HashMap;
 
-import org.webpki.util.ArrayUtil;
 import org.webpki.util.HexaDecimal;
 
 // Source configured for Android 13+
@@ -88,12 +89,11 @@ public class OkpSupport {
             throws IOException {
         byte[] encoded = publicKey.getEncoded();
         int prefixLength = pubKeyPrefix.get(keyAlgorithm).length;
-        if (okpKeyLength.get(keyAlgorithm) != encoded.length - prefixLength) {
+        int keyLength = okpKeyLength.get(keyAlgorithm);
+        if (keyLength != encoded.length - prefixLength) {
             throw new IOException("Wrong public key length for: " + keyAlgorithm.toString());
         }
-        byte[] rawKey = new byte[encoded.length - prefixLength];
-        System.arraycopy(encoded, prefixLength, rawKey, 0, rawKey.length);
-        return rawKey;
+        return Arrays.copyOfRange(encoded, prefixLength, prefixLength + keyLength);
     }
 
     public static PublicKey raw2PublicKey(byte[] x, KeyAlgorithms keyAlgorithm) 
@@ -101,10 +101,11 @@ public class OkpSupport {
         if (okpKeyLength.get(keyAlgorithm) != x.length) {
             throw new IOException("Wrong public key length for: " + keyAlgorithm.toString());
         }
+        byte[] prefix = pubKeyPrefix.get(keyAlgorithm);
+        byte[] spki = Arrays.copyOf(prefix, prefix.length + x.length);
+        System.arraycopy(x, 0, spki, prefix.length, x.length);
         return KeyFactory.getInstance(keyAlgorithm.getJceName())
-                .generatePublic(
-                        new X509EncodedKeySpec(
-                                ArrayUtil.add(pubKeyPrefix.get(keyAlgorithm), x)));
+                .generatePublic(new X509EncodedKeySpec(spki));
     }
 
     public static byte[] private2RawKey(PrivateKey privateKey, KeyAlgorithms keyAlgorithm) 
@@ -126,7 +127,9 @@ public class OkpSupport {
         if (okpKeyLength.get(keyAlgorithm) != d.length) {
             throw new IOException("Wrong private key length for: " + keyAlgorithm.toString());
         }
-        byte[] pkcs8 = ArrayUtil.add(privKeyPrefix.get(keyAlgorithm), d);
+        byte[] prefix = privKeyPrefix.get(keyAlgorithm);
+        byte[] pkcs8 = Arrays.copyOf(prefix, prefix.length + d.length);
+        System.arraycopy(d, 0, pkcs8, prefix.length, d.length);
         return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(pkcs8));
     }
 

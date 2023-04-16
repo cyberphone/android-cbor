@@ -38,7 +38,6 @@ import org.webpki.crypto.KeyAlgorithms;
 import org.webpki.crypto.KeyEncryptionAlgorithms;
 import org.webpki.crypto.OkpSupport;
 
-import org.webpki.util.ArrayUtil;
 import org.webpki.util.HexaDecimal;
 
 import java.io.IOException;
@@ -58,6 +57,7 @@ import java.security.spec.ECGenParameterSpec;
 import java.security.spec.NamedParameterSpec;
 import java.security.spec.RSAKeyGenParameterSpec;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.security.auth.x500.X500Principal;
@@ -100,12 +100,12 @@ public class InstrumentedTest {
                 .encrypt(dataToEncrypt);
         // Simple decryption
         assertTrue("enc1",
-                ArrayUtil.compare(dataToEncrypt,
-                                  new CBORAsymKeyDecrypter(keyPair.getPrivate()).decrypt(encrypted)));
+                Arrays.equals(dataToEncrypt,
+                              new CBORAsymKeyDecrypter(keyPair.getPrivate()).decrypt(encrypted)));
         Log.i("ENCRYPTION", encrypted.toString());
         // Sophisticated decryption
         assertTrue("enc2",
-                ArrayUtil.compare(dataToEncrypt,
+                Arrays.equals(dataToEncrypt,
         new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.KeyLocator() {
             @Override
             public PrivateKey locate(PublicKey optionalPublicKey,
@@ -181,7 +181,7 @@ public class InstrumentedTest {
                      .getMap().hasKey(CBORCryptoConstants.EPHEMERAL_KEY_LABEL) ?
                 RawReader.ecKeyPair.getPrivate() : RawReader.rsaKeyPair.getPrivate();
         assertTrue("Testv",
-                ArrayUtil.compare(dataToEncrypt,
+                   Arrays.equals(dataToEncrypt,
                   new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.KeyLocator() {
                       @Override
                       public PrivateKey locate(PublicKey optionalPublicKey,
@@ -233,7 +233,7 @@ public class InstrumentedTest {
         encryptionTestVector(R.raw.r2048_rsa_oaep_256_a256gcm_kid_cbor,
                 RawReader.rsaKeyId, null);
         assertTrue("Testv",
-                ArrayUtil.compare(dataToEncrypt,
+                Arrays.equals(dataToEncrypt,
         new CBORSymKeyDecrypter(new CBORSymKeyDecrypter.KeyLocator() {
             @Override
             public byte[] locate(CBORObject optionalKeyId,
@@ -430,7 +430,7 @@ public class InstrumentedTest {
         try {
             byte[] roundTrip = CBORObject.decode(cbor).encode();
             assertTrue("OK", ok);
-            assertTrue("Conv", ArrayUtil.compare(cbor, roundTrip));
+            assertTrue("Conv", Arrays.equals(cbor, roundTrip));
         } catch (Exception e) {
             assertFalse("No good", ok);
         }
@@ -445,7 +445,7 @@ public class InstrumentedTest {
             byte[] encodedBytes = CBORDiagnosticNotationDecoder.decode(
                     "'" + string + "'").getBytes();
             assertTrue("OK", ok);
-            assertTrue("Conv2", ArrayUtil.compare(encodedBytes, string.getBytes("utf-8")));
+            assertTrue("Conv2", Arrays.equals(encodedBytes, string.getBytes("utf-8")));
         } catch (Exception e) {
             assertFalse("No good", ok);
         }
