@@ -116,9 +116,7 @@ public class OkpSupport {
         if (encoded.length <= prefix.length || encoded[PRIV_KEY_LENGTH] != keyLength) {
             throw new IOException("Wrong private key length for: " + keyAlgorithm.toString());
         }
-        byte[] rawKey = new byte[keyLength];
-        System.arraycopy(encoded, prefix.length, rawKey, 0, keyLength);
-        return rawKey;
+        return Arrays.copyOfRange(encoded, prefix.length, prefix.length + keyLength);
     }
 
     public static PrivateKey raw2PrivateKey(byte[] d, KeyAlgorithms keyAlgorithm)
