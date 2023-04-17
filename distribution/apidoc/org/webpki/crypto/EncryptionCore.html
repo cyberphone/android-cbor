@@ -146,7 +146,7 @@ var activeTableTab = "active-table-tab";
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#receiverKeyAgreement(boolean,org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms,java.security.PublicKey,java.security.PrivateKey,byte%5B%5D)" class="member-name-link">receiverKeyAgreement</a><wbr>(boolean&nbsp;coseMode,
  <a href="KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
  <a href="ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;receivedPublicKey,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;publicKey,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey,
  byte[]&nbsp;encryptedKey)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -386,7 +386,7 @@ var activeTableTab = "active-table-tab";
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">receiverKeyAgreement</span><wbr><span class="parameters">(boolean&nbsp;coseMode,
  <a href="KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
  <a href="ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;receivedPublicKey,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;publicKey,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey,
  byte[]&nbsp;encryptedKey)</span>
                                    throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/GeneralSecurityException.html" title="class or interface in java.security" class="external-link">GeneralSecurityException</a>,
@@ -397,7 +397,7 @@ var activeTableTab = "active-table-tab";
 <dd><code>coseMode</code> - True => hmacKdf, else concatKdf</dd>
 <dd><code>keyEncryptionAlgorithm</code> - The ECDH algorithm</dd>
 <dd><code>contentEncryptionAlgorithm</code> - The designated content encryption algorithm</dd>
-<dd><code>receivedPublicKey</code> - The sender's (usually ephemeral) public key</dd>
+<dd><code>publicKey</code> - The sender's (usually ephemeral) public key</dd>
 <dd><code>privateKey</code> - The receiver's private key</dd>
 <dd><code>encryptedKey</code> - For ECDH+KW based operations only</dd>
 <dt>Returns:</dt>

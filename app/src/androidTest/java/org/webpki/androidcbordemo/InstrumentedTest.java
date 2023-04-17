@@ -27,7 +27,6 @@ import org.webpki.cbor.CBORDiagnosticNotationDecoder;
 import org.webpki.cbor.CBORHmacValidator;
 import org.webpki.cbor.CBORMap;
 import org.webpki.cbor.CBORObject;
-import org.webpki.cbor.CBORPublicKey;
 import org.webpki.cbor.CBORString;
 import org.webpki.cbor.CBORSymKeyDecrypter;
 import org.webpki.cbor.CBORValidator;
@@ -283,9 +282,6 @@ public class InstrumentedTest {
                          String staticProvider,
                          String ephemeralProvider) throws Exception {
         KeyPair keyPair = generateKeyPair(staticProvider != null, ka);
-      //  PublicKey pk = CBORPublicKey.convert(CBORPublicKey.convert(keyPair.getPublic()));
-        //Log.i("KPP", pk.toString());
-
         EncryptionCore.setEcProvider(staticProvider, ephemeralProvider);
         byte[] encrypted = new CBORAsymKeyEncrypter(keyPair.getPublic(), kea, cea)
                 .encrypt(DATA_TO_ENCRYPT).encode();
@@ -445,9 +441,11 @@ public class InstrumentedTest {
                                                          KeyAlgorithms.getKeyAlgorithm(
                                                                  keyPair.getPublic())).length);
             Log.i("ED25", "PK=" + keyPair.getPublic().getClass().getCanonicalName());
-/* As of 2023-01-30 there is no validation support in Android :(
+
+/*          As of 2023-01-30 there is no validation support in Android :(
             new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
-*/
+
+ */
         }
 
         // Encryption with ECDH
