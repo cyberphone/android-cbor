@@ -104,7 +104,7 @@ public class OkpSupport {
         byte[] prefix = pubKeyPrefix.get(keyAlgorithm);
         byte[] spki = Arrays.copyOf(prefix, prefix.length + x.length);
         System.arraycopy(x, 0, spki, prefix.length, x.length);
-        return KeyFactory.getInstance(keyAlgorithm.getJceName())
+        return KeyFactory.getInstance(keyAlgorithm.getKeyType() == KeyTypes.XEC ? "XDH" : "EC")
                 .generatePublic(new X509EncodedKeySpec(spki));
     }
 
