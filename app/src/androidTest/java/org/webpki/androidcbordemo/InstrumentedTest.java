@@ -1,6 +1,7 @@
 package org.webpki.androidcbordemo;
 
 import android.os.Build;
+
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.security.keystore.KeyProtection;
@@ -34,13 +35,13 @@ import org.webpki.cbor.CBORX509Validator;
 
 import org.webpki.crypto.AsymSignatureAlgorithms;
 import org.webpki.crypto.ContentEncryptionAlgorithms;
+import org.webpki.crypto.EncryptionCore;
 import org.webpki.crypto.KeyAlgorithms;
 import org.webpki.crypto.KeyEncryptionAlgorithms;
+import org.webpki.crypto.KeyTypes;
 import org.webpki.crypto.OkpSupport;
 
 import org.webpki.util.HexaDecimal;
-
-import java.io.IOException;
 
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
@@ -50,11 +51,12 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
+import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 
+import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
-import java.security.spec.NamedParameterSpec;
 import java.security.spec.RSAKeyGenParameterSpec;
 
 import java.util.Arrays;
@@ -71,12 +73,12 @@ import static org.junit.Assert.*;
  */
 @RunWith(AndroidJUnit4.class)
 public class InstrumentedTest {
-    static byte[] dataToEncrypt;
+    static byte[] DATA_TO_ENCRYPT;
 
     @BeforeClass
     static public void initialize() throws Exception {
         new RawReader(InstrumentationRegistry.getInstrumentation().getTargetContext());
-        dataToEncrypt = RawReader.getRawResource(R.raw.data2beencrypted_txt);
+        DATA_TO_ENCRYPT = RawReader.getRawResource(R.raw.data2beencrypted_txt);
     }
 
     static String ANDROID_KEYSTORE = "AndroidKeyStore";
@@ -97,15 +99,15 @@ public class InstrumentedTest {
         CBORObject encrypted = new CBORAsymKeyEncrypter(keyPair.getPublic(), kea, cea)
                 .setPublicKeyOption(wantPublicKey)
                 .setKeyId(useKeyId ? new CBORString(KEY_1) : null)
-                .encrypt(dataToEncrypt);
+                .encrypt(DATA_TO_ENCRYPT);
         // Simple decryption
         assertTrue("enc1",
-                Arrays.equals(dataToEncrypt,
+                Arrays.equals(DATA_TO_ENCRYPT,
                               new CBORAsymKeyDecrypter(keyPair.getPrivate()).decrypt(encrypted)));
         Log.i("ENCRYPTION", encrypted.toString());
         // Sophisticated decryption
         assertTrue("enc2",
-                Arrays.equals(dataToEncrypt,
+                Arrays.equals(DATA_TO_ENCRYPT,
         new CBORAsymKeyDecrypter((optionalPublicKey,
                                   optionalKeyId,
                                   keyEncryptionAlgorithm,
@@ -177,7 +179,7 @@ public class InstrumentedTest {
                      .getMap().hasKey(CBORCryptoConstants.EPHEMERAL_KEY_LABEL) ?
                 RawReader.ecKeyPair.getPrivate() : RawReader.rsaKeyPair.getPrivate();
         assertTrue("Testv",
-                   Arrays.equals(dataToEncrypt,
+                   Arrays.equals(DATA_TO_ENCRYPT,
                   new CBORAsymKeyDecrypter((optionalPublicKey,
                                             optionalKeyId,
                                             keyEncryptionAlgorithm,
@@ -228,7 +230,7 @@ public class InstrumentedTest {
                 RawReader.rsaKeyId, null);
 
         assertTrue("Testv",
-                Arrays.equals(dataToEncrypt,
+                Arrays.equals(DATA_TO_ENCRYPT,
         new CBORSymKeyDecrypter((optionalKeyId, contentEncryptionAlgorithm) -> {
             assertTrue("kid",
                     optionalKeyId.getString().equals(RawReader.secretKeyId));
@@ -244,6 +246,71 @@ public class InstrumentedTest {
     void printKeyPair(KeyPair keyPair) {
        Log.w("KPUB", getKeyObject(keyPair.getPublic()));
        Log.w("KPRI", getKeyObject(keyPair.getPrivate()));
+    }
+
+    KeyPair generateKeyPair(boolean androidKs,
+                            KeyAlgorithms keyAlgorithm) throws Exception {
+        KeyPairGenerator kpg;
+        if (androidKs) {
+            kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, ANDROID_KEYSTORE);
+
+            kpg.initialize(new KeyGenParameterSpec.Builder(
+                    KEY_2,
+                    KeyProperties.PURPOSE_AGREE_KEY)
+                    .setAlgorithmParameterSpec(new ECGenParameterSpec(keyAlgorithm.getJceName()))
+                    .setCertificateNotBefore(new Date(System.currentTimeMillis() - 600000L))
+                    .setCertificateSubject(new X500Principal("CN=Android, SerialNumber=5678"))
+                    .build());
+        } else {
+            if (keyAlgorithm.getKeyType() == KeyTypes.EC) {
+                AlgorithmParameterSpec paramSpec =
+                        new ECGenParameterSpec(keyAlgorithm.getJceName());
+                kpg = KeyPairGenerator.getInstance("EC");
+                kpg.initialize(paramSpec, new SecureRandom());
+            } else {
+                kpg = KeyPairGenerator.getInstance("XDH");
+                kpg.initialize(256, new SecureRandom());
+            }
+        }
+        KeyPair keyPair = kpg.generateKeyPair();
+        Log.i("ECDHK", keyPair.getPrivate().toString());
+        return keyPair;
+    }
+    private void oneShot(KeyAlgorithms ka,
+                         KeyEncryptionAlgorithms kea,
+                         ContentEncryptionAlgorithms cea,
+                         String staticProvider,
+                         String ephemeralProvider) throws Exception {
+        KeyPair keyPair = generateKeyPair(staticProvider != null, ka);
+        EncryptionCore.setEcProvider(staticProvider, ephemeralProvider);
+        byte[] encrypted = new CBORAsymKeyEncrypter(keyPair.getPublic(), kea, cea)
+                .encrypt(DATA_TO_ENCRYPT).encode();
+        if (ka.getKeyType() == KeyTypes.EC) {
+            assertTrue("Enc", Arrays.equals(DATA_TO_ENCRYPT,
+                    new CBORAsymKeyDecrypter(keyPair.getPrivate())
+                            .decrypt(CBORObject.decode(encrypted))));
+        }
+        encrypted = new CBORAsymKeyEncrypter(keyPair.getPublic(), kea, cea)
+                .setPublicKeyOption(true)
+                .encrypt(DATA_TO_ENCRYPT).encode();
+        if (ka.getKeyType() == KeyTypes.EC) {
+            assertTrue("Enc2", Arrays.equals(DATA_TO_ENCRYPT,
+                    new CBORAsymKeyDecrypter(keyPair.getPrivate())
+                            .decrypt(CBORObject.decode(encrypted))));
+        }
+        EncryptionCore.setEcProvider(null, null);
+    }
+
+    private void providerShot(KeyAlgorithms ka,
+                              KeyEncryptionAlgorithms kea,
+                              ContentEncryptionAlgorithms cea) throws Exception {
+        // Normal use-case, default provider
+        oneShot(ka, kea, cea, null, null);
+        // oneShot(ka, kea, cea, null,         ANDROID_KEYSTORE);
+        if (Build.VERSION.SDK_INT >= 33 && ka.getKeyType() == KeyTypes.EC) {
+            oneShot(ka, kea, cea, ANDROID_KEYSTORE, null);
+        }
+        // oneShot(ka, kea, cea, ANDROID_KEYSTORE, ANDROID_KEYSTORE);
     }
 
     @Test
@@ -346,19 +413,14 @@ public class InstrumentedTest {
                                 RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
         Log.i("CERTSIGN", signedData.toString());
 
-        new CBORX509Validator(new CBORX509Validator.Parameters() {
-            @Override
-            public void verify(X509Certificate[] certificatePath,
-                               AsymSignatureAlgorithms algorithm)
-                    throws IOException, GeneralSecurityException {
-                if (algorithm != KeyAlgorithms.P_256.getRecommendedSignatureAlgorithm()) {
-                    throw new GeneralSecurityException("alg");
-                }
-                int q = 0;
-                for (X509Certificate cert : RawReader.ecCertPath) {
-                    if (!certificatePath[q++].equals(cert)) {
-                        throw new GeneralSecurityException("cert");
-                    }
+        new CBORX509Validator((certificatePath, algorithm) -> {
+            if (algorithm != KeyAlgorithms.P_256.getRecommendedSignatureAlgorithm()) {
+                throw new GeneralSecurityException("alg");
+            }
+            int q = 0;
+            for (X509Certificate cert : RawReader.ecCertPath) {
+                if (!certificatePath[q++].equals(cert)) {
+                    throw new GeneralSecurityException("cert");
                 }
             }
         }).validate(SIGNATURE_LABEL, signedData);
@@ -386,6 +448,18 @@ public class InstrumentedTest {
 /* As of 2023-01-30 there is no validation support in Android :(
             new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
 */
+        }
+
+        // Encryption with ECDH
+        providerShot(KeyAlgorithms.P_256,
+                     KeyEncryptionAlgorithms.ECDH_ES,
+                     ContentEncryptionAlgorithms.A256GCM);
+        if (Build.VERSION.SDK_INT >= 33) {
+            generateKeyPair(true, KeyAlgorithms.X25519);
+            generateKeyPair(false, KeyAlgorithms.X25519);
+            providerShot(KeyAlgorithms.X25519,
+                         KeyEncryptionAlgorithms.ECDH_ES,
+                         ContentEncryptionAlgorithms.A256GCM);
         }
     }
 

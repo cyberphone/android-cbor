@@ -181,9 +181,10 @@ var activeTableTab = "active-table-tab";
 <div class="block">Explicitly set provider for AES operations.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setEcProvider(java.lang.String)" class="member-name-link">setEcProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setEcProvider(java.lang.String,java.lang.String)" class="member-name-link">setEcProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ecStaticProviderName,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ecEphemeralProviderName)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Explicitly set provider for EC operations.</div>
+<div class="block">Explicitly set provider for ECDH operations.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setRsaProvider(java.lang.String)" class="member-name-link">setRsaProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName)</code></div>
@@ -219,13 +220,19 @@ var activeTableTab = "active-table-tab";
 </section>
 </li>
 <li>
-<section class="detail" id="setEcProvider(java.lang.String)">
+<section class="detail" id="setEcProvider(java.lang.String,java.lang.String)">
 <h3>setEcProvider</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEcProvider</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName)</span></div>
-<div class="block">Explicitly set provider for EC operations.</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEcProvider</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ecStaticProviderName,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ecEphemeralProviderName)</span></div>
+<div class="block">Explicitly set provider for ECDH operations.
+ <p>
+ Setting <code>ecEphemeralProviderName</code> to anything but <code>null</code>
+ should be done with caution.
+ </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>providerName</code> - Name of provider</dd>
+<dd><code>ecStaticProviderName</code> - Name of provider for static private keys</dd>
+<dd><code>ecEphemeralProviderName</code> - Name of provider for ephemeral private keys</dd>
 </dl>
 </section>
 </li>

@@ -143,9 +143,13 @@ public class OkpSupport {
                     ((EdECKey)key).getParams().getName(),
                     AlgorithmPreferences.JOSE);
         }
-        // Saturn ugly fix while waiting for for EdDSA support.
+        // Ugly fix while waiting for for EdDSA support.
         if (key.getAlgorithm().equals("1.3.101.112")) {
             return KeyAlgorithms.ED25519;
+        }
+        // Ugly fix while waiting for for XDH support.
+        if (key.getAlgorithm().equals("XDH")) {
+            return KeyAlgorithms.X25519;
         }
         throw new IllegalArgumentException("Unknown OKP key type: " + key.getClass().getName());
     }
