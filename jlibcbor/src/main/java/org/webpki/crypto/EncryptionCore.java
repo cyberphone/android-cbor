@@ -136,6 +136,9 @@ public class EncryptionCore {
 
     /**
      * Explicitly set provider for AES operations.
+     * <p>
+     * DO NOT USE.
+     * </p> 
      * @param providerName Name of provider
      */
     public static void setAesProvider(String providerName) {
@@ -169,6 +172,9 @@ public class EncryptionCore {
     
     /**
      * Explicitly set provider for RSA operations.
+     * <p>
+     * DO NOT USE.
+     * </p> 
      * @param rsaProviderName Name of provider
      */
     public static void setRsaProvider(String rsaProviderName) {
@@ -354,12 +360,10 @@ public class EncryptionCore {
                 Cipher.getInstance(RSA_OAEP_JCENAME)
                                          : 
                 Cipher.getInstance(RSA_OAEP_JCENAME, provider);
-        if (keyEncryptionAlgorithm == KeyEncryptionAlgorithms.RSA_OAEP_256) {
-            cipher.init(mode, key, new OAEPParameterSpec("SHA-256", "MGF1",
-                    MGF1ParameterSpec.SHA256, PSource.PSpecified.DEFAULT));
-        } else {
-            cipher.init(mode, key);
-        }
+        cipher.init(mode, key, new OAEPParameterSpec("SHA-256", "MGF1",
+                    keyEncryptionAlgorithm == KeyEncryptionAlgorithms.RSA_OAEP_256 ?
+                        MGF1ParameterSpec.SHA256 : MGF1ParameterSpec.SHA1, 
+                    PSource.PSpecified.DEFAULT));
         return cipher.doFinal(data);
     }
 

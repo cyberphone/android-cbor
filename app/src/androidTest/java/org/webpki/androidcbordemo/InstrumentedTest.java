@@ -59,11 +59,15 @@ import java.security.cert.X509Certificate;
 
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
+import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.RSAKeyGenParameterSpec;
 
 import java.util.Arrays;
 import java.util.Date;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.OAEPParameterSpec;
+import javax.crypto.spec.PSource;
 import javax.security.auth.x500.X500Principal;
 
 import static org.junit.Assert.*;
@@ -264,6 +268,7 @@ public class InstrumentedTest {
                             keyAlgorithm.getPublicKeySizeInBits(), RSAKeyGenParameterSpec.F4))
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1,
                                            KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
+                    .setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
                     .setCertificateNotBefore(new Date(System.currentTimeMillis() - 600000L))
                     .setCertificateSubject(new X500Principal("CN=Android, SerialNumber=5678"))
                     .build());
@@ -304,9 +309,7 @@ public class InstrumentedTest {
                          String staticProvider,
                          String ephemeralProvider) throws Exception {
         KeyPair keyPair = generateKeyPair(staticProvider != null, ka);
-        if (ka.getKeyType() == KeyTypes.RSA) {
-            EncryptionCore.setRsaProvider(staticProvider);
-        } else {
+        if (ka.getKeyType() != KeyTypes.RSA) {
             EncryptionCore.setEcProvider(staticProvider, ephemeralProvider);
         }
         byte[] encrypted = new CBORAsymKeyEncrypter(keyPair.getPublic(), kea, cea)
@@ -332,7 +335,7 @@ public class InstrumentedTest {
 
         // oneShot(ka, kea, cea, null, ANDROID_KEYSTORE);
 
-        if (ka.getKeyType() != KeyTypes.RSA && Build.VERSION.SDK_INT >= 33) {
+        if (Build.VERSION.SDK_INT >= 33) {
             // Protected client keys
             oneShot(ka, kea, cea, ANDROID_KEYSTORE, null);
         }
@@ -484,14 +487,22 @@ public class InstrumentedTest {
                      KeyEncryptionAlgorithms.ECDH_ES,
                      ContentEncryptionAlgorithms.A256GCM);
 
-        generateKeyPair(true, KeyAlgorithms.RSA2048);
+        KeyPair kp = generateKeyPair(true, KeyAlgorithms.RSA2048);
+        Cipher cp = Cipher.getInstance("RSA/ECB/OAEPPadding");
+        cp.init(Cipher.DECRYPT_MODE, kp.getPrivate(), new OAEPParameterSpec("SHA-256",
+                "MGF1",
+                MGF1ParameterSpec.SHA1,
+                PSource.PSpecified.DEFAULT));
+
         generateKeyPair(false, KeyAlgorithms.RSA2048);
 
         // Encryption with RSA
         providerShot(KeyAlgorithms.RSA2048,
                      KeyEncryptionAlgorithms.RSA_OAEP,
                      ContentEncryptionAlgorithms.A256GCM);
-
+        providerShot(KeyAlgorithms.RSA2048,
+                KeyEncryptionAlgorithms.RSA_OAEP,
+                ContentEncryptionAlgorithms.A256GCM);
         if (Build.VERSION.SDK_INT >= 33) {
             generateKeyPair(true, KeyAlgorithms.X25519);
             generateKeyPair(false, KeyAlgorithms.X25519);
