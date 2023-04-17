@@ -121,14 +121,14 @@ public class OkpSupport {
 
     public static PrivateKey raw2PrivateKey(byte[] d, KeyAlgorithms keyAlgorithm)
             throws IOException, GeneralSecurityException {
-        KeyFactory keyFactory = KeyFactory.getInstance(keyAlgorithm.getJceName());
         if (okpKeyLength.get(keyAlgorithm) != d.length) {
             throw new IOException("Wrong private key length for: " + keyAlgorithm.toString());
         }
         byte[] prefix = privKeyPrefix.get(keyAlgorithm);
         byte[] pkcs8 = Arrays.copyOf(prefix, prefix.length + d.length);
         System.arraycopy(d, 0, pkcs8, prefix.length, d.length);
-        return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(pkcs8));
+        return KeyFactory.getInstance(keyAlgorithm.getKeyType() == KeyTypes.XEC ? "XDH" : "EC")
+                .generatePrivate(new PKCS8EncodedKeySpec(pkcs8));
     }
 
     @RequiresApi(api = 33)

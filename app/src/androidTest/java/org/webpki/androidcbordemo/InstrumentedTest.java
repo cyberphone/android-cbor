@@ -25,8 +25,10 @@ import org.webpki.cbor.CBORCryptoConstants;
 import org.webpki.cbor.CBORCryptoUtils;
 import org.webpki.cbor.CBORDiagnosticNotationDecoder;
 import org.webpki.cbor.CBORHmacValidator;
+import org.webpki.cbor.CBORKeyPair;
 import org.webpki.cbor.CBORMap;
 import org.webpki.cbor.CBORObject;
+import org.webpki.cbor.CBORPublicKey;
 import org.webpki.cbor.CBORString;
 import org.webpki.cbor.CBORSymKeyDecrypter;
 import org.webpki.cbor.CBORValidator;
@@ -520,5 +522,43 @@ public class InstrumentedTest {
         utf8DecoderTest("64f0908cbc", true);
         utf8EncoderTest("\uD83D", false);
         utf8EncoderTest("\uD83D\uDE2D", true);
+    }
+
+    @Test
+    public void succeededED25519PrivateKey() throws Exception {
+        // In API 33? Nope.
+        OkpSupport.raw2PrivateKey(
+            HexaDecimal.decode("fe49acf5b92b6e923594f2e83368f680ac924be93cf533aecaf802e37757f8c9"),
+            KeyAlgorithms.ED25519);
+    }
+
+    @Test
+    public void succeededED25519KeyPair() throws Exception {
+        // In API 33? Nope.
+        CBORKeyPair.convert(CBORObject.decode(HexaDecimal.decode(
+            "a401012006215820fe49acf5b92b6e923594f2e83368f680" +
+             "ac924be93cf533aecaf802e37757f8c9235820d1f96bfba" +
+             "6d7b38e7d7fdab002adb466cdcd8b34c62041f9feb4c3168ba6155e")));
+    }
+
+    @Test
+    public void succeededED25519PublicKey() throws Exception {
+        // In API 33? Nope.
+        CBORPublicKey.convert(CBORObject.decode(HexaDecimal.decode(
+            "a301012006215820fe49acf5b92b6e923594f2e83368f680ac924be93cf533aecaf802e37757f8c9")));
+    }
+
+    @Test
+    public void succeededX25519KeyPair() throws Exception {
+        CBORKeyPair.convert(CBORObject.decode(HexaDecimal.decode(
+                "a401012004215820e99a0cef205894960d9b1c05978513dcc" +
+                "b42a13bfbced523a51b8a117ad5f00c2358207317e5f3a115" +
+                "99caab474ee65843427f517fe4d8b99add55886c84441e90d6f0")));
+    }
+
+    @Test
+    public void succeededX25519PublicKey() throws Exception {
+        CBORPublicKey.convert(CBORObject.decode(HexaDecimal.decode(
+            "a301012004215820e99a0cef205894960d9b1c05978513dccb42a13bfbced523a51b8a117ad5f00c")));
     }
 }
