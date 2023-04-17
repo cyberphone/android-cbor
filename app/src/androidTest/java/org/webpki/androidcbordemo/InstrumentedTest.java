@@ -254,24 +254,44 @@ public class InstrumentedTest {
                             KeyAlgorithms keyAlgorithm) throws Exception {
         KeyPairGenerator kpg;
         if (androidKs) {
-            kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, ANDROID_KEYSTORE);
-
-            kpg.initialize(new KeyGenParameterSpec.Builder(
+            if (keyAlgorithm.getKeyType() == KeyTypes.RSA) {
+                kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA,
+                                                   ANDROID_KEYSTORE);
+                kpg.initialize(new KeyGenParameterSpec.Builder(
+                    KEY_2,
+                    KeyProperties.PURPOSE_DECRYPT | KeyProperties.PURPOSE_ENCRYPT)
+                    .setAlgorithmParameterSpec(new RSAKeyGenParameterSpec(
+                            keyAlgorithm.getPublicKeySizeInBits(), RSAKeyGenParameterSpec.F4))
+                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1,
+                                           KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
+                    .setCertificateNotBefore(new Date(System.currentTimeMillis() - 600000L))
+                    .setCertificateSubject(new X500Principal("CN=Android, SerialNumber=5678"))
+                    .build());
+            } else {
+                kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC,
+                                                                 ANDROID_KEYSTORE);
+                kpg.initialize(new KeyGenParameterSpec.Builder(
                     KEY_2,
                     KeyProperties.PURPOSE_AGREE_KEY)
                     .setAlgorithmParameterSpec(new ECGenParameterSpec(keyAlgorithm.getJceName()))
                     .setCertificateNotBefore(new Date(System.currentTimeMillis() - 600000L))
                     .setCertificateSubject(new X500Principal("CN=Android, SerialNumber=5678"))
                     .build());
+            }
         } else {
-            if (keyAlgorithm.getKeyType() == KeyTypes.EC) {
+            if (keyAlgorithm.getKeyType() == KeyTypes.RSA) {
+                AlgorithmParameterSpec paramSpec = new RSAKeyGenParameterSpec(
+                        keyAlgorithm.getPublicKeySizeInBits(), RSAKeyGenParameterSpec.F4);
+                kpg = KeyPairGenerator.getInstance("RSA");
+                kpg.initialize(paramSpec, new SecureRandom());
+            } else if (keyAlgorithm.getKeyType() == KeyTypes.EC) {
                 AlgorithmParameterSpec paramSpec =
                         new ECGenParameterSpec(keyAlgorithm.getJceName());
                 kpg = KeyPairGenerator.getInstance("EC");
                 kpg.initialize(paramSpec, new SecureRandom());
             } else {
                 kpg = KeyPairGenerator.getInstance("XDH");
-                kpg.initialize(256, new SecureRandom());
+                kpg.initialize(keyAlgorithm.getPublicKeySizeInBits(), new SecureRandom());
             }
         }
         KeyPair keyPair = kpg.generateKeyPair();
@@ -284,7 +304,11 @@ public class InstrumentedTest {
                          String staticProvider,
                          String ephemeralProvider) throws Exception {
         KeyPair keyPair = generateKeyPair(staticProvider != null, ka);
-        EncryptionCore.setEcProvider(staticProvider, ephemeralProvider);
+        if (ka.getKeyType() == KeyTypes.RSA) {
+            EncryptionCore.setRsaProvider(staticProvider);
+        } else {
+            EncryptionCore.setEcProvider(staticProvider, ephemeralProvider);
+        }
         byte[] encrypted = new CBORAsymKeyEncrypter(keyPair.getPublic(), kea, cea)
                 .encrypt(DATA_TO_ENCRYPT).encode();
         assertTrue("Enc", Arrays.equals(DATA_TO_ENCRYPT,
@@ -297,17 +321,22 @@ public class InstrumentedTest {
                 new CBORAsymKeyDecrypter(keyPair.getPrivate())
                         .decrypt(CBORObject.decode(encrypted))));
         EncryptionCore.setEcProvider(null, null);
+        EncryptionCore.setRsaProvider(null);
     }
 
     private void providerShot(KeyAlgorithms ka,
                               KeyEncryptionAlgorithms kea,
                               ContentEncryptionAlgorithms cea) throws Exception {
-        // Normal use-case, default provider
+        // Using the default provider
         oneShot(ka, kea, cea, null, null);
-        // oneShot(ka, kea, cea, null,         ANDROID_KEYSTORE);
+
+        // oneShot(ka, kea, cea, null, ANDROID_KEYSTORE);
+
         if (Build.VERSION.SDK_INT >= 33) {
+            // Protected client keys
             oneShot(ka, kea, cea, ANDROID_KEYSTORE, null);
         }
+
         // oneShot(ka, kea, cea, ANDROID_KEYSTORE, ANDROID_KEYSTORE);
     }
 
@@ -454,6 +483,15 @@ public class InstrumentedTest {
         providerShot(KeyAlgorithms.P_256,
                      KeyEncryptionAlgorithms.ECDH_ES,
                      ContentEncryptionAlgorithms.A256GCM);
+
+        generateKeyPair(true, KeyAlgorithms.RSA2048);
+        generateKeyPair(false, KeyAlgorithms.RSA2048);
+
+        // Encryption with ECDH
+        providerShot(KeyAlgorithms.RSA2048,
+                     KeyEncryptionAlgorithms.RSA_OAEP_256,
+                     ContentEncryptionAlgorithms.A256GCM);
+
         if (Build.VERSION.SDK_INT >= 33) {
             generateKeyPair(true, KeyAlgorithms.X25519);
             generateKeyPair(false, KeyAlgorithms.X25519);
