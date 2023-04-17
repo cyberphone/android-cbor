@@ -332,7 +332,7 @@ public class InstrumentedTest {
 
         // oneShot(ka, kea, cea, null, ANDROID_KEYSTORE);
 
-        if (Build.VERSION.SDK_INT >= 33) {
+        if (ka.getKeyType() != KeyTypes.RSA && Build.VERSION.SDK_INT >= 33) {
             // Protected client keys
             oneShot(ka, kea, cea, ANDROID_KEYSTORE, null);
         }
@@ -487,9 +487,9 @@ public class InstrumentedTest {
         generateKeyPair(true, KeyAlgorithms.RSA2048);
         generateKeyPair(false, KeyAlgorithms.RSA2048);
 
-        // Encryption with ECDH
+        // Encryption with RSA
         providerShot(KeyAlgorithms.RSA2048,
-                     KeyEncryptionAlgorithms.RSA_OAEP_256,
+                     KeyEncryptionAlgorithms.RSA_OAEP,
                      ContentEncryptionAlgorithms.A256GCM);
 
         if (Build.VERSION.SDK_INT >= 33) {

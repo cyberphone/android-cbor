@@ -130,8 +130,7 @@ public class EncryptionCore {
                                                 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     
     // RSA OAEP
-    static final String RSA_OAEP_JCENAME     = "RSA/ECB/OAEPWithSHA-1AndMGF1Padding";
-    static final String RSA_OAEP_256_JCENAME = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
+    static final String RSA_OAEP_JCENAME     = "RSA/ECB/OAEPPadding";
 
     private static String aesProviderName;
 
@@ -149,25 +148,31 @@ public class EncryptionCore {
     /**
      * Explicitly set provider for ECDH operations.
      * <p>
+     * Setting <code>ecStaticProviderName</code> to <code>"AndroidKeystore"</cde>
+     * permits <i>decryption</i> using protected client keys.
+     * </p>
+     * <p>
      * Setting <code>ecEphemeralProviderName</code> to anything but <code>null</code>
-     * should be done with caution.
+     * is not recommended. It is mainly available for compatibility with the JDK
+     * version of this library. 
      * </p>
      * @param ecStaticProviderName Name of provider for static private keys
      * @param ecEphemeralProviderName Name of provider for ephemeral private keys
      */
-    public static void setEcProvider(String ecStaticProviderName, String ecEphemeralProviderName) {
+    public static void setEcProvider(String ecStaticProviderName, 
+                                     String ecEphemeralProviderName) {
         ecStaticProvider = ecStaticProviderName;
         ecEphemeralProvider = ecEphemeralProviderName;
     }
 
-    private static String rsaProviderName;
+    private static String rsaProvider;
     
     /**
      * Explicitly set provider for RSA operations.
-     * @param providerName Name of provider
+     * @param rsaProviderName Name of provider
      */
-    public static void setRsaProvider(String providerName) {
-        rsaProviderName = providerName;
+    public static void setRsaProvider(String rsaProviderName) {
+        rsaProvider = rsaProviderName;
     }
 
     private static Cipher getAesCipher(String algorithm) throws GeneralSecurityException {
@@ -338,18 +343,17 @@ public class EncryptionCore {
     private static byte[] rsaCore(int mode,
                                   Key key,
                                   byte[] data,
-                                  KeyEncryptionAlgorithms keyEncryptionAlgorithm)
+                                  KeyEncryptionAlgorithms keyEncryptionAlgorithm,
+                                  String provider)
     throws GeneralSecurityException {
         if (!keyEncryptionAlgorithm.rsa) {
             throw new GeneralSecurityException(
                     "Unsupported RSA algorithm: " + keyEncryptionAlgorithm);
         }
-        String jceName = keyEncryptionAlgorithm == KeyEncryptionAlgorithms.RSA_OAEP ?
-                RSA_OAEP_JCENAME : RSA_OAEP_256_JCENAME;
-        Cipher cipher = rsaProviderName == null ? 
-                Cipher.getInstance(jceName)
-                                                : 
-                Cipher.getInstance(jceName, rsaProviderName);
+        Cipher cipher = provider == null ? 
+                Cipher.getInstance(RSA_OAEP_JCENAME)
+                                         : 
+                Cipher.getInstance(RSA_OAEP_JCENAME, provider);
         if (keyEncryptionAlgorithm == KeyEncryptionAlgorithms.RSA_OAEP_256) {
             cipher.init(mode, key, new OAEPParameterSpec("SHA-256", "MGF1",
                     MGF1ParameterSpec.SHA256, PSource.PSpecified.DEFAULT));
@@ -375,7 +379,8 @@ public class EncryptionCore {
                                               rsaCore(Cipher.ENCRYPT_MODE,
                                                       publicKey,
                                                       contentEncryptionKey,
-                                                      keyEncryptionAlgorithm),
+                                                      keyEncryptionAlgorithm,
+                                                      null),
                                               null);
     }
 
@@ -394,7 +399,8 @@ public class EncryptionCore {
         return rsaCore(Cipher.DECRYPT_MODE,
                        privateKey,
                        encryptedKey,
-                       keyEncryptionAlgorithm);
+                       keyEncryptionAlgorithm,
+                       rsaProvider);
     }
 
     public static byte[] hmacKdf(byte[] ikm, byte[] salt, byte[] info, int keyLength) 
@@ -577,8 +583,7 @@ public class EncryptionCore {
                     KeyPairGenerator.getInstance("XDH") 
                                               : 
                     KeyPairGenerator.getInstance("XDH", ecEphemeralProvider);
-            generator.initialize(OkpSupport.okpKeyLength.get(keyAlgorithm) * 8, 
-                                 new SecureRandom());
+            generator.initialize(keyAlgorithm.getPublicKeySizeInBits(), new SecureRandom());
         }
 //System.out.println(generator.getProvider().getName());
         KeyPair keyPair = generator.generateKeyPair();

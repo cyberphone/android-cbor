@@ -187,7 +187,7 @@ var activeTableTab = "active-table-tab";
 <div class="block">Explicitly set provider for ECDH operations.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setRsaProvider(java.lang.String)" class="member-name-link">setRsaProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setRsaProvider(java.lang.String)" class="member-name-link">setRsaProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;rsaProviderName)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Explicitly set provider for RSA operations.</div>
 </div>
@@ -226,8 +226,13 @@ var activeTableTab = "active-table-tab";
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ecEphemeralProviderName)</span></div>
 <div class="block">Explicitly set provider for ECDH operations.
  <p>
+ Setting <code>ecStaticProviderName</code> to <code>"AndroidKeystore"</cde>
+ permits <i>decryption</i> using protected client keys.
+ </p>
+ <p>
  Setting <code>ecEphemeralProviderName</code> to anything but <code>null</code>
- should be done with caution.
+ is not recommended. It is mainly available for compatibility with the JDK
+ version of this library. 
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -239,11 +244,11 @@ var activeTableTab = "active-table-tab";
 <li>
 <section class="detail" id="setRsaProvider(java.lang.String)">
 <h3>setRsaProvider</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRsaProvider</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRsaProvider</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;rsaProviderName)</span></div>
 <div class="block">Explicitly set provider for RSA operations.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>providerName</code> - Name of provider</dd>
+<dd><code>rsaProviderName</code> - Name of provider</dd>
 </dl>
 </section>
 </li>
