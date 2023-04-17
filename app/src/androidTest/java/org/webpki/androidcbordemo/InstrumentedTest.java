@@ -27,6 +27,7 @@ import org.webpki.cbor.CBORDiagnosticNotationDecoder;
 import org.webpki.cbor.CBORHmacValidator;
 import org.webpki.cbor.CBORMap;
 import org.webpki.cbor.CBORObject;
+import org.webpki.cbor.CBORPublicKey;
 import org.webpki.cbor.CBORString;
 import org.webpki.cbor.CBORSymKeyDecrypter;
 import org.webpki.cbor.CBORValidator;
@@ -282,22 +283,21 @@ public class InstrumentedTest {
                          String staticProvider,
                          String ephemeralProvider) throws Exception {
         KeyPair keyPair = generateKeyPair(staticProvider != null, ka);
+      //  PublicKey pk = CBORPublicKey.convert(CBORPublicKey.convert(keyPair.getPublic()));
+        //Log.i("KPP", pk.toString());
+
         EncryptionCore.setEcProvider(staticProvider, ephemeralProvider);
         byte[] encrypted = new CBORAsymKeyEncrypter(keyPair.getPublic(), kea, cea)
                 .encrypt(DATA_TO_ENCRYPT).encode();
-        if (ka.getKeyType() == KeyTypes.EC) {
-            assertTrue("Enc", Arrays.equals(DATA_TO_ENCRYPT,
-                    new CBORAsymKeyDecrypter(keyPair.getPrivate())
-                            .decrypt(CBORObject.decode(encrypted))));
-        }
+        assertTrue("Enc", Arrays.equals(DATA_TO_ENCRYPT,
+                new CBORAsymKeyDecrypter(keyPair.getPrivate())
+                        .decrypt(CBORObject.decode(encrypted))));
         encrypted = new CBORAsymKeyEncrypter(keyPair.getPublic(), kea, cea)
                 .setPublicKeyOption(true)
                 .encrypt(DATA_TO_ENCRYPT).encode();
-        if (ka.getKeyType() == KeyTypes.EC) {
-            assertTrue("Enc2", Arrays.equals(DATA_TO_ENCRYPT,
-                    new CBORAsymKeyDecrypter(keyPair.getPrivate())
-                            .decrypt(CBORObject.decode(encrypted))));
-        }
+        assertTrue("Enc2", Arrays.equals(DATA_TO_ENCRYPT,
+                new CBORAsymKeyDecrypter(keyPair.getPrivate())
+                        .decrypt(CBORObject.decode(encrypted))));
         EncryptionCore.setEcProvider(null, null);
     }
 
@@ -307,7 +307,7 @@ public class InstrumentedTest {
         // Normal use-case, default provider
         oneShot(ka, kea, cea, null, null);
         // oneShot(ka, kea, cea, null,         ANDROID_KEYSTORE);
-        if (Build.VERSION.SDK_INT >= 33 && ka.getKeyType() == KeyTypes.EC) {
+        if (Build.VERSION.SDK_INT >= 33) {
             oneShot(ka, kea, cea, ANDROID_KEYSTORE, null);
         }
         // oneShot(ka, kea, cea, ANDROID_KEYSTORE, ANDROID_KEYSTORE);
