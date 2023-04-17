@@ -548,7 +548,7 @@ public class EncryptionCore {
      * @param contentEncryptionKey Also known as CEK
      * @param keyEncryptionAlgorithm The ECDH algorithm
      * @param contentEncryptionAlgorithm The designated content encryption algorithm
-     * @param staticKey The receiver's (usually static) public key
+     * @param publicKey The receiver's (usually static) public key
      * @return A composite object including the (plain text) data encryption key
      * @throws GeneralSecurityException
      * @throws IOException
@@ -558,30 +558,34 @@ public class EncryptionCore {
                                byte[] contentEncryptionKey,
                                KeyEncryptionAlgorithms keyEncryptionAlgorithm,
                                ContentEncryptionAlgorithms contentEncryptionAlgorithm,
-                               PublicKey staticKey) 
+                               PublicKey publicKey) 
     throws IOException, GeneralSecurityException {
         KeyPairGenerator generator;
-        if (staticKey instanceof ECKey) {
-            AlgorithmParameterSpec paramSpec = new ECGenParameterSpec(
-                    KeyAlgorithms.getKeyAlgorithm(staticKey).getJceName());
+        KeyAlgorithms keyAlgorithm = KeyAlgorithms.getKeyAlgorithm(publicKey);
+        if (publicKey instanceof ECKey) {
+            AlgorithmParameterSpec paramSpec = new ECGenParameterSpec(keyAlgorithm.getJceName());
             generator = ecEphemeralProvider == null ?
                     KeyPairGenerator.getInstance("EC") 
                                               : 
                     KeyPairGenerator.getInstance("EC", ecEphemeralProvider);
             generator.initialize(paramSpec, new SecureRandom());
         } else {
+            // Public keys must be converted to OpenSSL format.
+            publicKey = OkpSupport.raw2PublicKey(
+                    OkpSupport.public2RawKey(publicKey, keyAlgorithm), keyAlgorithm);
             generator = ecEphemeralProvider == null ?
                     KeyPairGenerator.getInstance("XDH") 
                                               : 
                     KeyPairGenerator.getInstance("XDH", ecEphemeralProvider);
-            generator.initialize(256, new SecureRandom());
+            generator.initialize(OkpSupport.okpKeyLength.get(keyAlgorithm) * 8, 
+                                 new SecureRandom());
         }
 //System.out.println(generator.getProvider().getName());
         KeyPair keyPair = generator.generateKeyPair();
         byte[] derivedKey = coreKeyAgreement(coseMode,
                                              keyEncryptionAlgorithm,
                                              contentEncryptionAlgorithm,
-                                             staticKey,
+                                             publicKey,
                                              keyPair.getPrivate(),
                                              ecEphemeralProvider);
         byte[] encryptedKey = null;
