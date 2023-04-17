@@ -106,21 +106,17 @@ public class InstrumentedTest {
         // Sophisticated decryption
         assertTrue("enc2",
                 Arrays.equals(dataToEncrypt,
-        new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.KeyLocator() {
-            @Override
-            public PrivateKey locate(PublicKey optionalPublicKey,
-                                     CBORObject optionalKeyId,
-                                     KeyEncryptionAlgorithms keyEncryptionAlgorithm,
-                                     ContentEncryptionAlgorithms contentEncryptionAlgorithm)
-                    throws IOException, GeneralSecurityException {
-                assertTrue("kea", kea == keyEncryptionAlgorithm);
-                assertTrue("cea", cea == contentEncryptionAlgorithm);
-                assertTrue("keyid", optionalKeyId == null ?
-                        !useKeyId : useKeyId == true && optionalKeyId.getString().equals(KEY_1));
-                assertTrue("pub", wantPublicKey ?
-                        optionalPublicKey.equals(keyPair.getPublic()) : optionalPublicKey == null);
-                return keyPair.getPrivate();
-            }
+        new CBORAsymKeyDecrypter((optionalPublicKey,
+                                  optionalKeyId,
+                                  keyEncryptionAlgorithm,
+                                  contentEncryptionAlgorithm) -> {
+            assertTrue("kea", kea == keyEncryptionAlgorithm);
+            assertTrue("cea", cea == contentEncryptionAlgorithm);
+            assertTrue("keyid", optionalKeyId == null ?
+                    !useKeyId : useKeyId == true && optionalKeyId.getString().equals(KEY_1));
+            assertTrue("pub", wantPublicKey ?
+                    optionalPublicKey.equals(keyPair.getPublic()) : optionalPublicKey == null);
+            return keyPair.getPrivate();
         }).decrypt(encrypted)));
     }
 
@@ -182,20 +178,16 @@ public class InstrumentedTest {
                 RawReader.ecKeyPair.getPrivate() : RawReader.rsaKeyPair.getPrivate();
         assertTrue("Testv",
                    Arrays.equals(dataToEncrypt,
-                  new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.KeyLocator() {
-                      @Override
-                      public PrivateKey locate(PublicKey optionalPublicKey,
-                                               CBORObject optionalKeyId,
-                                               KeyEncryptionAlgorithms keyEncryptionAlgorithm,
-                                               ContentEncryptionAlgorithms contentEncryptionAlgorithm)
-                              throws IOException, GeneralSecurityException {
-                          assertTrue("PUB",
-                                  (publicKey == null && optionalPublicKey == null) ||
-                                          (publicKey != null && publicKey.equals(optionalPublicKey)));
-                          assertTrue("KID", (keyId == null && optionalKeyId == null) ||
-                                  (keyId != null && keyId.equals(optionalKeyId.getString())));
-                          return privateKey;
-                      }
+                  new CBORAsymKeyDecrypter((optionalPublicKey,
+                                            optionalKeyId,
+                                            keyEncryptionAlgorithm,
+                                            contentEncryptionAlgorithm) -> {
+                      assertTrue("PUB",
+                              (publicKey == null && optionalPublicKey == null) ||
+                                      (publicKey != null && publicKey.equals(optionalPublicKey)));
+                      assertTrue("KID", (keyId == null && optionalKeyId == null) ||
+                              (keyId != null && keyId.equals(optionalKeyId.getString())));
+                      return privateKey;
                   }).setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null).decrypt(encryptionObject)));
         byte[] tag = cefContainer.readBytesAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
         cefContainer.setObject(CBORCryptoConstants.TAG_LABEL, new CBORBytes(tag));
@@ -232,17 +224,15 @@ public class InstrumentedTest {
                 RawReader.ecKeyId, null);
         encryptionTestVector(R.raw.r2048_rsa_oaep_256_a256gcm_kid_cbor,
                 RawReader.rsaKeyId, null);
+        encryptionTestVector(R.raw.r2048_rsa_oaep_a256cbc_hs512_kid_cbor,
+                RawReader.rsaKeyId, null);
+
         assertTrue("Testv",
                 Arrays.equals(dataToEncrypt,
-        new CBORSymKeyDecrypter(new CBORSymKeyDecrypter.KeyLocator() {
-            @Override
-            public byte[] locate(CBORObject optionalKeyId,
-                                 ContentEncryptionAlgorithms contentEncryptionAlgorithm)
-                    throws IOException, GeneralSecurityException {
-                assertTrue("kid",
-                        optionalKeyId.getString().equals(RawReader.secretKeyId));
-                return RawReader.secretKey;
-            }
+        new CBORSymKeyDecrypter((optionalKeyId, contentEncryptionAlgorithm) -> {
+            assertTrue("kid",
+                    optionalKeyId.getString().equals(RawReader.secretKeyId));
+            return RawReader.secretKey;
         }).decrypt(CBORObject.decode(
                 RawReader.getRawResource(R.raw.a256_a128cbc_hs256_kid_cbor)))));
     }

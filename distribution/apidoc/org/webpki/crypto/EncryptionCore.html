@@ -133,7 +133,9 @@ var activeTableTab = "active-table-tab";
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static byte[]</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createIv(org.webpki.crypto.ContentEncryptionAlgorithms)" class="member-name-link">createIv</a><wbr>(<a href="ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Create an IV with an algorithm specific length.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static byte[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hmacKdf(byte%5B%5D,byte%5B%5D,byte%5B%5D,int)" class="member-name-link">hmacKdf</a><wbr>(byte[]&nbsp;ikm,
  byte[]&nbsp;salt,
@@ -173,6 +175,21 @@ var activeTableTab = "active-table-tab";
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Perform a sender side ECDH operation.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setAesProvider(java.lang.String)" class="member-name-link">setAesProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Explicitly set provider for AES operations.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setEcProvider(java.lang.String)" class="member-name-link">setEcProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Explicitly set provider for EC operations.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setRsaProvider(java.lang.String)" class="member-name-link">setRsaProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Explicitly set provider for RSA operations.</div>
+</div>
 </div>
 </div>
 </div>
@@ -191,9 +208,48 @@ var activeTableTab = "active-table-tab";
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="setAesProvider(java.lang.String)">
+<h3>setAesProvider</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAesProvider</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName)</span></div>
+<div class="block">Explicitly set provider for AES operations.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>providerName</code> - Name of provider</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setEcProvider(java.lang.String)">
+<h3>setEcProvider</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEcProvider</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName)</span></div>
+<div class="block">Explicitly set provider for EC operations.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>providerName</code> - Name of provider</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setRsaProvider(java.lang.String)">
+<h3>setRsaProvider</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRsaProvider</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName)</span></div>
+<div class="block">Explicitly set provider for RSA operations.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>providerName</code> - Name of provider</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="createIv(org.webpki.crypto.ContentEncryptionAlgorithms)">
 <h3>createIv</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">createIv</span><wbr><span class="parameters">(<a href="ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm)</span></div>
+<div class="block">Create an IV with an algorithm specific length.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>contentEncryptionAlgorithm</code> - </dd>
+<dt>Returns:</dt>
+</dl>
 </section>
 </li>
 <li>
