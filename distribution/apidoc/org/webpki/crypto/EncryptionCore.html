@@ -171,7 +171,7 @@ var activeTableTab = "active-table-tab";
  byte[]&nbsp;contentEncryptionKey,
  <a href="KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
  <a href="ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;staticKey)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;publicKey)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Perform a sender side ECDH operation.</div>
 </div>
@@ -415,7 +415,7 @@ var activeTableTab = "active-table-tab";
  byte[]&nbsp;contentEncryptionKey,
  <a href="KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
  <a href="ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;staticKey)</span>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;publicKey)</span>
                                                                     throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a>,
 <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/GeneralSecurityException.html" title="class or interface in java.security" class="external-link">GeneralSecurityException</a></span></div>
 <div class="block">Perform a sender side ECDH operation.</div>
@@ -425,7 +425,7 @@ var activeTableTab = "active-table-tab";
 <dd><code>contentEncryptionKey</code> - Also known as CEK</dd>
 <dd><code>keyEncryptionAlgorithm</code> - The ECDH algorithm</dd>
 <dd><code>contentEncryptionAlgorithm</code> - The designated content encryption algorithm</dd>
-<dd><code>staticKey</code> - The receiver's (usually static) public key</dd>
+<dd><code>publicKey</code> - The receiver's (usually static) public key</dd>
 <dt>Returns:</dt>
 <dd>A composite object including the (plain text) data encryption key</dd>
 <dt>Throws:</dt>
