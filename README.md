@@ -2,6 +2,9 @@
 This repository contains a CBOR AAR library and an Android application.
 The latter is only intended for testing and demonstrating the cryptographic functions of the CBOR library.
 
+<table><tr><td>Note that this document as well as the on-line API reference, mirror the "trunk".
+ Releases come with release specific information which may differ considerably between versions.</td></tr></table>
+
 ### Core Features
 - [Deterministic encoding](https://cyberphone.github.io/android-cbor/distribution/apidoc/org/webpki/cbor/package-summary.html#deterministic-encoding) support
 - [Diagnostic notation](https://cyberphone.github.io/android-cbor/distribution/apidoc/org/webpki/cbor/package-summary.html#diagnostic-notation) support including decoder
@@ -26,13 +29,16 @@ to a ```libs``` folder in the application and then add the line
 implementation files('libs/org.webpki-jlibcbor-1.0.0.aar')
 ```
 to the ```dependencies``` section of the Gradle file.
- 
+
 ### Source Code
 The library source code is available in:
 https://github.com/cyberphone/android-cbor/tree/main/jlibcbor.
 
-### Playground
+### CBOR Playground
 A feature-wise identical implementation can be tested on-line at:
 https://test.webpki.org/csf-lab/home.
 
-Version 1.0.0, 2023-04-15
+### Updates
+See https://github.com/cyberphone/android-cbor/tree/main/RELEASE-NOTES.md.
+
+Version 1.0.0+, 2023-04-17
