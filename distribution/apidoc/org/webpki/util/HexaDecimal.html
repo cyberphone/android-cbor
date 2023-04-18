@@ -84,20 +84,20 @@ var activeTableTab = "active-table-tab";
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static byte[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#decode(java.lang.String)" class="member-name-link">decode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;hexString)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Decodes a hexadecimal String.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#encode(byte%5B%5D)" class="member-name-link">encode</a><wbr>(byte[]&nbsp;byteArray)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Encodes byte array data.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getHexDebugData(byte%5B%5D)" class="member-name-link">getHexDebugData</a><wbr>(byte[]&nbsp;byteArray)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getHexDebugData(byte%5B%5D,int)" class="member-name-link">getHexDebugData</a><wbr>(byte[]&nbsp;byteArray,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getHexDebugData(byte%5B%5D,int)" class="member-name-link">getHexDebugData</a><wbr>(byte[]&nbsp;byteArray,
  int&nbsp;bytesPerLine)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#toHex(char)" class="member-name-link">toHex</a><wbr>(char&nbsp;c)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Formats byte array data into readable lines.</div>
+</div>
 </div>
 </div>
 </div>
@@ -120,30 +120,43 @@ var activeTableTab = "active-table-tab";
 <h3>getHexDebugData</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getHexDebugData</span><wbr><span class="parameters">(byte[]&nbsp;byteArray,
  int&nbsp;bytesPerLine)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="getHexDebugData(byte[])">
-<h3>getHexDebugData</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getHexDebugData</span><wbr><span class="parameters">(byte[]&nbsp;byteArray)</span></div>
+<div class="block">Formats byte array data into readable lines.
+ <p>
+ After each line (<code>nn:&nbsp;hh&nbsp;hh...</code>) the ASCII counterpart is listed as well.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>byteArray</code> - The data to be listed</dd>
+<dd><code>bytesPerLine</code> - Bytes per line</dd>
+<dt>Returns:</dt>
+<dd>Human-readable String</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="encode(byte[])">
 <h3>encode</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">encode</span><wbr><span class="parameters">(byte[]&nbsp;byteArray)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="toHex(char)">
-<h3>toHex</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">toHex</span><wbr><span class="parameters">(char&nbsp;c)</span></div>
+<div class="block">Encodes byte array data.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>byteArray</code> - Data to be encoded</dd>
+<dt>Returns:</dt>
+<dd>String with zero or more hexadecimal pairs (<code>hh</code>)</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="decode(java.lang.String)">
 <h3>decode</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">decode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;hexString)</span></div>
+<div class="block">Decodes a hexadecimal String.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>hexString</code> - String with zero or more hexadecimal pairs (<code>hh</code>)</dd>
+<dt>Returns:</dt>
+<dd>byteArray</dd>
+</dl>
 </section>
 </li>
 </ul>
