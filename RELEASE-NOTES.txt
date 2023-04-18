@@ -1,0 +1,9 @@
+Android CBOR - Relese Notes
+
+1.0.1:
+- X25519 now works on Android 13.  Static ECDH may use AndroidKeystore.
+  See distribution/apidoc/org/webpki/crypto/EncryptionCore.html for details.
+
+- Bug fix: RSA-OAEP generated incorrect code for the default (OpenSSL) provider.
+
+- InstrumentedTest updated with tests to verify the state of the Android platform.

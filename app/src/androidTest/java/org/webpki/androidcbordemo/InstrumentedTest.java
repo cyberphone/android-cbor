@@ -610,4 +610,15 @@ public class InstrumentedTest {
         CBORPublicKey.convert(CBORObject.decode(HexaDecimal.decode(
             "a301012004215820e99a0cef205894960d9b1c05978513dccb42a13bfbced523a51b8a117ad5f00c")));
     }
+
+    @Test
+    public void succeededRsaOaep256AndroidKeystore() throws Exception {
+        KeyPair keyPair = generateKeyPair(true, KeyAlgorithms.RSA2048);
+        assertTrue("OAEP-256", Arrays.equals(DATA_TO_ENCRYPT,
+            new CBORAsymKeyDecrypter(keyPair.getPrivate()).decrypt(
+                new CBORAsymKeyEncrypter(keyPair.getPublic(),
+                                         KeyEncryptionAlgorithms.RSA_OAEP_256,
+                                         ContentEncryptionAlgorithms.A256GCM)
+                                            .encrypt(DATA_TO_ENCRYPT))));
+    }
 }
