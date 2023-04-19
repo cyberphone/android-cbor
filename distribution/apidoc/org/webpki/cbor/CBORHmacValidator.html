@@ -33,7 +33,7 @@
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -72,23 +72,6 @@
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- ======== NESTED CLASS SUMMARY ======== -->
-<li>
-<section class="nested-class-summary" id="nested-class-summary">
-<h2>Nested Class Summary</h2>
-<div class="caption"><span>Nested Classes</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Class</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="CBORHmacValidator.KeyLocator.html" class="type-name-link" title="interface in org.webpki.cbor">CBORHmacValidator.KeyLocator</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">Interface for dynamic key retrieval.</div>
-</div>
-</div>
-</section>
-</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -101,9 +84,9 @@
 <div class="col-last even-row-color">
 <div class="block">Initializes a validator with a secret key.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(org.webpki.cbor.CBORHmacValidator.KeyLocator)" class="member-name-link">CBORHmacValidator</a><wbr>(<a href="CBORHmacValidator.KeyLocator.html" title="interface in org.webpki.cbor">CBORHmacValidator.KeyLocator</a>&nbsp;keyLocator)</code></div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(org.webpki.crypto.HmacVerifierInterface)" class="member-name-link">CBORHmacValidator</a><wbr>(<a href="../crypto/HmacVerifierInterface.html" title="interface in org.webpki.crypto">HmacVerifierInterface</a>&nbsp;verifier)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Initializes a validator with a key locator.</div>
+<div class="block">Initializes a validator with an external implementation.</div>
 </div>
 </div>
 </section>
@@ -136,7 +119,8 @@
 <div class="block">Initializes a validator with a secret key.
  <p>
  This constructor presumes that the validation key is given by the context
- and that the supplied algorithm meets the policy.
+ and that the supplied algorithm meets the policy.  The optional CSF
+ <code>keyId</code> is <i>ignored</i>.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -145,17 +129,18 @@
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(org.webpki.cbor.CBORHmacValidator.KeyLocator)">
+<section class="detail" id="&lt;init&gt;(org.webpki.crypto.HmacVerifierInterface)">
 <h3>CBORHmacValidator</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORHmacValidator</span><wbr><span class="parameters">(<a href="CBORHmacValidator.KeyLocator.html" title="interface in org.webpki.cbor">CBORHmacValidator.KeyLocator</a>&nbsp;keyLocator)</span></div>
-<div class="block">Initializes a validator with a key locator.
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORHmacValidator</span><wbr><span class="parameters">(<a href="../crypto/HmacVerifierInterface.html" title="interface in org.webpki.crypto">HmacVerifierInterface</a>&nbsp;verifier)</span></div>
+<div class="block">Initializes a validator with an external implementation.
  <p>
  This constructor provides full control for the verifier
- regarding key identifiers and HMAC algorithms.
+ HMAC algorithms and cryptographic providers.  Note that an
+ <code>optionalKeyId</code> <b>must</b> be a CBOR string.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>keyLocator</code> - KeyLocator implementation</dd>
+<dd><code>verifier</code> - Verifier implementation</dd>
 </dl>
 </section>
 </li>

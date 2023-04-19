@@ -63,6 +63,7 @@ var activeTableTab = "active-table-tab";
 <section class="class-description" id="class-description">
 <hr>
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">HmacVerifierInterface</span></div>
+<div class="block">Common interface for HMAC verification.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -78,7 +79,7 @@ var activeTableTab = "active-table-tab";
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#verifyData(byte%5B%5D,byte%5B%5D,org.webpki.crypto.HmacAlgorithms,java.lang.String)" class="member-name-link">verifyData</a><wbr>(byte[]&nbsp;data,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#verifySignature(byte%5B%5D,byte%5B%5D,org.webpki.crypto.HmacAlgorithms,java.lang.String)" class="member-name-link">verifySignature</a><wbr>(byte[]&nbsp;data,
  byte[]&nbsp;digest,
  <a href="HmacAlgorithms.html" title="enum class in org.webpki.crypto">HmacAlgorithms</a>&nbsp;algorithm,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;keyId)</code></div>
@@ -98,13 +99,13 @@ var activeTableTab = "active-table-tab";
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="verifyData(byte[],byte[],org.webpki.crypto.HmacAlgorithms,java.lang.String)">
-<h3>verifyData</h3>
-<div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">verifyData</span><wbr><span class="parameters">(byte[]&nbsp;data,
+<section class="detail" id="verifySignature(byte[],byte[],org.webpki.crypto.HmacAlgorithms,java.lang.String)">
+<h3>verifySignature</h3>
+<div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">verifySignature</span><wbr><span class="parameters">(byte[]&nbsp;data,
  byte[]&nbsp;digest,
  <a href="HmacAlgorithms.html" title="enum class in org.webpki.crypto">HmacAlgorithms</a>&nbsp;algorithm,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;keyId)</span>
-            throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a>,
+                 throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a>,
 <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/GeneralSecurityException.html" title="class or interface in java.security" class="external-link">GeneralSecurityException</a></span></div>
 <dl class="notes">
 <dt>Throws:</dt>
