@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 /**
- * Common interface for HMAC verification.
+ * Common interface for HMAC validation.
  */
 public interface HmacVerifierInterface {
 

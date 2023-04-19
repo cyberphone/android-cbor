@@ -67,6 +67,7 @@ var activeTableTab = "active-table-tab";
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CryptoRandom</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Support class to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/SecureRandom.html" title="class or interface in java.security" class="external-link"><code>SecureRandom</code></a>.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -83,7 +84,9 @@ var activeTableTab = "active-table-tab";
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static byte[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#generateRandom(int)" class="member-name-link">generateRandom</a><wbr>(int&nbsp;length)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Generates byte array with random data.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#generateURLFriendlyRandom(int)" class="member-name-link">generateURLFriendlyRandom</a><wbr>(int&nbsp;length)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -110,13 +113,24 @@ var activeTableTab = "active-table-tab";
 <section class="detail" id="generateRandom(int)">
 <h3>generateRandom</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">generateRandom</span><wbr><span class="parameters">(int&nbsp;length)</span></div>
+<div class="block">Generates byte array with random data.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>length</code> - Number of bytes</dd>
+<dt>Returns:</dt>
+<dd>byteArray</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="generateURLFriendlyRandom(int)">
 <h3>generateURLFriendlyRandom</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">generateURLFriendlyRandom</span><wbr><span class="parameters">(int&nbsp;length)</span></div>
-<div class="block">Generates a URL friendly encoded nonce.</div>
+<div class="block">Generates a URL friendly encoded nonce.
+ <p>
+ Note: although the characters are derived from Bas64URL,
+ the string is NOT intended to be decoded!
+ </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>length</code> - Number of characters</dd>

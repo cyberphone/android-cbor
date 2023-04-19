@@ -63,8 +63,8 @@ public class CBORHmacValidator extends CBORValidator {
      * Initializes a validator with an external implementation.
      * <p>
      * This constructor provides full control for the verifier
-     * HMAC algorithms and cryptographic providers.  Note that an
-     * <code>optionalKeyId</code> <b>must</b> be a CBOR string.
+     * HMAC algorithms and cryptographic providers.  Note that an optional CSF
+     * <code>keyId</code> <b>must</b> be a CBOR string.
      * </p>
      *
      * @param verifier Verifier implementation
