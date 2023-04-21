@@ -66,13 +66,13 @@ import org.webpki.cbor.CBORX509Encrypter;
 import org.webpki.cbor.CBORX509Signer;
 import org.webpki.cbor.CBORX509Validator;
 
-import org.webpki.crypto.AsymSignatureAlgorithms;
 import org.webpki.crypto.HmacAlgorithms;
 import org.webpki.crypto.ContentEncryptionAlgorithms;
 import org.webpki.crypto.KeyEncryptionAlgorithms;
 import org.webpki.crypto.KeyTypes;
 
 import org.webpki.util.HexaDecimal;
+import org.webpki.util.UTF8;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -80,7 +80,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 import java.security.GeneralSecurityException;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.KeyPair;
 
@@ -119,13 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
     WebView webView;
 
-    static WebViewAssetLoader.PathHandler ph = new WebViewAssetLoader.PathHandler() {
-        @Nullable
-        @Override
-        public WebResourceResponse handle(@NonNull String path) {
-            return null;
-        }
-    };
+    static WebViewAssetLoader.PathHandler ph = path -> null;
 
     byte[] currentHtml;
 
@@ -143,23 +136,18 @@ public class MainActivity extends AppCompatActivity {
 
     void loadHtml(final String javaScript, final String header, final String body) {
         try {
-            currentHtml = new StringBuilder(HTML_HEADER)
+            currentHtml = UTF8.encode(new StringBuilder(HTML_HEADER)
                     .append(javaScript)
                     .append(HTML_BODY)
                     .append(header)
                     .append("</h3>")
                     .append(body)
-                    .append("</body></html>").toString().getBytes("utf-8");
+                    .append("</body></html>").toString());
         } catch (Exception e) {
             Log.e("HTM", e.getMessage());
             return;
         }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                webView.loadUrl("https://appassets.androidplatform.net/main/");
-            }
-        });
+        runOnUiThread(() -> webView.loadUrl("https://appassets.androidplatform.net/main/"));
     }
 
     String htmlIze(String s) {
@@ -182,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         return res.toString();
     }
 
-    void errorViev(Exception e) {
+    void errorView(Exception e) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintWriter printerWriter = new PrintWriter(baos);
         e.printStackTrace(printerWriter);
@@ -374,31 +362,21 @@ public class MainActivity extends AppCompatActivity {
                 keyInfo = HexaDecimal.encode(RawReader.secretKey);
                 signatureType = "HMAC";
             } else if (certificatePath != null) {
-                validator = new CBORX509Validator(new CBORX509Validator.Parameters() {
-                    @Override
-                    public void verify(X509Certificate[] certificatePath,
-                                       AsymSignatureAlgorithms algorithm)
-                            throws IOException, GeneralSecurityException {
-                    }
-                });
+                validator = new CBORX509Validator((certificatePath, algorithm) -> { });
                 keyInfo = certificatePath[0].toString();
                 signatureType = "CERTIFICATE";
             } else {
-                validator = new CBORAsymKeyValidator(new CBORAsymKeyValidator.KeyLocator() {
-                    @Override
-                    public PublicKey locate(PublicKey optionalPublicKey,
-                                            CBORObject optionalKeyId,
-                                            AsymSignatureAlgorithms algorithm)
-                            throws IOException, GeneralSecurityException {
-                        if (optionalPublicKey == null) {
-                            publicKey = (algorithm.getKeyType() == KeyTypes.EC ?
-                                    RawReader.ecKeyPair : RawReader.rsaKeyPair).getPublic();
-                        } else {
-                            publicKey = optionalPublicKey;
-                        }
-                        keyInfo = publicKey.toString();
-                        return publicKey;
+                validator = new CBORAsymKeyValidator((optionalPublicKey,
+                                                      optionalKeyId,
+                                                      algorithm) -> {
+                    if (optionalPublicKey == null) {
+                        publicKey = (algorithm.getKeyType() == KeyTypes.EC ?
+                                RawReader.ecKeyPair : RawReader.rsaKeyPair).getPublic();
+                    } else {
+                        publicKey = optionalPublicKey;
                     }
+                    keyInfo = publicKey.toString();
+                    return publicKey;
                 });
                 signatureType = "ASYMMETRIC";
             }
@@ -413,7 +391,7 @@ public class MainActivity extends AppCompatActivity {
                     "</p><p><i>Signature key:</i></p><pre style='color:green'>" +
                             htmlIze(keyInfo) + "</pre>");
         } catch (Exception e) {
-            errorViev(e);
+            errorView(e);
         }
     }
 
@@ -485,7 +463,7 @@ public class MainActivity extends AppCompatActivity {
             });
             verifySignature(signer.sign(csfLabel, cborMap).toString());
         } catch (Exception e) {
-            errorViev(e);
+            errorView(e);
         }
     }
 
@@ -519,7 +497,7 @@ public class MainActivity extends AppCompatActivity {
     @JavascriptInterface
     public void doEncrypt(String arbitraryData, String keyType) {
         try {
-            byte[] unencryptedData = arbitraryData.getBytes("UTF-8");
+            byte[] unencryptedData = UTF8.encode(arbitraryData);
             KEY_TYPES encType = KEY_TYPES.valueOf(keyType);
             CBOREncrypter encrypter;
             switch (encType) {
@@ -545,7 +523,7 @@ public class MainActivity extends AppCompatActivity {
             }
             decryptData(encrypter.encrypt(unencryptedData).toString());
         } catch (Exception e) {
-            errorViev(e);
+            errorView(e);
         }
     }
 
@@ -573,42 +551,31 @@ public class MainActivity extends AppCompatActivity {
             if (cefMap.hasKey(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)) {
                 if (cefMap.getObject(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
                         .getMap().hasKey(CBORCryptoConstants.CERT_PATH_LABEL)) {
-
-                    decrypter = new CBORX509Decrypter(new CBORX509Decrypter.KeyLocator() {
-                        @Override
-                        public PrivateKey locate(X509Certificate[] certificatePath,
-                                                 KeyEncryptionAlgorithms keyEncryptionAlgorithm,
-                                                 ContentEncryptionAlgorithms contentEncryptionAlgorithm)
-                                throws IOException, GeneralSecurityException {
-                            return RawReader.ecKeyPair.getPrivate();
-                        }
-                    });
                     encryptionInfo = "PKI";
+                    decrypter = new CBORX509Decrypter(
+                            (certificatePath,
+                             keyEncryptionAlgorithm,
+                             contentEncryptionAlgorithm) -> RawReader.ecKeyPair.getPrivate());
                 } else {
                     encryptionInfo = "ASYMMETRIC";
-                    decrypter = new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.KeyLocator() {
-                        @Override
-                        public PrivateKey locate(PublicKey optionalPublicKey,
-                                                 CBORObject optionalKeyId,
-                                                 KeyEncryptionAlgorithms keyEncryptionAlgorithm,
-                                                 ContentEncryptionAlgorithms contentEncryptionAlgorithm)
-                                throws IOException, GeneralSecurityException {
-                            return (keyEncryptionAlgorithm.isRsa() ?
-                                    RawReader.rsaKeyPair : RawReader.ecKeyPair).getPrivate();
-                        }
-                    });
+                    decrypter = new CBORAsymKeyDecrypter(
+                            (optionalPublicKey,
+                             optionalKeyId,
+                             keyEncryptionAlgorithm,
+                             contentEncryptionAlgorithm) -> (keyEncryptionAlgorithm.isRsa() ?
+                                 RawReader.rsaKeyPair : RawReader.ecKeyPair).getPrivate());
                 }
             } else {
                 encryptionInfo = "SYMMETRIC";
                 decrypter = new CBORSymKeyDecrypter(RawReader.secretKey);
             }
-            String decryptedData = new String(decrypter.decrypt(cefObject), "utf-8");
+            String decryptedData = UTF8.decode(decrypter.decrypt(cefObject));
             loadHtml("",
                     "Decrypted Data",
                     "<p><i>Decryption type:</i> " + encryptionInfo +
                             "</p><pre style='color:blue'>" + htmlIze(decryptedData) + "</pre>");
         } catch (Exception e) {
-            errorViev(e);
+            errorView(e);
         }
     }
 }
