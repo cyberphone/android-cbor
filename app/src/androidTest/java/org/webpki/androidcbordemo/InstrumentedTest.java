@@ -113,7 +113,39 @@ public class InstrumentedTest {
         Log.i("ENCRYPTION", encrypted.toString());
         // Sophisticated decryption
         assertTrue("enc2",
-                Arrays.equals(DATA_TO_ENCRYPT,
+                Arrays.equals(
+            new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.DecrypterImpl() {
+
+                @Override
+                public PrivateKey locate(PublicKey optionalPublicKey,
+                                         CBORObject optionalKeyId,
+                                         KeyEncryptionAlgorithms keyEncryptionAlgorithm,
+                                         ContentEncryptionAlgorithms contentEncryptionAlgorithm) {
+                    assertTrue("kea", kea == keyEncryptionAlgorithm);
+                    assertTrue("cea", cea == contentEncryptionAlgorithm);
+                    assertTrue("keyid", optionalKeyId == null ?
+                            !useKeyId : useKeyId == true && optionalKeyId.getString().equals(KEY_1));
+                    assertTrue("pub", wantPublicKey ?
+                            optionalPublicKey.equals(keyPair.getPublic()) : optionalPublicKey == null);
+                    return keyPair.getPrivate();
+                }
+
+                @Override
+                public byte[] decrypt(PrivateKey privateKey,
+                                      byte[] optionalEncryptedKey,
+                                      PublicKey optionalEphemeralKey,
+                                      KeyEncryptionAlgorithms keyEncryptionAlgorithm,
+                                      ContentEncryptionAlgorithms contentEncryptionAlgorithm) {
+                    return EncryptionCore.decryptKey(true,
+                                                     privateKey,
+                                                     optionalEncryptedKey,
+                                                     optionalEphemeralKey,
+                                                     keyEncryptionAlgorithm,
+                                                     contentEncryptionAlgorithm);
+
+                }
+            }).decrypt(encrypted), DATA_TO_ENCRYPT));
+        /*
         new CBORAsymKeyDecrypter((optionalPublicKey,
                                   optionalKeyId,
                                   keyEncryptionAlgorithm,
@@ -126,6 +158,8 @@ public class InstrumentedTest {
                     optionalPublicKey.equals(keyPair.getPublic()) : optionalPublicKey == null);
             return keyPair.getPrivate();
         }).decrypt(encrypted)));
+
+         */
     }
 
     void signatureTestVector(int resource, CBORValidator validator) throws Exception {
@@ -172,7 +206,7 @@ public class InstrumentedTest {
                     return optionalPublicKey;
                 }));
 */
-        Log.i("KURT", RawReader.ed25519CertPath[0].toString());
+//        Log.i("X.509", RawReader.ed25519CertPath[0].toString());
     }
 
     void encryptionTestVector(int resource,
@@ -186,16 +220,42 @@ public class InstrumentedTest {
                 RawReader.ecKeyPair.getPrivate() : RawReader.rsaKeyPair.getPrivate();
         assertTrue("Testv",
                    Arrays.equals(DATA_TO_ENCRYPT,
-                  new CBORAsymKeyDecrypter((optionalPublicKey,
-                                            optionalKeyId,
-                                            keyEncryptionAlgorithm,
-                                            contentEncryptionAlgorithm) -> {
+                           new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.DecrypterImpl() {
+               @Override
+               public PrivateKey locate(PublicKey optionalPublicKey,
+                                        CBORObject optionalKeyId,
+                                        KeyEncryptionAlgorithms keyEncryptionAlgorithm,
+                                        ContentEncryptionAlgorithms contentEncryptionAlgorithm) {
+                   assertTrue("PUB",
+                          (publicKey == null && optionalPublicKey == null) ||
+                                  (publicKey != null && publicKey.equals(optionalPublicKey)));
+                   assertTrue("KID", (keyId == null && optionalKeyId == null) ||
+                          (keyId != null && keyId.equals(optionalKeyId.getString())));
+                    return privateKey;
+                }
+
+                @Override
+                public byte[] decrypt(PrivateKey privateKey,
+                                      byte[] optionalEncryptedKey,
+                                      PublicKey optionalEphemeralKey,
+                                      KeyEncryptionAlgorithms keyEncryptionAlgorithm,
+                                      ContentEncryptionAlgorithms contentEncryptionAlgorithm) {
+                    return EncryptionCore.decryptKey(true,
+                                                     privateKey,
+                                                     optionalEncryptedKey,
+                                                     optionalEphemeralKey,
+                                                     keyEncryptionAlgorithm,
+                                                     contentEncryptionAlgorithm);
+                }
+                      /*
                       assertTrue("PUB",
                               (publicKey == null && optionalPublicKey == null) ||
                                       (publicKey != null && publicKey.equals(optionalPublicKey)));
                       assertTrue("KID", (keyId == null && optionalKeyId == null) ||
                               (keyId != null && keyId.equals(optionalKeyId.getString())));
                       return privateKey;
+
+                       */
                   }).setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null).decrypt(encryptionObject)));
         byte[] tag = cefContainer.readBytesAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
         cefContainer.setObject(CBORCryptoConstants.TAG_LABEL, new CBORBytes(tag));
@@ -219,8 +279,9 @@ public class InstrumentedTest {
     @Test
     public void encryption() throws Exception {
         for (KeyEncryptionAlgorithms kea : KeyEncryptionAlgorithms.values()) {
-            for (ContentEncryptionAlgorithms cea : ContentEncryptionAlgorithms.values())
+            for (ContentEncryptionAlgorithms cea : ContentEncryptionAlgorithms.values()) {
                 asymCoreEncryption(kea.isRsa() ? RawReader.rsaKeyPair : RawReader.ecKeyPair, kea, cea);
+            }
         }
         encryptionTestVector(R.raw.ecdh_es_a128cbc_hs256_imp_cbor,
                 null, null);
@@ -300,7 +361,7 @@ public class InstrumentedTest {
             }
         }
         KeyPair keyPair = kpg.generateKeyPair();
-        Log.i("ECDHK", keyPair.getPrivate().toString());
+//        Log.i("ECDHK", keyPair.getPrivate().toString());
         return keyPair;
     }
     private void oneShot(KeyAlgorithms ka,
@@ -363,7 +424,7 @@ public class InstrumentedTest {
         KeyStore keyStore = KeyStore.getInstance(ANDROID_KEYSTORE);
         keyStore.load(null);
 
-        Log.i("CERT", keyStore.getCertificate(KEY_1).toString());
+//        Log.i("CERT", keyStore.getCertificate(KEY_1).toString());
 
         printKeyPair(keyPair);
         printKeyPair(RawReader.rsaKeyPair);
@@ -419,14 +480,14 @@ public class InstrumentedTest {
                         .setPublicKey(keyPair.getPublic())
                         .sign(SIGNATURE_LABEL,
                                 RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
-        Log.i("SIGN", signedData.toString());
+//        Log.i("SIGN", signedData.toString());
 
         new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
         signedData =
                 new CBORAsymKeySigner(keyPair.getPrivate())
                         .sign(SIGNATURE_LABEL,
                                 RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
-        Log.i("SIGN", signedData.toString());
+//        Log.i("SIGN", signedData.toString());
         new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
 
         keyStore.setEntry(
@@ -441,7 +502,7 @@ public class InstrumentedTest {
                 new CBORX509Signer(((KeyStore.PrivateKeyEntry) keyStore.getEntry(KEY_2, null)).getPrivateKey(), RawReader.ecCertPath)
                         .sign(SIGNATURE_LABEL,
                                 RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
-        Log.i("CERTSIGN", signedData.toString());
+//        Log.i("CERTSIGN", signedData.toString());
 
         new CBORX509Validator((certificatePath, algorithm) -> {
             if (algorithm != KeyAlgorithms.P_256.getRecommendedSignatureAlgorithm()) {

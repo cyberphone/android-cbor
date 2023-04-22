@@ -66,6 +66,7 @@ import org.webpki.cbor.CBORX509Encrypter;
 import org.webpki.cbor.CBORX509Signer;
 import org.webpki.cbor.CBORX509Validator;
 
+import org.webpki.crypto.EncryptionCore;
 import org.webpki.crypto.HmacAlgorithms;
 import org.webpki.crypto.ContentEncryptionAlgorithms;
 import org.webpki.crypto.KeyEncryptionAlgorithms;
@@ -80,6 +81,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 import java.security.GeneralSecurityException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.KeyPair;
 
@@ -455,9 +457,7 @@ public class MainActivity extends AppCompatActivity {
                             .setKeyId(new CBORString(RawReader.secretKeyId));
             }
             signer.setIntercepter(new CBORCryptoUtils.Intercepter() {
-                @Override
-                public CBORObject wrap(CBORMap mapToSign) throws
-                        IOException, GeneralSecurityException {
+                @Override public CBORObject wrap(CBORMap mapToSign) {
                     return dataToBeSigned;
                 }
             });
@@ -552,18 +552,54 @@ public class MainActivity extends AppCompatActivity {
                 if (cefMap.getObject(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
                         .getMap().hasKey(CBORCryptoConstants.CERT_PATH_LABEL)) {
                     encryptionInfo = "PKI";
-                    decrypter = new CBORX509Decrypter(
-                            (certificatePath,
-                             keyEncryptionAlgorithm,
-                             contentEncryptionAlgorithm) -> RawReader.ecKeyPair.getPrivate());
+                    decrypter = new CBORX509Decrypter(new CBORX509Decrypter.DecrypterImpl() {
+                        @Override
+                        public PrivateKey locate(X509Certificate[] certificatePath,
+                                                 KeyEncryptionAlgorithms keyEncryptionAlgorithm,
+                                                 ContentEncryptionAlgorithms contentEncryptionAlgorithm) {
+                            return RawReader.ecKeyPair.getPrivate();
+                        }
+
+                        @Override
+                        public byte[] decrypt(PrivateKey privateKey,
+                                              byte[] optionalEncryptedKey,
+                                              PublicKey optionalEphemeralKey,
+                                              KeyEncryptionAlgorithms keyEncryptionAlgorithm,
+                                              ContentEncryptionAlgorithms contentEncryptionAlgorithm) {
+                            return EncryptionCore.receiverKeyAgreement(true,
+                                                                       keyEncryptionAlgorithm,
+                                                                       contentEncryptionAlgorithm,
+                                                                       optionalEphemeralKey,
+                                                                       privateKey,
+                                                                       optionalEncryptedKey);
+                        }
+                    });
                 } else {
                     encryptionInfo = "ASYMMETRIC";
-                    decrypter = new CBORAsymKeyDecrypter(
-                            (optionalPublicKey,
-                             optionalKeyId,
-                             keyEncryptionAlgorithm,
-                             contentEncryptionAlgorithm) -> (keyEncryptionAlgorithm.isRsa() ?
-                                 RawReader.rsaKeyPair : RawReader.ecKeyPair).getPrivate());
+                    decrypter = new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.DecrypterImpl() {
+                        @Override
+                        public PrivateKey locate(PublicKey optionalPublicKey,
+                                                 CBORObject optionalKeyId,
+                                                 KeyEncryptionAlgorithms keyEncryptionAlgorithm,
+                                                 ContentEncryptionAlgorithms contentEncryptionAlgorithm) {
+                            return (keyEncryptionAlgorithm.isRsa() ?
+                                    RawReader.rsaKeyPair : RawReader.ecKeyPair).getPrivate();
+                        }
+
+                        @Override
+                        public byte[] decrypt(PrivateKey privateKey,
+                                              byte[] optionalEncryptedKey,
+                                              PublicKey optionalEphemeralKey,
+                                              KeyEncryptionAlgorithms keyEncryptionAlgorithm,
+                                              ContentEncryptionAlgorithms contentEncryptionAlgorithm) {
+                            return EncryptionCore.receiverKeyAgreement(true,
+                                                                       keyEncryptionAlgorithm,
+                                                                       contentEncryptionAlgorithm,
+                                                                       optionalEphemeralKey,
+                                                                       privateKey,
+                                                                       optionalEncryptedKey);
+                        }
+                    });
                 }
             } else {
                 encryptionInfo = "SYMMETRIC";

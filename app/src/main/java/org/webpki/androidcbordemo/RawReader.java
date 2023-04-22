@@ -8,6 +8,7 @@ import org.webpki.cbor.CBORKeyPair;
 import org.webpki.cbor.CBORObject;
 
 import org.webpki.util.HexaDecimal;
+import org.webpki.util.IO;
 import org.webpki.util.UTF8;
 
 import java.io.ByteArrayOutputStream;
@@ -36,35 +37,24 @@ public class RawReader {
     public static byte[] secretKey;
     public static String secretKeyId;
 
-    static byte[] getByteArrayFromInputStream(InputStream is) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(10000);
-        byte[] buffer = new byte[10000];
-        int bytes;
-        while ((bytes = is.read(buffer)) != -1) {
-            baos.write(buffer, 0, bytes);
-        }
-        is.close();
-        return baos.toByteArray();
-    }
-
-    static byte[] getRawResource(int resource) throws Exception {
-        return getByteArrayFromInputStream(appContext.getResources()
+    static byte[] getRawResource(int resource) {
+        return IO.getByteArrayFromInputStream(appContext.getResources()
                 .openRawResource(resource));
     }
 
-    static String getStringResource(int resource) throws Exception {
+    static String getStringResource(int resource) {
         return UTF8.decode(getRawResource(resource));
     }
 
-    static CBORObject getCBORResource(int resource) throws Exception {
+    static CBORObject getCBORResource(int resource) {
         return CBORDiagnosticNotationDecoder.decode(getStringResource(resource));
     }
 
-    static String getCBORText(int resource) throws Exception {
+    static String getCBORText(int resource) {
         return CBORObject.decode(getRawResource(resource)).toString();
     }
 
-    static KeyPair getKeyPair(int resource) throws Exception {
+    static KeyPair getKeyPair(int resource)  {
         return CBORKeyPair.convert(getCBORResource(resource));
     }
 
