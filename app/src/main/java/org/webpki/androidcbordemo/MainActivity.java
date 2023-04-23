@@ -246,24 +246,23 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("'CBOR Sample' yyyy-MM-dd'T'HH:mm:ss'Z'");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         return new CBORMap()
-                .setObject(new CBORInteger(++index),
-                           new CBORString(sdf.format(new Date().getTime())))
-                .setObject(new CBORInteger(++index),
+                .set(new CBORInteger(++index), new CBORString(sdf.format(new Date().getTime())))
+                .set(new CBORInteger(++index),
                            new CBORBytes(
                         new byte[]{(byte)0x50, (byte)0x42, (byte)0x12, (byte)0x3a, (byte)0x65,
                                    (byte)0x93, (byte)0x60, (byte)0x16, (byte)0x3a, (byte)0xd8,
                                    (byte)0x84, (byte)0x71, (byte)0xf8, (byte)0xc0, (byte)0x89,
                                    (byte)0x91, (byte)0x3b}))
-                .setObject(new CBORInteger(++index),
-                           new CBORBigInteger(new BigInteger("-653625362513652165356656")))
-                .setObject(new CBORInteger(++index), new CBORArray()
-                        .addObject(new CBORNull())
-                        .addObject(new CBORBoolean(true))
-                        .addObject(new CBORBoolean(false)))
-                .setObject(new CBORInteger(++index), new CBORArray()
-                        .addObject(new CBORFloatingPoint(0.0))
-                        .addObject(new CBORFloatingPoint(2.0000001e+38))
-                        .addObject(new CBORFloatingPoint(Double.NEGATIVE_INFINITY)));
+                .set(new CBORInteger(++index),
+                     new CBORBigInteger(new BigInteger("-653625362513652165356656")))
+                .set(new CBORInteger(++index), new CBORArray()
+                        .add(new CBORNull())
+                        .add(new CBORBoolean(true))
+                        .add(new CBORBoolean(false)))
+                .set(new CBORInteger(++index), new CBORArray()
+                        .add(new CBORFloatingPoint(0.0))
+                        .add(new CBORFloatingPoint(2.0000001e+38))
+                        .add(new CBORFloatingPoint(Double.NEGATIVE_INFINITY)));
     }
 
     @JavascriptInterface
@@ -288,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
         if (rawContainer.getType() == CBORTypes.TAG) {
             CBORObject container = rawContainer.getTag().getObject();
             if (container.getType() == CBORTypes.ARRAY) {
-                container = container.getArray().getObject(1);
+                container = container.getArray().get(1);
             }
             return container.getMap();
         }
@@ -307,34 +306,34 @@ public class MainActivity extends AppCompatActivity {
             algorithm = 0;
             keyId = null;
             for (CBORObject key : coreMap.getKeys()) {
-                CBORObject value = coreMap.getObject(key);
+                CBORObject value = coreMap.get(key);
                 if (value.getType() != CBORTypes.MAP) continue;
                 CBORMap csfCandidate = value.getMap();
-                if (!csfCandidate.hasKey(CBORCryptoConstants.ALGORITHM_LABEL)) continue;
-                value = csfCandidate.getObject(CBORCryptoConstants.ALGORITHM_LABEL);
+                if (!csfCandidate.containsKey(CBORCryptoConstants.ALGORITHM_LABEL)) continue;
+                value = csfCandidate.get(CBORCryptoConstants.ALGORITHM_LABEL);
                 if (value.getType() != CBORTypes.INTEGER) continue;
                 int tempAlgorithm = value.getInt();
                 CBORObject tempKeyId = null;
-                if (csfCandidate.hasKey(CBORCryptoConstants.KEY_ID_LABEL)) {
-                    tempKeyId = csfCandidate.getObject(CBORCryptoConstants.KEY_ID_LABEL);
+                if (csfCandidate.containsKey(CBORCryptoConstants.KEY_ID_LABEL)) {
+                    tempKeyId = csfCandidate.get(CBORCryptoConstants.KEY_ID_LABEL);
                 }
-                if (!csfCandidate.hasKey(CBORCryptoConstants.SIGNATURE_LABEL)) continue;
-                value = csfCandidate.getObject(CBORCryptoConstants.SIGNATURE_LABEL);
+                if (!csfCandidate.containsKey(CBORCryptoConstants.SIGNATURE_LABEL)) continue;
+                value = csfCandidate.get(CBORCryptoConstants.SIGNATURE_LABEL);
                 if (value.getType() != CBORTypes.BYTE_STRING) continue;
                 PublicKey tempPublicKey = null;
-                if (csfCandidate.hasKey(CBORCryptoConstants.PUBLIC_KEY_LABEL)) {
+                if (csfCandidate.containsKey(CBORCryptoConstants.PUBLIC_KEY_LABEL)) {
                     try {
                         tempPublicKey = CBORPublicKey.convert(
-                                csfCandidate.getObject(CBORCryptoConstants.PUBLIC_KEY_LABEL));
+                                csfCandidate.get(CBORCryptoConstants.PUBLIC_KEY_LABEL));
                     } catch (Exception e) {
                         continue;
                     }
                 }
                 X509Certificate[] tempCertificatePath = null;
-                if (csfCandidate.hasKey(CBORCryptoConstants.CERT_PATH_LABEL)) {
+                if (csfCandidate.containsKey(CBORCryptoConstants.CERT_PATH_LABEL)) {
                     try {
                         tempCertificatePath = CBORCryptoUtils.decodeCertificateArray(
-                                csfCandidate.getObject(CBORCryptoConstants.CERT_PATH_LABEL).getArray());
+                                csfCandidate.get(CBORCryptoConstants.CERT_PATH_LABEL).getArray());
                     } catch (Exception e) {
                         continue;
                     }
@@ -548,9 +547,9 @@ public class MainActivity extends AppCompatActivity {
             CBORMap cefMap = unwrapOptionalTag(cefObject);
             CBORDecrypter decrypter;
             String encryptionInfo;
-            if (cefMap.hasKey(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)) {
-                if (cefMap.getObject(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
-                        .getMap().hasKey(CBORCryptoConstants.CERT_PATH_LABEL)) {
+            if (cefMap.containsKey(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)) {
+                if (cefMap.get(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
+                        .getMap().containsKey(CBORCryptoConstants.CERT_PATH_LABEL)) {
                     encryptionInfo = "PKI";
                     decrypter = new CBORX509Decrypter(new CBORX509Decrypter.DecrypterImpl() {
                         @Override
@@ -566,12 +565,12 @@ public class MainActivity extends AppCompatActivity {
                                               PublicKey optionalEphemeralKey,
                                               KeyEncryptionAlgorithms keyEncryptionAlgorithm,
                                               ContentEncryptionAlgorithms contentEncryptionAlgorithm) {
-                            return EncryptionCore.receiverKeyAgreement(true,
-                                                                       keyEncryptionAlgorithm,
-                                                                       contentEncryptionAlgorithm,
-                                                                       optionalEphemeralKey,
-                                                                       privateKey,
-                                                                       optionalEncryptedKey);
+                            return EncryptionCore.decryptKey(true,
+                                                             privateKey,
+                                                             optionalEncryptedKey,
+                                                             optionalEphemeralKey,
+                                                             keyEncryptionAlgorithm,
+                                                             contentEncryptionAlgorithm);
                         }
                     });
                 } else {
@@ -592,12 +591,12 @@ public class MainActivity extends AppCompatActivity {
                                               PublicKey optionalEphemeralKey,
                                               KeyEncryptionAlgorithms keyEncryptionAlgorithm,
                                               ContentEncryptionAlgorithms contentEncryptionAlgorithm) {
-                            return EncryptionCore.receiverKeyAgreement(true,
-                                                                       keyEncryptionAlgorithm,
-                                                                       contentEncryptionAlgorithm,
-                                                                       optionalEphemeralKey,
-                                                                       privateKey,
-                                                                       optionalEncryptedKey);
+                            return EncryptionCore.decryptKey(true,
+                                                             privateKey,
+                                                             optionalEncryptedKey,
+                                                             optionalEphemeralKey,
+                                                             keyEncryptionAlgorithm,
+                                                             contentEncryptionAlgorithm);
                         }
                     });
                 }

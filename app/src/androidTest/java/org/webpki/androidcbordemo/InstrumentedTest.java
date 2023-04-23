@@ -37,6 +37,7 @@ import org.webpki.cbor.CBORX509Validator;
 
 import org.webpki.crypto.AsymSignatureAlgorithms;
 import org.webpki.crypto.ContentEncryptionAlgorithms;
+import org.webpki.crypto.CryptoException;
 import org.webpki.crypto.EncryptionCore;
 import org.webpki.crypto.KeyAlgorithms;
 import org.webpki.crypto.KeyEncryptionAlgorithms;
@@ -45,7 +46,6 @@ import org.webpki.crypto.OkpSupport;
 
 import org.webpki.util.HexaDecimal;
 
-import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
@@ -215,8 +215,8 @@ public class InstrumentedTest {
         CBORObject encryptionObject = CBORObject.decode(RawReader.getRawResource(resource));
         CBORMap cefContainer = MainActivity.unwrapOptionalTag(encryptionObject);
         PrivateKey privateKey = cefContainer
-                .getObject(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
-                     .getMap().hasKey(CBORCryptoConstants.EPHEMERAL_KEY_LABEL) ?
+                .get(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
+                     .getMap().containsKey(CBORCryptoConstants.EPHEMERAL_KEY_LABEL) ?
                 RawReader.ecKeyPair.getPrivate() : RawReader.rsaKeyPair.getPrivate();
         assertTrue("Testv",
                    Arrays.equals(DATA_TO_ENCRYPT,
@@ -258,14 +258,14 @@ public class InstrumentedTest {
                        */
                   }).setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null).decrypt(encryptionObject)));
         byte[] tag = cefContainer.readBytesAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
-        cefContainer.setObject(CBORCryptoConstants.TAG_LABEL, new CBORBytes(tag));
+        cefContainer.set(CBORCryptoConstants.TAG_LABEL, new CBORBytes(tag));
         new CBORAsymKeyDecrypter(privateKey)
                 .setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
                 .decrypt(encryptionObject);
 
         tag = cefContainer.readBytesAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
         tag[5]++;
-        cefContainer.setObject(CBORCryptoConstants.TAG_LABEL, new CBORBytes(tag));
+        cefContainer.set(CBORCryptoConstants.TAG_LABEL, new CBORBytes(tag));
         try {
             new CBORAsymKeyDecrypter(privateKey)
                     .setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
@@ -443,12 +443,12 @@ public class InstrumentedTest {
         Log.i("SIGN", signedData.toString());
         new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
         byte[] signature =
-        signedData.getMap().getObject(SIGNATURE_LABEL)
+        signedData.getMap().get(SIGNATURE_LABEL)
                 .getMap().readBytesAndRemoveKey(CBORCryptoConstants.SIGNATURE_LABEL);
         signature[5]++;
         try {
-            signedData.getMap().getObject(SIGNATURE_LABEL)
-                    .getMap().setObject(CBORCryptoConstants.SIGNATURE_LABEL,
+            signedData.getMap().get(SIGNATURE_LABEL)
+                    .getMap().set(CBORCryptoConstants.SIGNATURE_LABEL,
                                         new CBORBytes(signature));
             new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
             fail("must not");
@@ -506,12 +506,12 @@ public class InstrumentedTest {
 
         new CBORX509Validator((certificatePath, algorithm) -> {
             if (algorithm != KeyAlgorithms.P_256.getRecommendedSignatureAlgorithm()) {
-                throw new GeneralSecurityException("alg");
+                throw new CryptoException("alg");
             }
             int q = 0;
             for (X509Certificate cert : RawReader.ecCertPath) {
                 if (!certificatePath[q++].equals(cert)) {
-                    throw new GeneralSecurityException("cert");
+                    throw new CryptoException("cert");
                 }
             }
         }).validate(SIGNATURE_LABEL, signedData);
