@@ -80,7 +80,6 @@ import java.io.IOException;
 
 import java.math.BigInteger;
 
-import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.KeyPair;
@@ -241,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                  executeButton("doVerify(document.getElementById(\"cborData\").value)"));
     }
 
-    CBORMap getStandardMessage() throws IOException {
+    CBORMap getStandardMessage() {
         int index = 0;
         SimpleDateFormat sdf = new SimpleDateFormat("'CBOR Sample' yyyy-MM-dd'T'HH:mm:ss'Z'");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -266,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @JavascriptInterface
-    public void verifySignature() throws Exception {
+    public void verifySignature() {
         // Show a pre-defined signed object as default
         CBORMap dataToSign = getStandardMessage();
         verifySignature(new CBORAsymKeySigner(RawReader.ecKeyPair.getPrivate())
@@ -282,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
     String signatureType;
     String keyInfo;
 
-    public static CBORMap unwrapOptionalTag(CBORObject rawContainer) throws IOException {
+    public static CBORMap unwrapOptionalTag(CBORObject rawContainer) {
         // It might be tagged
         if (rawContainer.getType() == CBORTypes.TAG) {
             CBORObject container = rawContainer.getTag().getObject();
@@ -535,7 +534,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @JavascriptInterface
-    public void decryptData() throws Exception {
+    public void decryptData()  {
         // Show a pre-defined encrypted object as default
         decryptData(RawReader.getCBORText(R.raw.a256_a128cbc_hs256_kid_cbor));
     }
