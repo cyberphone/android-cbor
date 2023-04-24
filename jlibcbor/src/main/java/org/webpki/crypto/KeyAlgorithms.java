@@ -16,8 +16,6 @@
  */
 package org.webpki.crypto;
 
-import java.io.IOException;
-
 import java.security.AlgorithmParameters;
 import java.security.GeneralSecurityException;
 import java.security.Key;
@@ -289,7 +287,7 @@ public enum KeyAlgorithms implements CryptoAlgorithms {
                     } catch (Exception e1) {
                         Log.e("OL2", jceName, e);
                     }
-                    new RuntimeException(e);
+                    new CryptoException(e);
                 }
             }
         }
@@ -359,7 +357,7 @@ public enum KeyAlgorithms implements CryptoAlgorithms {
                     return alg;
                 }
             }
-            throw new IllegalArgumentException("Unsupported RSA key size: " + lengthInBits);
+            throw new CryptoException("Unsupported RSA key size: " + lengthInBits);
         }
         if (Build.VERSION.SDK_INT >= 33) {
             return OkpSupport.getKeyAlgorithm(key);
@@ -370,24 +368,27 @@ public enum KeyAlgorithms implements CryptoAlgorithms {
     // Public keys read from specific security providers are not comparable to 
     // public keys created directly from crypto parameters and thus don't compare :-(
     // This method normalizes the former.
-    public static PublicKey normalizePublicKey(PublicKey publicKey)
-            throws GeneralSecurityException, IOException {
-        if (publicKey instanceof ECKey) {
-            return KeyFactory.getInstance("EC")
-                    .generatePublic(new ECPublicKeySpec(((ECPublicKey)publicKey).getW(),
-                                                        ((ECPublicKey)publicKey).getParams()));
+    public static PublicKey normalizePublicKey(PublicKey publicKey) {
+        try {
+            if (publicKey instanceof ECKey) {
+                return KeyFactory.getInstance("EC")
+                        .generatePublic(new ECPublicKeySpec(((ECPublicKey)publicKey).getW(),
+                                                            ((ECPublicKey)publicKey).getParams()));
+            }
+            if (publicKey instanceof RSAKey) {
+                return KeyFactory.getInstance("RSA").generatePublic(
+                        new RSAPublicKeySpec(((RSAPublicKey)publicKey).getModulus(),
+                                             ((RSAPublicKey)publicKey).getPublicExponent()));
+            }
+            if (Build.VERSION.SDK_INT >= 33) {
+                KeyAlgorithms keyAlgorithm = OkpSupport.getKeyAlgorithm(publicKey);
+                return OkpSupport.raw2PublicKey(OkpSupport.public2RawKey(publicKey, keyAlgorithm),
+                                                keyAlgorithm);
+            }
+            throw new IllegalArgumentException("Unsupported in API " +  Build.VERSION.SDK_INT);
+        } catch (GeneralSecurityException e) {
+            throw new CryptoException(e);
         }
-        if (publicKey instanceof RSAKey) {
-            return KeyFactory.getInstance("RSA").generatePublic(
-                    new RSAPublicKeySpec(((RSAPublicKey)publicKey).getModulus(),
-                                         ((RSAPublicKey)publicKey).getPublicExponent()));
-        }
-        if (Build.VERSION.SDK_INT >= 33) {
-            KeyAlgorithms keyAlgorithm = OkpSupport.getKeyAlgorithm(publicKey);
-            return OkpSupport.raw2PublicKey(OkpSupport.public2RawKey(publicKey, keyAlgorithm),
-                                            keyAlgorithm);
-        }
-        throw new IllegalArgumentException("Unsupported in API " +  Build.VERSION.SDK_INT);
     }
 
     public static KeyAlgorithms getKeyAlgorithm(Key key) {

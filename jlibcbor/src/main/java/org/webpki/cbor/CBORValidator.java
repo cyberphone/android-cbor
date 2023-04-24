@@ -16,10 +16,6 @@
  */
 package org.webpki.cbor;
 
-import java.io.IOException;
-
-import java.security.GeneralSecurityException;
-
 import org.webpki.cbor.CBORCryptoUtils.POLICY;
 import org.webpki.cbor.CBORCryptoUtils.Collector;
 
@@ -44,7 +40,7 @@ public abstract class CBORValidator {
                                  int coseAlgorithmId,
                                  CBORObject optionalKeyId,
                                  byte[] signatureValue,
-                                 byte[] signedData) throws IOException, GeneralSecurityException;
+                                 byte[] signedData);
  
     POLICY customDataPolicy = POLICY.FORBIDDEN;
     Collector customDataCollector;
@@ -101,11 +97,8 @@ public abstract class CBORValidator {
      * @param key Key in map holding signature
      * @param signedObject Signed CBOR object
      * @return The original <code>signedObject</code>
-     * @throws IOException
-     * @throws GeneralSecurityException
      */
-    public CBORObject validate(CBORObject key, CBORObject signedObject) 
-            throws IOException, GeneralSecurityException {
+    public CBORObject validate(CBORObject key, CBORObject signedObject) {
 
         // There may be a tag holding the signed map.
         CBORMap signedMap = CBORCryptoUtils.unwrapContainerMap(signedObject,
@@ -113,7 +106,7 @@ public abstract class CBORValidator {
                                                                tagCollector);
 
         // Fetch signature container object
-        CBORMap csfContainer = signedMap.getObject(key).getMap();
+        CBORMap csfContainer = signedMap.get(key).getMap();
 
         // Get the signature value and remove it from the (map) object.
         byte[] signatureValue = csfContainer.readBytesAndRemoveKey(SIGNATURE_LABEL);
@@ -127,7 +120,7 @@ public abstract class CBORValidator {
         // Call algorithm specific validator. The code below presumes that encode()
         // returns a deterministic representation of the signed CBOR data.
         coreValidation(csfContainer,
-                       csfContainer.getObject(ALGORITHM_LABEL).getInt(),
+                       csfContainer.get(ALGORITHM_LABEL).getInt(),
                        optionalKeyId, 
                        signatureValue,
                        signedObject.encode());
@@ -136,7 +129,7 @@ public abstract class CBORValidator {
         csfContainer.checkForUnread();
 
         // Restore object.
-        csfContainer.setObject(SIGNATURE_LABEL, new CBORBytes(signatureValue));
+        csfContainer.set(SIGNATURE_LABEL, new CBORBytes(signatureValue));
         
         // Return it as well.
         return signedObject;

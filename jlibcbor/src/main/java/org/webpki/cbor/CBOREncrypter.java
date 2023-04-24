@@ -16,10 +16,6 @@
  */
 package org.webpki.cbor;
 
-import java.io.IOException;
-
-import java.security.GeneralSecurityException;
-
 import org.webpki.crypto.ContentEncryptionAlgorithms;
 import org.webpki.crypto.EncryptionCore;
 
@@ -57,8 +53,7 @@ public abstract class CBOREncrypter {
         this.contentEncryptionAlgorithm = contentEncryptionAlgorithm;
     }
     
-    abstract byte[] getContentEncryptionKey(CBORMap encryptionObject)
-            throws IOException, GeneralSecurityException;
+    abstract byte[] getContentEncryptionKey(CBORMap encryptionObject);
     
     /**
      * Sets optional Intercepter.
@@ -127,10 +122,8 @@ public abstract class CBOREncrypter {
      * 
      * @param dataToEncrypt The data to encrypt
      * @return CBOR encryption object
-     * @throws IOException
-     * @throws GeneralSecurityException
      */
-    public CBORObject encrypt(byte[] dataToEncrypt) throws IOException, GeneralSecurityException {
+    public CBORObject encrypt(byte[] dataToEncrypt) {
 
         // Create an empty encryption container object.
         CBORMap cefContainer = new CBORMap();
@@ -141,11 +134,11 @@ public abstract class CBOREncrypter {
         // Get optional custom data.
         CBORObject customData = intercepter.getCustomData();
         if (customData != null) {
-            cefContainer.setObject(CUSTOM_DATA_LABEL, customData);
+            cefContainer.set(CUSTOM_DATA_LABEL, customData);
         }
 
         // Add the mandatory content encryption algorithm.
-        cefContainer.setObject(ALGORITHM_LABEL,
+        cefContainer.set(ALGORITHM_LABEL,
                                new CBORInteger(contentEncryptionAlgorithm.getCoseAlgorithmId()));
 
         // Possible key encryption kicks in here.
@@ -154,7 +147,7 @@ public abstract class CBOREncrypter {
             innerObject = cefContainer;
         } else {
             innerObject = new CBORMap();
-            cefContainer.setObject(KEY_ENCRYPTION_LABEL, innerObject);
+            cefContainer.set(KEY_ENCRYPTION_LABEL, innerObject);
         }
 
         // Get the content encryption key which also may be encrypted.
@@ -162,7 +155,7 @@ public abstract class CBOREncrypter {
 
         // Add a key Id if there is one.
         if (optionalKeyId != null) {
-            innerObject.setObject(KEY_ID_LABEL, optionalKeyId);
+            innerObject.set(KEY_ID_LABEL, optionalKeyId);
         }
         
         // Now we should have everything for encrypting the actual data.
@@ -183,13 +176,13 @@ public abstract class CBOREncrypter {
         // Complement the encryption object with the result of the content encryption.
         
         // Authentication Data (tag).
-        cefContainer.setObject(TAG_LABEL, new CBORBytes(result.getTag()));
+        cefContainer.set(TAG_LABEL, new CBORBytes(result.getTag()));
 
         // Initialization Vector.
-        cefContainer.setObject(IV_LABEL, new CBORBytes(iv));
+        cefContainer.set(IV_LABEL, new CBORBytes(iv));
 
         // The encrypted data.
-        cefContainer.setObject(CIPHER_TEXT_LABEL, new CBORBytes(result.getCipherText()));
+        cefContainer.set(CIPHER_TEXT_LABEL, new CBORBytes(result.getCipherText()));
 
         // Finally, the thing we all longed(?) for!
         return outerObject;

@@ -14,27 +14,30 @@
  *  limitations under the License.
  *
  */
-package org.webpki.crypto;
+package org.webpki.cbor;
 
 /**
- * Common interface for asymmetric key signatures.
- *
+ * Wrapper for making the WebPKI crypto library only throw unchecked exceptions.
  */
-public interface AsymKeySignerInterface {
+public class CBORException extends RuntimeException {
 
-    /**
-     * Sign data.
-     * 
-     * @param data Data to sign
-     * @return Signed data
-     */
-    byte[] signData(byte[] data);
+    private static final long serialVersionUID = 1L;
     
     /**
-     * Get signature algorithm.
-     * 
-     * @return Signature algorithm
+     * Constructor for rethrowing checked exceptions.
+     *  
+     * @param sourceException
      */
-    AsymSignatureAlgorithms getAlgorithm();
-
+    public CBORException(Exception sourceException) {
+        super(sourceException);
+    }
+    
+    /**
+     * Constructor for original exceptions.
+     * 
+     * @param message
+     */
+    public CBORException(String message) {
+        super(message);
+    }
 }

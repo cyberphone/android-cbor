@@ -16,10 +16,6 @@
  */
 package org.webpki.cbor;
 
-import java.io.IOException;
-
-import java.security.GeneralSecurityException;
-
 import org.webpki.crypto.ContentEncryptionAlgorithms;
 import org.webpki.crypto.EncryptionCore;
 
@@ -45,8 +41,7 @@ public abstract class CBORDecrypter {
     
     abstract byte[] getContentEncryptionKey(CBORMap innerObject,
                                             ContentEncryptionAlgorithms contentEncryptionAlgorithm,
-                                            CBORObject optionalKeyId) 
-            throws IOException, GeneralSecurityException;
+                                            CBORObject optionalKeyId);
 
     POLICY customDataPolicy = POLICY.FORBIDDEN;
     Collector customDataCallBack;
@@ -101,11 +96,8 @@ public abstract class CBORDecrypter {
      * 
      * @param encryptionObject CBOR encryption object
      * @return Decrypted data
-     * @throws IOException
-     * @throws GeneralSecurityException
      */
-    public byte[] decrypt(CBORObject encryptionObject) throws IOException, 
-                                                              GeneralSecurityException {
+    public byte[] decrypt(CBORObject encryptionObject) {
 
         // There may be a tag holding the encryption container object (main map).
         CBORMap cefContainer = CBORCryptoUtils.unwrapContainerMap(encryptionObject,
@@ -115,11 +107,11 @@ public abstract class CBORDecrypter {
         // Get the mandatory content encryption algorithm.
         ContentEncryptionAlgorithms contentEncryptionAlgorithm =
                 ContentEncryptionAlgorithms.getAlgorithmFromId(
-                        cefContainer.getObject(ALGORITHM_LABEL).getInt());
+                        cefContainer.get(ALGORITHM_LABEL).getInt());
 
         // Possible key encryption kicks in here.  That is, there is a sub map.
         CBORMap innerObject = this instanceof CBORSymKeyDecrypter ? 
-                cefContainer : cefContainer.getObject(KEY_ENCRYPTION_LABEL).getMap();
+                cefContainer : cefContainer.get(KEY_ENCRYPTION_LABEL).getMap();
               
         // Fetch optional keyId.
         CBORObject optionalKeyId = CBORCryptoUtils.getKeyId(innerObject);

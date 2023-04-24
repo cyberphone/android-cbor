@@ -16,9 +16,6 @@
  */
 package org.webpki.cbor;
 
-import java.io.IOException;
-
-import java.security.GeneralSecurityException;
 import java.security.PublicKey;
 
 import org.webpki.crypto.ContentEncryptionAlgorithms;
@@ -63,12 +60,11 @@ public class CBORAsymKeyEncrypter extends CBOREncrypter {
     }
  
     @Override
-    byte[] getContentEncryptionKey(CBORMap keyEncryption)
-            throws IOException, GeneralSecurityException {
+    byte[] getContentEncryptionKey(CBORMap keyEncryption) {
         
         // We may want to include the public key as well
         if (wantPublicKey) {
-            keyEncryption.setObject(PUBLIC_KEY_LABEL, CBORPublicKey.convert(publicKey));
+            keyEncryption.set(PUBLIC_KEY_LABEL, CBORPublicKey.convert(publicKey));
             // Which does not go together with a keyId
             CBORCryptoUtils.rejectPossibleKeyId(optionalKeyId);
         }

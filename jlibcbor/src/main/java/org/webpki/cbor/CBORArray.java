@@ -16,8 +16,6 @@
  */
 package org.webpki.cbor;
 
-import java.io.IOException;
-
 import java.util.ArrayList;
 
 /**
@@ -47,9 +45,8 @@ public class CBORArray extends CBORObject {
      * 
      * @param index The position (0 - size-1)
      * @return CBOR object
-     * @throws IOException
      */
-    public CBORObject getObject(int index) throws IOException {
+    public CBORObject get(int index) {
         return objectList.get(index);
     }
     
@@ -59,7 +56,7 @@ public class CBORArray extends CBORObject {
      * @param cborObject
      * @return <code>this</code>
      */
-    public CBORArray addObject(CBORObject cborObject) {
+    public CBORArray add(CBORObject cborObject) {
         nullCheck(cborObject);
         objectList.add(cborObject);
         return this;
@@ -70,7 +67,7 @@ public class CBORArray extends CBORObject {
      * 
      * @return Array of CBOR objects
      */
-    public CBORObject[] getObjects() {
+    public CBORObject[] toArray() {
         return objectList.toArray(new CBORObject[0]);
     }
 
@@ -82,7 +79,7 @@ public class CBORArray extends CBORObject {
     @Override
     public byte[] encode() {
         byte[] encoded = encodeTagAndN(MT_ARRAY, objectList.size());
-        for (CBORObject cborObject : getObjects()) {
+        for (CBORObject cborObject : toArray()) {
             encoded = addByteArrays(encoded, cborObject.encode());
         }
         return encoded;
@@ -92,7 +89,7 @@ public class CBORArray extends CBORObject {
     void internalToString(CBORObject.DiagnosticNotation cborPrinter) {
         cborPrinter.append('[');
         boolean notFirst = false;
-        for (CBORObject cborObject : getObjects()) {
+        for (CBORObject cborObject : toArray()) {
             if (notFirst) {
                 cborPrinter.append(", ");
             }

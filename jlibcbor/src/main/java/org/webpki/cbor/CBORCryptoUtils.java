@@ -16,36 +16,31 @@
  */
 package org.webpki.cbor;
 
-import java.io.IOException;
-
-import java.security.GeneralSecurityException;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 
 import java.security.cert.X509Certificate;
 
 import java.util.ArrayList;
 
-import org.webpki.crypto.AsymSignatureAlgorithms;
 import org.webpki.crypto.CertificateUtil;
 import org.webpki.crypto.ContentEncryptionAlgorithms;
+import org.webpki.crypto.CryptoException;
 import org.webpki.crypto.CryptoRandom;
 import org.webpki.crypto.EncryptionCore;
 import org.webpki.crypto.KeyEncryptionAlgorithms;
-import org.webpki.crypto.SignatureWrapper;
 
 import static org.webpki.cbor.CBORCryptoConstants.*;
 
 /**
- * Class holding crypto support 
+ * Class holding CBOR crypto support 
  */
 public class CBORCryptoUtils {
     
-    CBORCryptoUtils() {}
+    private CBORCryptoUtils() {}
     
     /**
      * Decodes a certificate path from a CBOR array.
- 
+     *<p>
      * Note that the array must only contain a
      * list of X509 certificates in DER format,
      * each encoded as a CBOR <code>byte&nbsp;string</code>. 
@@ -53,15 +48,15 @@ public class CBORCryptoUtils {
      * order with respect to parenthood.  That is,
      * the first certificate would typically be
      * an end-entity certificate.
-     * 
+     * </p>
+     * <p>
      * See {@link #encodeCertificateArray(X509Certificate[])}.
+     * </p>
      * 
+     * @param array CBOR array with X.509 certificates
      * @return Certificate path
-     * @throws IOException
-     * @throws GeneralSecurityException
      */
-    public static X509Certificate[] decodeCertificateArray(CBORArray array) 
-            throws IOException, GeneralSecurityException {
+    public static X509Certificate[] decodeCertificateArray(CBORArray array) {
         ArrayList<byte[]> blobs = new ArrayList<>();
         int index = 0;
         do {
@@ -72,7 +67,7 @@ public class CBORCryptoUtils {
 
     /**
      * Encodes certificate path into a CBOR array.
- 
+     * <p>
      * Note that the certificates must be in ascending
      * order with respect to parenthood.  That is,
      * the first certificate would typically be
@@ -80,20 +75,18 @@ public class CBORCryptoUtils {
      * will after the conversion hold a list of
      * DER-encoded certificates, each represented by a CBOR
      * <code>byte&nbsp;string</code>.
-     * 
+     * </p>
+     * <p>
      * See  {@link #decodeCertificateArray(CBORArray)}.
+     * </p>
      * 
      * @param certificatePath The certificate path to be converted to CBOR 
-     * 
      * @return CBORArray
-     * @throws IOException
-     * @throws GeneralSecurityException
-     */
-    public static CBORArray encodeCertificateArray(X509Certificate[] certificatePath) 
-            throws IOException, GeneralSecurityException {
+      */
+    public static CBORArray encodeCertificateArray(X509Certificate[] certificatePath) {
         CBORArray array = new CBORArray();
-        for (X509Certificate certificate : CertificateUtil.checkCertificatePath(certificatePath)) {
-            array.addObject(new CBORBytes(certificate.getEncoded()));
+        for (X509Certificate cert : CertificateUtil.checkCertificatePath(certificatePath)) {
+            array.add(new CBORBytes(CertificateUtil.getBlobFromCertificate(cert)));
         }
         return array;
     }
@@ -117,11 +110,8 @@ public class CBORCryptoUtils {
          * 
          * @param map Unwrapped map
          * @return Original (default implementation) or wrapped map
-         * @throws IOException
-         * @throws GeneralSecurityException
          */
-        default CBORObject wrap(CBORMap map) 
-                throws IOException, GeneralSecurityException {
+        default CBORObject wrap(CBORMap map) {
             return map;
         }
 
@@ -137,10 +127,8 @@ public class CBORCryptoUtils {
          * </p>
          * 
          * @return <code>null</code> (default implementation) or custom data object.
-         * @throws IOException
-         * @throws GeneralSecurityException
          */
-        default CBORObject getCustomData() throws IOException, GeneralSecurityException {
+        default CBORObject getCustomData() {
             return null;
         }
     }
@@ -161,10 +149,8 @@ public class CBORCryptoUtils {
          * 
          * @param objectOrNull If there is no tag or custom data this element is <code>null</code>
          *
-         * @throws IOException
-         * @throws GeneralSecurityException
          */
-        void foundData(CBORObject objectOrNull) throws IOException, GeneralSecurityException;
+        void foundData(CBORObject objectOrNull);
     }
     
     /**
@@ -172,14 +158,13 @@ public class CBORCryptoUtils {
      */
     public enum POLICY {FORBIDDEN, OPTIONAL, MANDATORY}
     
-    static void inputError(String text, POLICY policy) throws IOException {
+    static void inputError(String text, POLICY policy) {
         CBORObject.reportError(String.format("%s. Policy: %s", text, policy.toString()));
     }
  
     static CBORMap unwrapContainerMap(CBORObject container, 
                                       POLICY tagPolicy,
-                                      Collector callBackOrNull)
-            throws IOException, GeneralSecurityException {
+                                      Collector callBackOrNull) {
         if (container.getType() == CBORTypes.TAG) {
             if (tagPolicy == POLICY.FORBIDDEN) {
                 inputError("Tag encountered", tagPolicy);
@@ -187,7 +172,7 @@ public class CBORCryptoUtils {
             CBORTag tag = container.getTag();
             container = tag.object;
             if (tag.tagNumber == CBORTag.RESERVED_TAG_COTX) {
-                container = container.getArray(2).getObject(1);
+                container = container.getArray(2).get(1);
             }
             if (callBackOrNull != null) {
                 callBackOrNull.foundData(tag);
@@ -198,24 +183,23 @@ public class CBORCryptoUtils {
         return container.getMap();
     }
     
-    static CBORObject getKeyId(CBORMap holderMap) throws IOException {
+    static CBORObject getKeyId(CBORMap holderMap) {
 
         // Get the key Id if there is one and scan() to make sure checkForUnread() won't fail
-        return holderMap.hasKey(KEY_ID_LABEL) ?
-            holderMap.getObject(KEY_ID_LABEL).scan() : null;
+        return holderMap.containsKey(KEY_ID_LABEL) ?
+            holderMap.get(KEY_ID_LABEL).scan() : null;
     }
     
     static void getCustomData(CBORMap holderMap, 
                               POLICY customDataPolicy,
-                              Collector callBackOrNull) throws IOException,
-                                                               GeneralSecurityException {
+                              Collector callBackOrNull) {
         // Get optional customData element.
-        if (holderMap.hasKey(CUSTOM_DATA_LABEL)) {
+        if (holderMap.containsKey(CUSTOM_DATA_LABEL)) {
             if (customDataPolicy == POLICY.FORBIDDEN) {
                 inputError("Custom data encountered", customDataPolicy);
             }
             // It is OK to not read customData during validation.
-            CBORObject customData = holderMap.getObject(CUSTOM_DATA_LABEL).scan();
+            CBORObject customData = holderMap.get(CUSTOM_DATA_LABEL).scan();
             if (callBackOrNull != null) {
                 callBackOrNull.foundData(customData);
             }
@@ -227,11 +211,10 @@ public class CBORCryptoUtils {
     static byte[] setupBasicKeyEncryption(PublicKey publicKey,
                                           CBORMap keyEncryption,
                                           KeyEncryptionAlgorithms keyEncryptionAlgorithm,
-                                          ContentEncryptionAlgorithms contentEncryptionAlgorithm) 
-            throws GeneralSecurityException, IOException {
+                                          ContentEncryptionAlgorithms contentEncryptionAlgorithm) {
 
         // The mandatory key encryption algorithm
-        keyEncryption.setObject(ALGORITHM_LABEL,
+        keyEncryption.set(ALGORITHM_LABEL,
                                 new CBORInteger(keyEncryptionAlgorithm.getCoseAlgorithmId()));
         
         // Key wrapping algorithms need a key to wrap
@@ -252,70 +235,32 @@ public class CBORCryptoUtils {
                                                       publicKey);
         if (!keyEncryptionAlgorithm.isRsa()) {
             // ECDH-ES requires the ephemeral public key
-            keyEncryption.setObject(EPHEMERAL_KEY_LABEL,
+            keyEncryption.set(EPHEMERAL_KEY_LABEL,
                                     CBORPublicKey.convert(result.getEphemeralKey()));
         }
         if (keyEncryptionAlgorithm.isKeyWrap()) {
             // Encrypted key
-            keyEncryption.setObject(CIPHER_TEXT_LABEL, new CBORBytes(result.getEncryptedKey()));
+            keyEncryption.set(CIPHER_TEXT_LABEL, new CBORBytes(result.getEncryptedKey()));
         }
         return result.getContentEncryptionKey();
     }
     
-    static byte[] asymKeyDecrypt(PrivateKey privateKey,
-                                 CBORMap innerObject,
-                                 KeyEncryptionAlgorithms keyEncryptionAlgorithm,
-                                 ContentEncryptionAlgorithms contentEncryptionAlgorithm)
-            throws GeneralSecurityException, IOException {
-
-        // Fetch encrypted key if applicable
-        byte[] encryptedKey = keyEncryptionAlgorithm.isKeyWrap() ?
-            innerObject.getObject(CIPHER_TEXT_LABEL).getBytes() : null;
-
-        // The core
-        return keyEncryptionAlgorithm.isRsa() ?
-            EncryptionCore.rsaDecryptKey(keyEncryptionAlgorithm, 
-                                         encryptedKey,
-                                         privateKey)
-                                              :
-            EncryptionCore.receiverKeyAgreement(true,
-                                                keyEncryptionAlgorithm,
-                                                contentEncryptionAlgorithm,
-                                                CBORPublicKey.convert(
-                                                    innerObject.getObject(EPHEMERAL_KEY_LABEL)),
-                                                privateKey,
-                                                encryptedKey);
+    static byte[] getEncryptedKey(CBORMap innerObject,
+                                  KeyEncryptionAlgorithms keyEncryptionAlgorithm) {
+        return keyEncryptionAlgorithm.isKeyWrap() ?  // All but ECDH-ES
+            innerObject.get(CIPHER_TEXT_LABEL).getBytes() : null;
     }
-
-    static void asymKeySignatureValidation(PublicKey publicKey,
-                                           AsymSignatureAlgorithms signatureAlgorithm,
-                                           byte[] signedData,
-                                           byte[] signatureValue) 
-            throws GeneralSecurityException, IOException {
-
-        // Verify signature using the default provider
-        if (!new SignatureWrapper(signatureAlgorithm, publicKey)
-                 .update(signedData)
-                 .verify(signatureValue)) {
-            throw new GeneralSecurityException("Bad signature for key: " + publicKey.toString());
-        }
+    
+    static PublicKey getEphemeralKey(CBORMap innerObject,
+                                     KeyEncryptionAlgorithms keyEncryptionAlgorithm) {
+        return keyEncryptionAlgorithm.isRsa() ? null :
+            CBORPublicKey.convert(innerObject.get(EPHEMERAL_KEY_LABEL));
+        
     }
-
-    static byte[] asymKeySignatureGeneration(PrivateKey privateKey,
-                                             AsymSignatureAlgorithms algorithm,
-                                             byte[] dataToBeSigned,
-                                             String provider) 
-            throws GeneralSecurityException, IOException {
-
-        // Sign using the specified provider
-        return new SignatureWrapper(algorithm, privateKey, provider)
-                .update(dataToBeSigned)
-                .sign();      
-    }
-
-    static void rejectPossibleKeyId(CBORObject optionalKeyId) throws GeneralSecurityException {
+    
+    static void rejectPossibleKeyId(CBORObject optionalKeyId) {
         if (optionalKeyId != null) {
-            throw new GeneralSecurityException(STDERR_KEY_ID_PUBLIC);
+            throw new CryptoException(STDERR_KEY_ID_PUBLIC);
         }
     }
     

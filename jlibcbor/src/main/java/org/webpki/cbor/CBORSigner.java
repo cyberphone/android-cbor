@@ -16,10 +16,6 @@
  */
 package org.webpki.cbor;
 
-import java.io.IOException;
-
-import java.security.GeneralSecurityException;
-
 import org.webpki.crypto.SignatureAlgorithms;
 
 import static org.webpki.cbor.CBORCryptoConstants.*;
@@ -54,13 +50,11 @@ public abstract class CBORSigner {
 
     CBORSigner() {}
     
-    abstract byte[] coreSigner(byte[] dataToSign) throws IOException, GeneralSecurityException;
+    abstract byte[] coreSigner(byte[] dataToSign);
     
-    abstract SignatureAlgorithms getAlgorithm()
-            throws IOException,GeneralSecurityException;
+    abstract SignatureAlgorithms getAlgorithm();
     
-    abstract void additionalItems(CBORMap signatureObject)
-            throws IOException, GeneralSecurityException;
+    abstract void additionalItems(CBORMap signatureObject);
     
     /**
      * Sets optional Intercepter.
@@ -122,11 +116,8 @@ public abstract class CBORSigner {
      * @param key Key holding the signature in the CBOR map to sign
      * @param mapToSign CBOR map to be signed
      * @return Signed object
-     * @throws IOException
-     * @throws GeneralSecurityException
      */
-    public CBORObject sign(CBORObject key, CBORMap mapToSign) throws IOException, 
-                                                                     GeneralSecurityException {
+    public CBORObject sign(CBORObject key, CBORMap mapToSign) {
         // Create an empty signature container object.
         CBORMap csfContainer = new CBORMap();
 
@@ -136,23 +127,23 @@ public abstract class CBORSigner {
         // Get optional custom data.
         CBORObject customData = intercepter.getCustomData();
         if (customData != null) {
-            csfContainer.setObject(CUSTOM_DATA_LABEL, customData);
+            csfContainer.set(CUSTOM_DATA_LABEL, customData);
         }
 
         // Add the mandatory signature algorithm.
-        csfContainer.setObject(ALGORITHM_LABEL, 
+        csfContainer.set(ALGORITHM_LABEL, 
                                new CBORInteger(getAlgorithm().getCoseAlgorithmId()));
         
         // Add a keyId if there is one.
         if (optionalKeyId != null) {
-            csfContainer.setObject(KEY_ID_LABEL, optionalKeyId);
+            csfContainer.set(KEY_ID_LABEL, optionalKeyId);
         }
         
         // Asymmetric key signatures add specific items to the signature container.
         additionalItems(csfContainer);
         
         // Add the prepared signature object to the map object we want to sign. 
-        mapToSign.setObject(key, csfContainer);
+        mapToSign.set(key, csfContainer);
 
         // Finally, sign all but the signature label and associated value.
         csfContainer.setBytes(SIGNATURE_LABEL, coreSigner(objectToSign.encode()));

@@ -16,13 +16,10 @@
  */
 package org.webpki.cbor;
 
-import java.io.IOException;
-
-import java.security.GeneralSecurityException;
-
 import java.security.cert.X509Certificate;
 
 import org.webpki.crypto.AsymSignatureAlgorithms;
+import org.webpki.crypto.SignatureWrapper;
 
 import static org.webpki.cbor.CBORCryptoConstants.*;
 
@@ -53,11 +50,8 @@ public class CBORX509Validator extends CBORValidator {
          * 
          * @param certificatePath Path to be verified
          * @param algorithm Signature algorithm
-         * @throws IOException
-         * @throws GeneralSecurityException
          */
-        void verify(X509Certificate[] certificatePath, AsymSignatureAlgorithms algorithm)
-            throws IOException, GeneralSecurityException;
+        void verify(X509Certificate[] certificatePath, AsymSignatureAlgorithms algorithm);
     }
     
     Parameters parameters;
@@ -76,7 +70,7 @@ public class CBORX509Validator extends CBORValidator {
                         int coseAlgorithmId,
                         CBORObject optionalKeyId,
                         byte[] signatureValue,
-                        byte[] signedData) throws IOException, GeneralSecurityException {
+                        byte[] signedData) {
 
         // keyId and certificates? Never!
         CBORCryptoUtils.rejectPossibleKeyId(optionalKeyId);
@@ -87,13 +81,14 @@ public class CBORX509Validator extends CBORValidator {
         
         // Fetch certificate(path).
         X509Certificate[] certificatePath = CBORCryptoUtils.decodeCertificateArray(
-                signatureObject.getObject(CERT_PATH_LABEL).getArray());
+                signatureObject.get(CERT_PATH_LABEL).getArray());
         
         // Now we have everything needed for validating the signature.
-        CBORCryptoUtils.asymKeySignatureValidation(certificatePath[0].getPublicKey(),
-                                                   algorithm, 
-                                                   signedData, 
-                                                   signatureValue);
+        SignatureWrapper.validate(certificatePath[0].getPublicKey(),
+                                  algorithm, 
+                                  signedData, 
+                                  signatureValue,
+                                  null);
 
         // Finally, check certificate(path) and signature algorithm.
         parameters.verify(certificatePath, algorithm);

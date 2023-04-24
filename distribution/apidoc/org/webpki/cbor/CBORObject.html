@@ -251,13 +251,12 @@ var activeTableTab = "active-table-tab";
 <li>
 <section class="detail" id="getBigInteger()">
 <h3>getBigInteger</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link">BigInteger</a></span>&nbsp;<span class="element-name">getBigInteger</span>()
-                         throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link">BigInteger</a></span>&nbsp;<span class="element-name">getBigInteger</span>()</div>
 <div class="block">Returns <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link"><code>BigInteger</code></a> value.
  <p>
  This method requires that the object is a
  <a href="CBORBigInteger.html" title="class in org.webpki.cbor"><code>CBORBigInteger</code></a> or <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a>,
- otherwise an exception will be thrown.
+ otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p>
  <p>
  Note that this method is independent of the underlying CBOR integer type.
@@ -265,79 +264,67 @@ var activeTableTab = "active-table-tab";
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><code>BigInteger</code></dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getLong()">
 <h3>getLong</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getLong</span>()
-             throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getLong</span>()</div>
 <div class="block">Returns Java <code>long</code> value.
  <p>
  This method requires that the object is a
  <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a> and fits a Java (<i>signed</i>) long, 
- otherwise an exception will be thrown.
+ otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p>
  Also see <a href="#getBigInteger()"><code>getBigInteger()</code></a>.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>Java <code>long</code></dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getUnsignedLong()">
 <h3>getUnsignedLong</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getUnsignedLong</span>()
-                     throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getUnsignedLong</span>()</div>
 <div class="block">Returns Java <i>unsigned</i> <code>long</code> value.
  <p>
  This method requires that the object is an <i>unsigned</i>
- <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a>, otherwise an exception will be thrown.
+ <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>Java <code>long</code></dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getInt()">
 <h3>getInt</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getInt</span>()
-           throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getInt</span>()</div>
 <div class="block">Returns Java <code>int</code> value.
  <p>
  This method requires that the object is a
  <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a> and fits a Java (<i>signed</i>) <code>int</code>, 
- otherwise an exception will be thrown.
+ otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p>
  Also see <a href="#getBigInteger()"><code>getBigInteger()</code></a>.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>Java <code>int</code></dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getInt53()">
 <h3>getInt53</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getInt53</span>()
-              throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getInt53</span>()</div>
 <div class="block">Returns JavaScript compatible integer value.
  <p>
  This method requires that the object is a
  <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a> and fits a JavaScript <code>Number</code> 
- (&pm;2^53), otherwise an exception will be thrown.
+ (&pm;2^53), otherwise an <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link"><code>IllegalArgumentException</code></a> is thrown.
  </p>
  <p>
  See <a href="CBORInteger.html#createInt53(long)"><code>CBORInteger.createInt53(long)</code></a>.
@@ -345,72 +332,59 @@ var activeTableTab = "active-table-tab";
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>Signed long</dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getDouble()">
 <h3>getDouble</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getDouble</span>()
-                 throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getDouble</span>()</div>
 <div class="block">Returns <code>double</code> value.
  <p>
  This method requires that the object is a
- <a href="CBORFloatingPoint.html" title="class in org.webpki.cbor"><code>CBORFloatingPoint</code></a>, otherwise an exception will be thrown.
+ <a href="CBORFloatingPoint.html" title="class in org.webpki.cbor"><code>CBORFloatingPoint</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>Java double</dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getFloat()">
 <h3>getFloat</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getFloat</span>()
-               throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getFloat</span>()</div>
 <div class="block">Returns <code>float</code> value.
  <p>
  This method requires that the object is a
  <a href="CBORFloatingPoint.html" title="class in org.webpki.cbor"><code>CBORFloatingPoint</code></a> holding a 16 or 32-bit IEEE 754 value, 
- otherwise an exception will be thrown.
+ otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>Java float</dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getBoolean()">
 <h3>getBoolean</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">getBoolean</span>()
-                   throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">getBoolean</span>()</div>
 <div class="block">Returns <code>boolean</code> value.
  <p>
  This method requires that the object is a
- <a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a>, otherwise an exception will be thrown.
+ <a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>Boolean</dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="isNull()">
 <h3>isNull</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isNull</span>()
-               throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isNull</span>()</div>
 <div class="block">Checks for <code>null</code>.
  <p>
  If the object is a <a href="CBORNull.html" title="class in org.webpki.cbor"><code>CBORNull</code></a> the call will return
@@ -419,114 +393,96 @@ var activeTableTab = "active-table-tab";
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>Status</dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getString()">
 <h3>getString</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getString</span>()
-                 throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getString</span>()</div>
 <div class="block">Returns <code>text string</code> value.
  <p>
  This method requires that the object is a
- <a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a>, otherwise an exception will be thrown.
+ <a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>String</dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getBytes()">
 <h3>getBytes</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">getBytes</span>()
-                throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">getBytes</span>()</div>
 <div class="block">Returns <code>byte string</code> value.
  <p>
  This method requires that the object is a
- <a href="CBORBytes.html" title="class in org.webpki.cbor"><code>CBORBytes</code></a>, otherwise an exception will be thrown.
+ <a href="CBORBytes.html" title="class in org.webpki.cbor"><code>CBORBytes</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>Byte array</dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getMap()">
 <h3>getMap</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></span>&nbsp;<span class="element-name">getMap</span>()
-               throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></span>&nbsp;<span class="element-name">getMap</span>()</div>
 <div class="block">Returns <code>map</code> object.
  <p>
  This method requires that the object is a
- <a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code></a>, otherwise an exception will be thrown.
+ <a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>Map object</dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getArray()">
 <h3>getArray</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></span>&nbsp;<span class="element-name">getArray</span>()
-                   throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></span>&nbsp;<span class="element-name">getArray</span>()</div>
 <div class="block">Returns <code>array</code> object.
  <p>
  This method requires that the object is a
- <a href="CBORArray.html" title="class in org.webpki.cbor"><code>CBORArray</code></a>, otherwise an exception will be thrown.
+ <a href="CBORArray.html" title="class in org.webpki.cbor"><code>CBORArray</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>Array object</dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getArray(int)">
 <h3>getArray</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></span>&nbsp;<span class="element-name">getArray</span><wbr><span class="parameters">(int&nbsp;requiredLength)</span>
-                   throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></span>&nbsp;<span class="element-name">getArray</span><wbr><span class="parameters">(int&nbsp;requiredLength)</span></div>
 <div class="block">Returns a fixed-length <code>array</code> object.
  <p>
  This method requires that the object is a
  <a href="CBORArray.html" title="class in org.webpki.cbor"><code>CBORArray</code></a> as well as holding
  <code>requiredLength</code> number of elements, 
- otherwise an exception will be thrown.
+ otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>requiredLength</code> - Required number of elements</dd>
 <dt>Returns:</dt>
 <dd>Array object</dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getTag()">
 <h3>getTag</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></span>&nbsp;<span class="element-name">getTag</span>()
-               throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></span>&nbsp;<span class="element-name">getTag</span>()</div>
 <div class="block">Returns tag object.
  <p>
  This method requires that the object is a
- <a href="CBORTag.html" title="class in org.webpki.cbor"><code>CBORTag</code></a>, otherwise an exception will be thrown.
+ <a href="CBORTag.html" title="class in org.webpki.cbor"><code>CBORTag</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p>
  <p>
  Note that the <code>big&nbsp;integer</code> type is dealt with
@@ -535,8 +491,6 @@ var activeTableTab = "active-table-tab";
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>Tag object</dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
@@ -564,18 +518,15 @@ var activeTableTab = "active-table-tab";
 <li>
 <section class="detail" id="checkForUnread()">
 <h3>checkForUnread</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkForUnread</span>()
-                    throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkForUnread</span>()</div>
 <div class="block">Checks for unread CBOR data.
  <p>
  Verifies that all data from the current object including
  possible child objects have been read
  (through calling <a href="#getBytes()"><code>getBytes()</code></a> etc.),
- and throws an exception if this is not the case.
+ and throws <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> if this is not the case.
  </p></div>
 <dl class="notes">
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
@@ -592,11 +543,13 @@ var activeTableTab = "active-table-tab";
  boolean&nbsp;sequenceFlag,
  boolean&nbsp;nonDeterministic,
  boolean&nbsp;constrainedKeys,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;maxLength)</span>
-                         throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;maxLength)</span></div>
 <div class="block">Decodes CBOR data with options.
  <p>
  See <a href="CBORSequenceBuilder.html" title="class in org.webpki.cbor"><code>CBORSequenceBuilder</code></a>.
+ </p>
+ <p>
+ Decoding errors throw <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a>.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -610,16 +563,13 @@ var activeTableTab = "active-table-tab";
  bytes or <code>null</code> (<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MAX_VALUE</code></a> is assumed)</dd>
 <dt>Returns:</dt>
 <dd>CBORObject</dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="decode(byte[])">
 <h3>decode</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">decode</span><wbr><span class="parameters">(byte[]&nbsp;cborData)</span>
-                         throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">decode</span><wbr><span class="parameters">(byte[]&nbsp;cborData)</span></div>
 <div class="block">Decodes CBOR data.
  <p>
  This method is identical to:
@@ -629,14 +579,15 @@ var activeTableTab = "active-table-tab";
          false,
          cborData.length);
 </pre>
+ </p>
+ <p>
+ Decoding errors throw <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a>.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>cborData</code> - CBOR in its binary form</dd>
 <dt>Returns:</dt>
 <dd>CBORObject</dd>
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
 </section>
 </li>
