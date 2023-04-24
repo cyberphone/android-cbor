@@ -7,3 +7,6 @@ Android CBOR - Relese Notes
 - Bug fix: RSA-OAEP generated incorrect code for the default (OpenSSL) provider.
 
 - InstrumentedTest updated with tests to verify the state of the Android platform.
+
+- Major refactoring: the API now uses "unchecked" exceptions which reduce
+  code clutter.  This is the method used by the spring framework.
