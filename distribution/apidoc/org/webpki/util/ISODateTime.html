@@ -211,12 +211,17 @@ var activeTableTab = "active-table-tab";
  <i>UTC:</i> Append 'Z'<br>
  <i>Local time:</i> Append time-zone difference expressed as
  <code>+hh:mm</code> or <code>-hh:mm</code>
+ </p>
+ <p>
+ If <a href="ISODateTime.DatePatterns.html#UTC"><code>ISODateTime.DatePatterns.UTC</code></a> is defined, UTC mode is used, else local time format is assumed.
+ </p>
+ <p>
+ If <a href="ISODateTime.DatePatterns.html#MILLISECONDS"><code>ISODateTime.DatePatterns.MILLISECONDS</code></a> is defined, milliseconds (<cde>.nnn</code>] are included in the output, else only seconds are used.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>dateTime</code> - The date/time object</dd>
-<dd><code>format</code> - Format: Note <i>Representation:</i> <code>true</code>
- for UTC, <code>false</code> for local time</dd>
+<dd><code>format</code> - Format</dd>
 <dt>Returns:</dt>
 <dd>String</dd>
 </dl>

@@ -34,6 +34,22 @@ import androidx.webkit.WebViewAssetLoader;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
+import java.math.BigInteger;
+
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.KeyPair;
+
+import java.security.cert.X509Certificate;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+
+import java.util.GregorianCalendar;
+
 import org.webpki.cbor.CBORArray;
 import org.webpki.cbor.CBORAsymKeyDecrypter;
 import org.webpki.cbor.CBORAsymKeyEncrypter;
@@ -75,23 +91,6 @@ import org.webpki.crypto.KeyTypes;
 import org.webpki.util.HexaDecimal;
 import org.webpki.util.ISODateTime;
 import org.webpki.util.UTF8;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
-import java.math.BigInteger;
-
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.KeyPair;
-
-import java.security.cert.X509Certificate;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
-
-import java.util.EnumSet;
-import java.util.GregorianCalendar;
 
 /**
  * This is a demonstration and test application for the WebPKI CBOR, CSF and CEF components.
@@ -245,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
                 .set(new CBORInteger(++index),
                      new CBORString("'CBOR Sample' " +
                              ISODateTime.encode(new GregorianCalendar(),
-                                                EnumSet.of(ISODateTime.DatePatterns.LOCAL))))
+                                                ISODateTime.LOCAL_NO_SUBSECONDS)))
                 .set(new CBORInteger(++index),
                            new CBORBytes(
                         new byte[]{(byte)0x50, (byte)0x42, (byte)0x12, (byte)0x3a, (byte)0x65,

@@ -187,10 +187,15 @@ public class ISODateTime {
      * <i>Local time:</i> Append time-zone difference expressed as
      * <code>+hh:mm</code> or <code>-hh:mm</code>
      * </p>
+     * <p>
+     * If {@link DatePatterns#UTC} is defined, UTC mode is used, else local time format is assumed.
+     * </p>
+     * <p>
+     * If {@link DatePatterns#MILLISECONDS} is defined, milliseconds (<cde>.nnn</code>] are included in the output, else only seconds are used.
+     * </p> 
      * 
      * @param dateTime The date/time object
-     * @param format Format: Note <i>Representation:</i> <code>true</code>
-     * for UTC, <code>false</code> for local time
+     * @param format Format
      * @return String
      */
     public static String encode(GregorianCalendar dateTime, EnumSet<DatePatterns> format) {
