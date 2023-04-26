@@ -10,3 +10,6 @@ Android CBOR - Relese Notes
 
 - Major refactoring: the API now uses "unchecked" exceptions which reduce
   code clutter.  This is the method used by the spring framework.
+
+1.0.2:
+TBD
