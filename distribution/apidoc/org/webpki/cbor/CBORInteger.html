@@ -73,7 +73,21 @@ var activeTableTab = "active-table-tab";
  <p>
  Note that the encoder is adaptive, selecting the shortest possible
  representation in order to produce a fully deterministic result.
- </p></div>
+ </p>
+ <div id='range' class='webpkicomment'>
+ Applications that are intended to work with multiple platforms
+ should for interoperability reasons not exploit <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a> numbers outside the
+ range of traditional 
+ "unsigned" (<code>0</code> to <code>2<div class='webpkisuper'>n</div>-1</code>)
+ and 
+ <code>"signed"</code> (<code>-2<div class='webpkisuper'>(n - 1)</div></code> 
+ to <code>2<div class='webpkisuper'>(n -1)</div>-1</code>)
+ integers, where <code>n</code>
+ is the size in bits of the anticipated data type.
+ That is, if a protocol schema or declaration calls for a signed 32-bit integer, the valid
+ range would be <code>-0x80000000</code> to <code>0x7fffffff</code>.
+ Also see <a href="CBORObject.html#getInt()"><code>CBORObject.getInt()</code></a>.
+ </div></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -102,25 +116,20 @@ var activeTableTab = "active-table-tab";
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORInteger.html" title="class in org.webpki.cbor">CBORInteger</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createInt53(long)" class="member-name-link">createInt53</a><wbr>(long&nbsp;value)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Creates a JavaScript compatible integer.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>byte[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#encode()" class="member-name-link">encode</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>byte[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#encode()" class="member-name-link">encode</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Encodes CBOR object.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORTypes.html" title="enum class in org.webpki.cbor">CBORTypes</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getType()" class="member-name-link">getType</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORTypes.html" title="enum class in org.webpki.cbor">CBORTypes</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getType()" class="member-name-link">getType</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns core CBOR type.</div>
 </div>
 </div>
@@ -128,7 +137,7 @@ var activeTableTab = "active-table-tab";
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-org.webpki.cbor.CBORObject">Methods inherited from class&nbsp;org.webpki.cbor.<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></h3>
-<code><a href="CBORObject.html#checkForUnread()">checkForUnread</a>, <a href="CBORObject.html#decode(byte%5B%5D)">decode</a>, <a href="CBORObject.html#decode(java.io.InputStream,boolean,boolean,boolean,java.lang.Integer)">decode</a>, <a href="CBORObject.html#equals(java.lang.Object)">equals</a>, <a href="CBORObject.html#getArray()">getArray</a>, <a href="CBORObject.html#getArray(int)">getArray</a>, <a href="CBORObject.html#getBigInteger()">getBigInteger</a>, <a href="CBORObject.html#getBoolean()">getBoolean</a>, <a href="CBORObject.html#getBytes()">getBytes</a>, <a href="CBORObject.html#getDouble()">getDouble</a>, <a href="CBORObject.html#getFloat()">getFloat</a>, <a href="CBORObject.html#getInt()">getInt</a>, <a href="CBORObject.html#getInt53()">getInt53</a>, <a href="CBORObject.html#getLong()">getLong</a>, <a href="CBORObject.html#getMap()">getMap</a>, <a href="CBORObject.html#getString()">getString</a>, <a href="CBORObject.html#getTag()">getTag</a>, <a href="CBORObject.html#getUnsignedLong()">getUnsignedLong</a>, <a href="CBORObject.html#isNull()">isNull</a>, <a href="CBORObject.html#scan()">scan</a>, <a href="CBORObject.html#toString()">toString</a></code></div>
+<code><a href="CBORObject.html#checkForUnread()">checkForUnread</a>, <a href="CBORObject.html#decode(byte%5B%5D)">decode</a>, <a href="CBORObject.html#decode(java.io.InputStream,boolean,boolean,boolean,java.lang.Integer)">decode</a>, <a href="CBORObject.html#equals(java.lang.Object)">equals</a>, <a href="CBORObject.html#getArray()">getArray</a>, <a href="CBORObject.html#getArray(int)">getArray</a>, <a href="CBORObject.html#getBigInteger()">getBigInteger</a>, <a href="CBORObject.html#getBoolean()">getBoolean</a>, <a href="CBORObject.html#getBytes()">getBytes</a>, <a href="CBORObject.html#getDouble()">getDouble</a>, <a href="CBORObject.html#getFloat()">getFloat</a>, <a href="CBORObject.html#getInt()">getInt</a>, <a href="CBORObject.html#getLong()">getLong</a>, <a href="CBORObject.html#getMap()">getMap</a>, <a href="CBORObject.html#getString()">getString</a>, <a href="CBORObject.html#getTag()">getTag</a>, <a href="CBORObject.html#getUnsignedLong()">getUnsignedLong</a>, <a href="CBORObject.html#isNull()">isNull</a>, <a href="CBORObject.html#scan()">scan</a>, <a href="CBORObject.html#toString()">toString</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -166,16 +175,7 @@ var activeTableTab = "active-table-tab";
  and <code>-9223372036854775809</code> respectively.
  A special case is the value <code>0xffffffffffffffffL</code>
  (long <code>-1</code>), which corresponds to <code>-2^64</code>.
- </p>
- <div class='webpkicomment'>
- Applications that are intended to work with multiple platforms
- <b>should&nbsp;not</b> exploit <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a> numbers outside the range
- <code>-2^63</code> to <code>2^64-1</code>.
- Applications needing the full 65-bit range <b>should</b> preferably 
- declare associated protocol items as <a href="CBORBigInteger.html" title="class in org.webpki.cbor"><code>CBORBigInteger</code></a> compatible,
- although some negative numbers would still use the 65-bit scheme to adhere with
- CBOR integer encoding rules.
- </div></div>
+ </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>value</code> - long value</dd>
@@ -189,7 +189,7 @@ var activeTableTab = "active-table-tab";
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORInteger</span><wbr><span class="parameters">(long&nbsp;value)</span></div>
 <div class="block">Creates a CBOR signed <code>integer</code> value.
  <p>
- See <a href="#%3Cinit%3E(long,boolean)"><code>CBORInteger(long,boolean)</code></a> and 
+ Also see <a href="#%3Cinit%3E(long,boolean)"><code>CBORInteger(long,boolean)</code></a> and 
  <a href="CBORBigInteger.html#%3Cinit%3E(java.math.BigInteger)"><code>CBORBigInteger(BigInteger)</code></a>.
  </p></div>
 <dl class="notes">
@@ -231,30 +231,6 @@ var activeTableTab = "active-table-tab";
 <dd><code><a href="CBORObject.html#encode()">encode</a></code>&nbsp;in class&nbsp;<code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></dd>
 <dt>Returns:</dt>
 <dd>CBOR bytes</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="createInt53(long)">
-<h3>createInt53</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORInteger.html" title="class in org.webpki.cbor">CBORInteger</a></span>&nbsp;<span class="element-name">createInt53</span><wbr><span class="parameters">(long&nbsp;value)</span></div>
-<div class="block">Creates a JavaScript compatible integer.
- <p>
- This method requires that <code>value</code>
- fits a JavaScript <code>Number</code> 
- (&pm;2^53), otherwise an <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link"><code>IllegalArgumentException</code></a> is thrown.
- </p>
- <p>
- See <a href="#createInt53(long)"><code>createInt53(long)</code></a>.
- </p>
- <p>
- See <a href="CBORObject.html#getInt53()"><code>CBORObject.getInt53()</code></a>.
- </p></div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>value</code> - Signed long</dd>
-<dt>Returns:</dt>
-<dd>CBORInteger</dd>
 </dl>
 </section>
 </li>

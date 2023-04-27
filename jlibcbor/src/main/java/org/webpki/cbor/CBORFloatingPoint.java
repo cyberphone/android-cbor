@@ -48,7 +48,7 @@ public class CBORFloatingPoint extends CBORObject {
      * Due to the CBOR normalization algorithm, numbers are still correctly encoded.
      * </p>
      * <p>
-     * See {@link CBORObject#getDouble()} and {@link CBORObject#getFloat()}
+     * Also see {@link CBORObject#getDouble()} and {@link CBORObject#getFloat()}
      * </p>
      * 
      * @param value Java double
