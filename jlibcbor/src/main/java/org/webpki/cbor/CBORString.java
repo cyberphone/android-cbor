@@ -19,7 +19,7 @@ package org.webpki.cbor;
 import org.webpki.util.UTF8;
 
 /**
- * Class for holding CBOR text strings.
+ * Class for holding CBOR <code>text&nbsp;string</code> objects.
  */
 public class CBORString extends CBORObject {
 

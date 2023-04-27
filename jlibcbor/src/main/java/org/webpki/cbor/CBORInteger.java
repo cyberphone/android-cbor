@@ -19,23 +19,24 @@ package org.webpki.cbor;
 import java.math.BigInteger;
 
 /**
- * Class for holding CBOR <code>integer</code>.
+ * Class for holding CBOR <code>integer</code> objects.
  * <p>
  * Note that the encoder is adaptive, selecting the shortest possible
  * representation in order to produce a fully deterministic result.
  * </p>
- * <div id='range' class='webpkicomment'>
+ * <div id='recommendations' class='webpkicomment'>
  * Applications that are intended to work with multiple platforms
- * should for interoperability reasons not exploit {@link CBORInteger} numbers outside the
- * range of traditional 
- * "unsigned" (<code>0</code> to <code>2<div class='webpkisuper'>n</div>-1</code>)
- * and 
- * <code>"signed"</code> (<code>-2<div class='webpkisuper'>(n - 1)</div></code> 
- * to <code>2<div class='webpkisuper'>(n -1)</div>-1</code>)
- * integers, where <code>n</code>
- * is the size in bits of the anticipated data type.
- * That is, if a protocol schema or declaration calls for a signed 32-bit integer, the valid
+ * should for interoperability reasons not exploit {@link CBORInteger} numbers 
+ * outside of the traditional range for <code>"unsigned"</code> and <code>"signed"</code> integers.
+ * Translated to values, the <i>recommended</i> range would then span from
+ * <span style='white-space:nowrap'><code>-2<div class='webpkisuper'>(n-1)</div></code></span> to
+ * <span style='white-space:nowrap'><code>2<div class='webpkisuper'>n</div>-1</code></span>, 
+ * where <code>n</code> is the size in bits of the anticipated target data type.
+ * That is, if a protocol schema or declaration calls for a signed
+ * <span style='white-space:nowrap'>32-bit</span> integer, the valid
  * range would be <code>-0x80000000</code> to <code>0x7fffffff</code>.
+ * Note that these constraints do not apply to CBOR <code>integer</code>
+ * objects that are <i>shorter</i> than the actual target data type.
  * Also see {@link CBORObject#getInt()}.
  * </div>
  */
@@ -70,6 +71,7 @@ public class CBORInteger extends CBORObject {
      * A special case is the value <code>0xffffffffffffffffL</code>
      * (long <code>-1</code>), which corresponds to <code>-2^64</code>.
      * </p>
+     * Also see <a href='#recommendations'>recommendations</a>.
      *
      * @param value long value
      * @param unsigned <code>true</code> if value should be considered as unsigned
