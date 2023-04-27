@@ -126,8 +126,10 @@ The encoding rules are as follows:
 <li id='integer-encoding' class='webpkilistspacing'>
   RFC: Integers, represented by the <code>integer</code> and 
 <code>big&nbsp;integer</code> types, <b>must</b> use the <code>integer</code>
-type if the value is between -2^64 and 2^64-1, otherwise the
-<code>big&nbsp;integer</code> type <b>must</b> be used.
+type if the value is between 
+<span style='white-space:nowrap'><code>-2<div class='webpkisuper'>64</div></code></span> 
+and <span style='white-space:nowrap'><code>2<div class='webpkisuper'>64</div>-1</code></span>,
+otherwise the <code>big&nbsp;integer</code> type <b>must</b> be used.
 The following table holds a few sample values and their proper CBOR encoding:
 <div class='webpkifloat'>
 <table class='webpkitable' style='margin-left:2em'>
@@ -176,7 +178,7 @@ as well as a small set of "edge&nbsp;cases":
 <tr style='text-align:right'><td><code>65504.00390625</code></td><td><code>fa477fe001</code></td></tr>
 <tr style='text-align:right'><td><code>65536.0</code></td><td><code>fa47800000</code></td></tr>
 <tr style='text-align:right'><td><code>10.559998512268066</code></td><td><code>fa4128f5c1</code></td></tr>
-<tr style='text-align:right'><td><code>10.559999942779541</code></td><td><code>fb40251eb850000000</code></td></tr>
+<tr style='text-align:right'><td><code>10.559998512268068</code></td><td><code>fb40251eb820000001</code></td></tr>
 <tr style='text-align:right'><td><code>3.4028234663852886e+38</code></td><td><code>fa7f7fffff</code></td></tr>
 <tr style='text-align:right'><td><code>3.402823466385289e+38</code></td><td><code>fb47efffffe0000001</code></td></tr>
 <tr style='text-align:right'><td><code>5.0e-324</code></td><td><code>fb0000000000000001</code></td></tr>
@@ -331,7 +333,7 @@ See <a href='#floating-point-encoding'>CBOR floating point encoding</a>.
 <tr><td><code>NaN</code></td><td></td><td>Not a number.
 See <a href='#floating-point-encoding'>CBOR floating point encoding</a>.
 </td></tr>
-<tr><td>{<i>sign</i>}<code>Infinity</code></td><td></td>
+<tr><td>{<i>sign</i>}<code>Infinity</code></td><td>2</td>
 <td>Infinity.
 See <a href='#floating-point-encoding'>CBOR floating point encoding</a>.
 </td></tr>
@@ -348,9 +350,9 @@ Padding with <code>'='</code> characters is <i>optional</i>.</td></tr>
 <td>Construct holding a CBOR object which is subsequently embedded in a byte string.</td></tr>
 <tr><td><code>text&nbsp;string</code></td>
 <td><code>&quot;</code><i>text</i><code>&quot;</code><td>4, 5</td><td>UTF-8 encoded text string.</td></tr>
-<tr><td><code>true</code></td><td><code>true</code></td><td></td>
+<tr><td><code>true</code></td><td><code>true</code></td><td rowspan='2'></td>
 <td rowspan='2'>Boolean value.</td></tr>
-<tr><td><code>false</code></td><td><code>false</code></td><td></td></tr>
+<tr><td><code>false</code></td><td><code>false</code></td></tr>
 <tr><td><code>null</code></td><td><code>null</code></td><td></td><td>Null value.</td></tr>
 <tr><td><code>array</code></td><td><code>[</code>&nbsp;<i>elements</i>&nbsp;<code>]</code></td>
 <td></td><td>Array with zero or more comma separated CBOR objects.</td></tr>
@@ -393,7 +395,7 @@ immediately preceding the newline may be used.</li>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR arrays.</div>
+<div class="block">Class for holding CBOR <code>array</code> objects.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORAsymKeyDecrypter.html" title="class in org.webpki.cbor">CBORAsymKeyDecrypter</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -421,15 +423,15 @@ immediately preceding the newline may be used.</li>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORBigInteger.html" title="class in org.webpki.cbor">CBORBigInteger</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR <code>big&nbsp;integer</code>.</div>
+<div class="block">Class for holding CBOR <code>big&nbsp;integer</code> objects.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORBoolean.html" title="class in org.webpki.cbor">CBORBoolean</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR <code>true</code> and <code>false</code>.</div>
+<div class="block">Class for holding CBOR <code>boolean</code> objects.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORBytes.html" title="class in org.webpki.cbor">CBORBytes</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR byte strings.</div>
+<div class="block">Class for holding CBOR <code>byte&nbsp;string</code> objects.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab1"><a href="CBORCryptoConstants.html" title="interface in org.webpki.cbor">CBORCryptoConstants</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab1">
@@ -465,11 +467,11 @@ immediately preceding the newline may be used.</li>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab5"><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab5">
-<div class="block">Wrapper for making the WebPKI crypto library only throw unchecked exceptions.</div>
+<div class="block">Wrapper for making the WebPKI CBOR library only throw unchecked exceptions.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORFloatingPoint.html" title="class in org.webpki.cbor">CBORFloatingPoint</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR floating point numbers.</div>
+<div class="block">Class for holding CBOR <code>floating&nbsp;point</code> objects.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab3"><a href="CBORFloatingPoint.IeeeVariant.html" title="enum class in org.webpki.cbor">CBORFloatingPoint.IeeeVariant</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab3">
@@ -489,7 +491,7 @@ immediately preceding the newline may be used.</li>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORInteger.html" title="class in org.webpki.cbor">CBORInteger</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR <code>integer</code>.</div>
+<div class="block">Class for holding CBOR <code>integer</code> objects.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORKeyPair.html" title="class in org.webpki.cbor">CBORKeyPair</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -497,11 +499,11 @@ immediately preceding the newline may be used.</li>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding <code>CBOR</code> map.</div>
+<div class="block">Class for holding CBOR <code>map</code> objects.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORNull.html" title="class in org.webpki.cbor">CBORNull</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR <code>null</code>.</div>
+<div class="block">Class for holding CBOR <code>null</code> objects.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
@@ -521,7 +523,7 @@ immediately preceding the newline may be used.</li>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORString.html" title="class in org.webpki.cbor">CBORString</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR text strings.</div>
+<div class="block">Class for holding CBOR <code>text&nbsp;string</code> objects.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORSymKeyDecrypter.html" title="class in org.webpki.cbor">CBORSymKeyDecrypter</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -537,7 +539,7 @@ immediately preceding the newline may be used.</li>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR tagged objects.</div>
+<div class="block">Class for holding CBOR <code>tag</code> objects.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORTypedObjectDecoder.html" title="class in org.webpki.cbor">CBORTypedObjectDecoder</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">

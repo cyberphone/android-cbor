@@ -67,7 +67,23 @@ var activeTableTab = "active-table-tab";
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ISODateTime</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Encodes/decodes ISO time data.</div>
+<div class="block"><div id='iso'>Encodes/decodes ISO <code>dateTime</code> objects.</div>
+ <p>
+ <i>Always:</i> <code>yyyy-mm-ddThh:mm:ss</code><br>
+ <i>Optionally:</i> a <code>'.'</code> followed by <code>1-9</code> digits holding fractions of a second<br>
+ <i>Finally:</i> <code>'Z'</code> for UTC or an UTC time-zone difference 
+ expressed as <code>&pm;hh:mm</code>.
+ </p>
+ Sample values:
+ <div class='webpkifloat'>
+ <table class='webpkitable'>
+ <tr><th>ISO&nbsp;dateTime</th><th style='min-width:20em'>Description</th></tr>
+ <tr><td><code>2009-12-24T05:45:23-08:00</code></td><td>Local <code>dateTime</code> without sub-seconds.</td></tr>
+ <tr><td><code>2009-12-24T13:45:23Z</code></td><td>The same <code>dateTime</code> as the previous, expressed as UTC.
+ <tr><td><code style='white-space:nowrap'>2009-12-24T05:45:23.856-08:00</code></td><td>Local <code>dateTime</code> with sub-seconds.</td></tr>
+ <tr><td><code>2009-12-24T13:45:23.856Z</code></td><td>The same <code>dateTime</code> as the previous, expressed as UTC.
+ </table>
+ </div></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -100,7 +116,7 @@ var activeTableTab = "active-table-tab";
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/EnumSet.html" title="class or interface in java.util" class="external-link">EnumSet</a>&lt;<a href="ISODateTime.DatePatterns.html" title="enum class in org.webpki.util">ISODateTime.DatePatterns</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#COMPLETE" class="member-name-link">COMPLETE</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">For <a href="#decode(java.lang.String,java.util.EnumSet)"><code>decode(String, EnumSet&lt;DatePatterns&gt;)</code></a> only: accept the full syntax.</div>
+<div class="block">For <a href="#decode(java.lang.String,java.util.EnumSet)"><code>decode(String, EnumSet&lt;DatePatterns&gt;)</code></a> only: accept all <a href='#iso'>valid forms</a>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/EnumSet.html" title="class or interface in java.util" class="external-link">EnumSet</a>&lt;<a href="ISODateTime.DatePatterns.html" title="enum class in org.webpki.util">ISODateTime.DatePatterns</a>&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#LOCAL_NO_SUBSECONDS" class="member-name-link">LOCAL_NO_SUBSECONDS</a></code></div>
@@ -126,13 +142,13 @@ var activeTableTab = "active-table-tab";
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#decode(java.lang.String,java.util.EnumSet)" class="member-name-link">decode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;dateTime,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/EnumSet.html" title="class or interface in java.util" class="external-link">EnumSet</a>&lt;<a href="ISODateTime.DatePatterns.html" title="enum class in org.webpki.util">ISODateTime.DatePatterns</a>&gt;&nbsp;constraints)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Decodes an ISO formatted dateTime string.</div>
+<div class="block">Decodes an <a href='#iso'>ISO compliant</a> <code>dateTime</code> string.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#encode(java.util.GregorianCalendar,java.util.EnumSet)" class="member-name-link">encode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/GregorianCalendar.html" title="class or interface in java.util" class="external-link">GregorianCalendar</a>&nbsp;dateTime,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/EnumSet.html" title="class or interface in java.util" class="external-link">EnumSet</a>&lt;<a href="ISODateTime.DatePatterns.html" title="enum class in org.webpki.util">ISODateTime.DatePatterns</a>&gt;&nbsp;format)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Encodes an ISO formatted dateTime string.</div>
+<div class="block">Encodes an <a href='#iso'>ISO compliant</a> <code>dateTime</code> string.</div>
 </div>
 </div>
 </div>
@@ -167,7 +183,7 @@ var activeTableTab = "active-table-tab";
 <section class="detail" id="COMPLETE">
 <h3>COMPLETE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/EnumSet.html" title="class or interface in java.util" class="external-link">EnumSet</a>&lt;<a href="ISODateTime.DatePatterns.html" title="enum class in org.webpki.util">ISODateTime.DatePatterns</a>&gt;</span>&nbsp;<span class="element-name">COMPLETE</span></div>
-<div class="block">For <a href="#decode(java.lang.String,java.util.EnumSet)"><code>decode(String, EnumSet&lt;DatePatterns&gt;)</code></a> only: accept the full syntax.</div>
+<div class="block">For <a href="#decode(java.lang.String,java.util.EnumSet)"><code>decode(String, EnumSet&lt;DatePatterns&gt;)</code></a> only: accept all <a href='#iso'>valid forms</a>.</div>
 </section>
 </li>
 </ul>
@@ -183,17 +199,11 @@ var activeTableTab = "active-table-tab";
 <h3>decode</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/GregorianCalendar.html" title="class or interface in java.util" class="external-link">GregorianCalendar</a></span>&nbsp;<span class="element-name">decode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;dateTime,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/EnumSet.html" title="class or interface in java.util" class="external-link">EnumSet</a>&lt;<a href="ISODateTime.DatePatterns.html" title="enum class in org.webpki.util">ISODateTime.DatePatterns</a>&gt;&nbsp;constraints)</span></div>
-<div class="block">Decodes an ISO formatted dateTime string.
- <p>
- <i>Always:</i> <code>yyyy-mm-ddThh:mm:ss</code><br>
- <i>Optionally:</i> a '.' followed by 1-9 digits holding fractions of a second<br>
- <i>Finally:</i> 'Z' for UTC or an UTC time-zone difference 
- expressed as <code>+hh:mm</code> or <code>-hh:mm</code>
- </p></div>
+<div class="block">Decodes an <a href='#iso'>ISO compliant</a> <code>dateTime</code> string.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>dateTime</code> - String to be parsed</dd>
-<dd><code>constraints</code> - Permitted format(s)</dd>
+<dd><code>dateTime</code> - ISO formatted <code>dateTime</code> string</dd>
+<dd><code>constraints</code> - Permitted input format variants</dd>
 <dt>Returns:</dt>
 <dd>GregorianCalendar</dd>
 </dl>
@@ -204,26 +214,17 @@ var activeTableTab = "active-table-tab";
 <h3>encode</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">encode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/GregorianCalendar.html" title="class or interface in java.util" class="external-link">GregorianCalendar</a>&nbsp;dateTime,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/EnumSet.html" title="class or interface in java.util" class="external-link">EnumSet</a>&lt;<a href="ISODateTime.DatePatterns.html" title="enum class in org.webpki.util">ISODateTime.DatePatterns</a>&gt;&nbsp;format)</span></div>
-<div class="block">Encodes an ISO formatted dateTime string.
+<div class="block">Encodes an <a href='#iso'>ISO compliant</a> <code>dateTime</code> string.
  <p>
- <i>Always:</i> <code>yyyy-mm-ddThh:mm:ss</code><br>
- <i>Optional:</i> a '.' followed by 3 digits holding milliseconds<br>
- <i>UTC:</i> Append 'Z'<br>
- <i>Local time:</i> Append time-zone difference expressed as
- <code>+hh:mm</code> or <code>-hh:mm</code>
- </p>
- <p>
- If <a href="ISODateTime.DatePatterns.html#UTC"><code>ISODateTime.DatePatterns.UTC</code></a> is defined, UTC mode is used, else local time format is assumed.
- </p>
- <p>
- If <a href="ISODateTime.DatePatterns.html#MILLISECONDS"><code>ISODateTime.DatePatterns.MILLISECONDS</code></a> is defined, milliseconds (<cde>.nnn</code>] are included in the output, else only seconds are used.
+ If <a href="ISODateTime.DatePatterns.html#MILLISECONDS"><code>ISODateTime.DatePatterns.MILLISECONDS</code></a> is defined, milliseconds (<code>.nnn</code>] 
+ are included in the output, else only seconds are used.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>dateTime</code> - The date/time object</dd>
-<dd><code>format</code> - Format</dd>
+<dd><code>format</code> - Output format</dd>
 <dt>Returns:</dt>
-<dd>String</dd>
+<dd>ISO formatted <code>dateTime</code> string</dd>
 </dl>
 </section>
 </li>
