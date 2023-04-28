@@ -70,23 +70,23 @@ var activeTableTab = "active-table-tab";
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CBORInteger</span>
 <span class="extends-implements">extends <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span></div>
 <div class="block">Class for holding CBOR <code>integer</code> objects.
- <p>
+ <p id='range-constraints'>
  Note that the encoder is adaptive, selecting the shortest possible
  representation in order to produce a fully deterministic result.
  </p>
- <div id='recommendations' class='webpkicomment'>
+ <div class='webpkicomment'>
  Applications that are intended to work with multiple platforms
- should for interoperability reasons not exploit <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a> numbers 
+ should for interoperability reasons not exploit CBOR <code>integer</code> numbers 
  outside of the traditional range for <code>"unsigned"</code> and <code>"signed"</code> integers.
  Translated to values, the <i>recommended</i> range would then span from
  <span style='white-space:nowrap'><code>-2<div class='webpkisuper'>(n-1)</div></code></span> to
  <span style='white-space:nowrap'><code>2<div class='webpkisuper'>n</div>-1</code></span>, 
- where <code>n</code> is the size in bits of the anticipated target data type.
+ where <code>n</code> is the size in bits of the anticipated target integer type.
  That is, if a protocol schema or declaration calls for a signed
  <span style='white-space:nowrap'>32-bit</span> integer, the valid
  range would be <code>-0x80000000</code> to <code>0x7fffffff</code>.
- Note that these constraints do not apply to CBOR <code>integer</code>
- objects that are <i>shorter</i> than the actual target data type.
+ Note that range constraints do not apply to CBOR <code>integer</code>
+ numbers that are <i>shorter</i> than the actual target integer type.
  Also see <a href="CBORObject.html#getInt()"><code>CBORObject.getInt()</code></a>.
  </div></div>
 </section>
@@ -138,7 +138,7 @@ var activeTableTab = "active-table-tab";
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-org.webpki.cbor.CBORObject">Methods inherited from class&nbsp;org.webpki.cbor.<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></h3>
-<code><a href="CBORObject.html#checkForUnread()">checkForUnread</a>, <a href="CBORObject.html#decode(byte%5B%5D)">decode</a>, <a href="CBORObject.html#decode(java.io.InputStream,boolean,boolean,boolean,java.lang.Integer)">decode</a>, <a href="CBORObject.html#equals(java.lang.Object)">equals</a>, <a href="CBORObject.html#getArray()">getArray</a>, <a href="CBORObject.html#getArray(int)">getArray</a>, <a href="CBORObject.html#getBigInteger()">getBigInteger</a>, <a href="CBORObject.html#getBoolean()">getBoolean</a>, <a href="CBORObject.html#getBytes()">getBytes</a>, <a href="CBORObject.html#getDouble()">getDouble</a>, <a href="CBORObject.html#getFloat()">getFloat</a>, <a href="CBORObject.html#getInt()">getInt</a>, <a href="CBORObject.html#getLong()">getLong</a>, <a href="CBORObject.html#getMap()">getMap</a>, <a href="CBORObject.html#getString()">getString</a>, <a href="CBORObject.html#getTag()">getTag</a>, <a href="CBORObject.html#getUnsignedLong()">getUnsignedLong</a>, <a href="CBORObject.html#isNull()">isNull</a>, <a href="CBORObject.html#scan()">scan</a>, <a href="CBORObject.html#toString()">toString</a></code></div>
+<code><a href="CBORObject.html#checkForUnread()">checkForUnread</a>, <a href="CBORObject.html#decode(byte%5B%5D)">decode</a>, <a href="CBORObject.html#decode(java.io.InputStream,boolean,boolean,boolean,java.lang.Integer)">decode</a>, <a href="CBORObject.html#equals(java.lang.Object)">equals</a>, <a href="CBORObject.html#getArray()">getArray</a>, <a href="CBORObject.html#getArray(int)">getArray</a>, <a href="CBORObject.html#getBigInteger()">getBigInteger</a>, <a href="CBORObject.html#getBoolean()">getBoolean</a>, <a href="CBORObject.html#getByte()">getByte</a>, <a href="CBORObject.html#getBytes()">getBytes</a>, <a href="CBORObject.html#getDouble()">getDouble</a>, <a href="CBORObject.html#getFloat()">getFloat</a>, <a href="CBORObject.html#getInt()">getInt</a>, <a href="CBORObject.html#getLong()">getLong</a>, <a href="CBORObject.html#getMap()">getMap</a>, <a href="CBORObject.html#getShort()">getShort</a>, <a href="CBORObject.html#getString()">getString</a>, <a href="CBORObject.html#getTag()">getTag</a>, <a href="CBORObject.html#getUnsignedByte()">getUnsignedByte</a>, <a href="CBORObject.html#getUnsignedInt()">getUnsignedInt</a>, <a href="CBORObject.html#getUnsignedLong()">getUnsignedLong</a>, <a href="CBORObject.html#getUnsignedShort()">getUnsignedShort</a>, <a href="CBORObject.html#isNull()">isNull</a>, <a href="CBORObject.html#scan()">scan</a>, <a href="CBORObject.html#toString()">toString</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -177,7 +177,7 @@ var activeTableTab = "active-table-tab";
  A special case is the value <code>0xffffffffffffffffL</code>
  (long <code>-1</code>), which corresponds to <code>-2^64</code>.
  </p>
- Also see <a href='#recommendations'>recommendations</a>.</div>
+ Also see <a href='#range-constraints'>Range&nbsp;Constraints</a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>value</code> - long value</dd>
@@ -218,7 +218,7 @@ var activeTableTab = "active-table-tab";
 <dt>Specified by:</dt>
 <dd><code><a href="CBORObject.html#getType()">getType</a></code>&nbsp;in class&nbsp;<code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></dd>
 <dt>Returns:</dt>
-<dd>The CBOR core type</dd>
+<dd>CBOR core type</dd>
 </dl>
 </section>
 </li>
@@ -227,12 +227,16 @@ var activeTableTab = "active-table-tab";
 <h3>encode</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">encode</span>()</div>
 <div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="CBORObject.html#encode()">CBORObject</a></code></span></div>
-<div class="block">Encodes CBOR object.</div>
+<div class="block">Encodes CBOR object.
+ <p>
+ Note: this method always return CBOR data using 
+ <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>.
+ </p></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="CBORObject.html#encode()">encode</a></code>&nbsp;in class&nbsp;<code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></dd>
 <dt>Returns:</dt>
-<dd>CBOR bytes</dd>
+<dd>CBOR encoded <code>byteArray</code></dd>
 </dl>
 </section>
 </li>
