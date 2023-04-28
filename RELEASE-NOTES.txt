@@ -16,3 +16,9 @@ Android CBOR - Relese Notes
 
 - Removed int53 support
 
+- Added to CBORObject:
+    getUnsignedInt()
+    getShort()
+    getUnsignedShort()
+    getByte()
+    getUnsignedByte()
