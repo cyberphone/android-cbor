@@ -142,12 +142,11 @@ var activeTableTab = "active-table-tab";
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a>[]</span>&nbsp;<span class="element-name">decodeCertificateArray</span><wbr><span class="parameters">(<a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a>&nbsp;array)</span></div>
 <div class="block">Decodes a certificate path from a CBOR array.
 <p>
- Note that the array must only contain a
- list of X509 certificates in DER format,
+ The CBOR array is assumed to hold one or more X.509 certificates in DER format,
  each encoded as a CBOR <code>byte&nbsp;string</code>. 
- The certificates must be in ascending
- order with respect to parenthood.  That is,
- the first certificate would typically be
+ Note that the certificates must be featured in <i>ascending order</i>
+ with respect to parenthood.  That is,
+ the certificate at index <code>0</code> would normally be
  an end-entity certificate.
  </p>
  <p>
@@ -157,7 +156,7 @@ var activeTableTab = "active-table-tab";
 <dt>Parameters:</dt>
 <dd><code>array</code> - CBOR array with X.509 certificates</dd>
 <dt>Returns:</dt>
-<dd>Certificate path</dd>
+<dd>Decoded X.509 certificate path</dd>
 </dl>
 </section>
 </li>
@@ -167,11 +166,11 @@ var activeTableTab = "active-table-tab";
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></span>&nbsp;<span class="element-name">encodeCertificateArray</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a>[]&nbsp;certificatePath)</span></div>
 <div class="block">Encodes certificate path into a CBOR array.
  <p>
- Note that the certificates must be in ascending
- order with respect to parenthood.  That is,
- the first certificate would typically be
+ Note that the certificates must be featured in <i>ascending order</i>
+ with respect to parenthood.  That is,
+ the certificate at index <code>0</code> would normally be
  an end-entity certificate.  The CBOR array
- will after the conversion hold a list of
+ will after processing hold a list of
  DER-encoded certificates, each represented by a CBOR
  <code>byte&nbsp;string</code>.
  </p>
@@ -180,9 +179,9 @@ var activeTableTab = "active-table-tab";
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>certificatePath</code> - The certificate path to be converted to CBOR</dd>
+<dd><code>certificatePath</code> - X.509 certificate path to be encoded</dd>
 <dt>Returns:</dt>
-<dd>CBORArray</dd>
+<dd>CBOR array with X.509 certificates</dd>
 </dl>
 </section>
 </li>
