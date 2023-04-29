@@ -640,11 +640,11 @@ var activeTableTab = "active-table-tab";
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>inputStream</code> - Stream holding CBOR data</dd>
-<dd><code>sequenceFlag</code> - Stop reading after parsing a valid CBOR object
+<dd><code>sequenceFlag</code> - If <code>true</code> stop reading after decoding a CBOR object
  (no object returns <code>null</code>)</dd>
-<dd><code>nonDeterministic</code> - Disable deterministic encoding check</dd>
-<dd><code>constrainedKeys</code> - Limit map keys to text string and integer types,
- including flagging mixing of these types in map</dd>
+<dd><code>nonDeterministic</code> - If <code>true</code> disable deterministic encoding check</dd>
+<dd><code>constrainedKeys</code> - If <code>true</code> limit <a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code></a> keys to <a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a> and <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a> objects,
+ including flagging <i>mixing</i> of these objects in maps</dd>
 <dd><code>maxLength</code> - Holds maximum input size in 
  bytes or <code>null</code> (<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MAX_VALUE</code></a> is assumed)</dd>
 <dt>Returns:</dt>
