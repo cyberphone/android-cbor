@@ -108,16 +108,21 @@ var activeTableTab = "active-table-tab";
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#decode(org.webpki.cbor.CBORObject)" class="member-name-link">decode</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;cborBody)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">INTERNAL USE ONLY.</div>
+<div class="block">IMPLEMENTER USE ONLY.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getObjectId()" class="member-name-link">getObjectId</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#enableCheckForUnread()" class="member-name-link">enableCheckForUnread</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">IMPLEMENTER USE ONLY.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getObjectId()" class="member-name-link">getObjectId</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Returns typed object identifier.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRoot()" class="member-name-link">getRoot</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRoot()" class="member-name-link">getRoot</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns root of decoded CBOR.</div>
 </div>
 </div>
@@ -161,23 +166,34 @@ var activeTableTab = "active-table-tab";
 <section class="detail" id="decode(org.webpki.cbor.CBORObject)">
 <h3>decode</h3>
 <div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">decode</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;cborBody)</span></div>
-<div class="block">INTERNAL USE ONLY.
+<div class="block">IMPLEMENTER USE ONLY.
  <p>
  Implementations <b>must</b> decode all elements
  associated with the specific object decoder.
  </p>
  <p>
  Note that "checked" exceptions <b>must</b> be wrapped in
- an unchecked exception like <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/RuntimeException.html" title="class or interface in java.lang" class="external-link"><code>RuntimeException</code></a>,
+ suitable unchecked exceptions like <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/RuntimeException.html" title="class or interface in java.lang" class="external-link"><code>RuntimeException</code></a>,
  <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a>, or <a href="../crypto/CryptoException.html" title="class in org.webpki.crypto"><code>CryptoException</code></a>.
- </p>
- <p>
- Also see <a href="CBORTypedObjectDecoderCache.html#setCheckForUnread(boolean)"><code>CBORTypedObjectDecoderCache.setCheckForUnread(boolean)</code></a>.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>cborBody</code> - COTX argument of <a href="CBORTypedObjectDecoder.html" title="class in org.webpki.cbor"><code>CBORTypedObjectDecoder</code></a> instance</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="enableCheckForUnread()">
+<h3>enableCheckForUnread</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">enableCheckForUnread</span>()</div>
+<div class="block">IMPLEMENTER USE ONLY.
+ <p>
+ After <a href="#decode(org.webpki.cbor.CBORObject)"><code>decode(CBORObject)</code></a> has been called,
+ the <a href="CBORTypedObjectDecoderCache.html" title="class in org.webpki.cbor"><code>CBORTypedObjectDecoderCache</code></a> will by <i>default</i> call
+ <a href="CBORObject.html#checkForUnread()"><code>CBORObject.checkForUnread()</code></a>.  By <i>overriding</i>
+ <a href="#enableCheckForUnread()"><code>enableCheckForUnread()</code></a> and returning <code>false</code>,
+ a decoder implementation can <i>disable</i> this check.
+ </p></div>
 </section>
 </li>
 <li>
@@ -197,11 +213,11 @@ var activeTableTab = "active-table-tab";
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">getRoot</span>()</div>
 <div class="block">Returns root of decoded CBOR.
  <p>
- Including COTX.
+ Note: the root points to the entire object, including the COTX tag.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>CBORObject</dd>
+<dd><code>CBORObject</code></dd>
 </dl>
 </section>
 </li>

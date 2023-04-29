@@ -835,11 +835,11 @@ public abstract class CBORObject {
      * </p>
      * 
      * @param inputStream Stream holding CBOR data
-     * @param sequenceFlag Stop reading after parsing a valid CBOR object
+     * @param sequenceFlag If <code>true</code> stop reading after decoding a CBOR object
      * (no object returns <code>null</code>)
-     * @param nonDeterministic Disable deterministic encoding check
-     * @param constrainedKeys Limit map keys to text string and integer types,
-     * including flagging mixing of these types in map
+     * @param nonDeterministic If <code>true</code> disable deterministic encoding check
+     * @param constrainedKeys If <code>true</code> limit {@link CBORMap} keys to {@link CBORString} and {@link CBORInteger} objects,
+     * including flagging <i>mixing</i> of these objects in maps
      * @param maxLength Holds maximum input size in 
      * bytes or <code>null</code> ({@link Integer#MAX_VALUE} is assumed)
      * @return <code>CBORObject</code>
