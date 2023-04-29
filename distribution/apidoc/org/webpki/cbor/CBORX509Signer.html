@@ -65,12 +65,12 @@
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CBORX509Signer</span>
 <span class="extends-implements">extends <a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a></span></div>
-<div class="block">Class for creating CBOR X509 signatures.
+<div class="block">Class for creating X.509 signatures.
  <p>
  Also see <a href="CBORSigner.html" title="class in org.webpki.cbor"><code>CBORSigner</code></a>.
  </p>
  <p> 
- Note that X509 signatures do not permit the use of a <code>keyId</code>.
+ Note that X.509 signatures do not permit the use of a <code>keyId</code>.
  </p></div>
 </section>
 <section class="summary">
@@ -86,13 +86,13 @@
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.security.PrivateKey,java.security.cert.X509Certificate%5B%5D)" class="member-name-link">CBORX509Signer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a>[]&nbsp;certificatePath)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Initializes an X509 signer with a private key.</div>
+<div class="block">Initializes an X.509 signer with a private key.</div>
 </div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.security.PrivateKey,java.security.cert.X509Certificate%5B%5D,org.webpki.crypto.AsymSignatureAlgorithms)" class="member-name-link">CBORX509Signer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a>[]&nbsp;certificatePath,
  <a href="../crypto/AsymSignatureAlgorithms.html" title="enum class in org.webpki.crypto">AsymSignatureAlgorithms</a>&nbsp;algorithm)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Initializes an X509 signer with a private key.</div>
+<div class="block">Initializes an X.509 signer with a private key.</div>
 </div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.webpki.crypto.X509SignerInterface)" class="member-name-link">CBORX509Signer</a><wbr>(<a href="../crypto/X509SignerInterface.html" title="interface in org.webpki.crypto">X509SignerInterface</a>&nbsp;signer)</code></div>
 <div class="col-last even-row-color">
@@ -138,7 +138,7 @@
 <h3>CBORX509Signer</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORX509Signer</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a>[]&nbsp;certificatePath)</span></div>
-<div class="block">Initializes an X509 signer with a private key.
+<div class="block">Initializes an X.509 signer with a private key.
  <p>
  The signature algorithm to use is based on the recommendations
  in RFC 7518.
@@ -156,7 +156,7 @@
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORX509Signer</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a>[]&nbsp;certificatePath,
  <a href="../crypto/AsymSignatureAlgorithms.html" title="enum class in org.webpki.crypto">AsymSignatureAlgorithms</a>&nbsp;algorithm)</span></div>
-<div class="block">Initializes an X509 signer with a private key.</div>
+<div class="block">Initializes an X.509 signer with a private key.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>privateKey</code> - Signature key</dd>
