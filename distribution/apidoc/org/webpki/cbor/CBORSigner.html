@@ -105,24 +105,29 @@ var activeTableTab = "active-table-tab";
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIntercepter(org.webpki.cbor.CBORCryptoUtils.Intercepter)" class="member-name-link">setIntercepter</a><wbr>(<a href="CBORCryptoUtils.Intercepter.html" title="interface in org.webpki.cbor">CBORCryptoUtils.Intercepter</a>&nbsp;intercepter)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCloneMode(boolean)" class="member-name-link">setCloneMode</a><wbr>(boolean&nbsp;flag)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets optional Intercepter.</div>
+<div class="block">Sets clone mode.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setKeyId(org.webpki.cbor.CBORObject)" class="member-name-link">setKeyId</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;keyId)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIntercepter(org.webpki.cbor.CBORCryptoUtils.Intercepter)" class="member-name-link">setIntercepter</a><wbr>(<a href="CBORCryptoUtils.Intercepter.html" title="interface in org.webpki.cbor">CBORCryptoUtils.Intercepter</a>&nbsp;intercepter)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets signature <code>keyId</code>.</div>
+<div class="block">Sets optional Intercepter.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProvider(java.lang.String)" class="member-name-link">setProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;provider)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setKeyId(org.webpki.cbor.CBORObject)" class="member-name-link">setKeyId</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;keyId)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets signature <code>keyId</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProvider(java.lang.String)" class="member-name-link">setProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;provider)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets cryptographic provider.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sign(org.webpki.cbor.CBORObject,org.webpki.cbor.CBORMap)" class="member-name-link">sign</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sign(org.webpki.cbor.CBORObject,org.webpki.cbor.CBORMap)" class="member-name-link">sign</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key,
  <a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a>&nbsp;mapToSign)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Signs CBOR object.</div>
 </div>
 </div>
@@ -199,6 +204,23 @@ var activeTableTab = "active-table-tab";
 </section>
 </li>
 <li>
+<section class="detail" id="setCloneMode(boolean)">
+<h3>setCloneMode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a></span>&nbsp;<span class="element-name">setCloneMode</span><wbr><span class="parameters">(boolean&nbsp;flag)</span></div>
+<div class="block">Sets clone mode.
+ <p>
+ By default the <a href="#sign(org.webpki.cbor.CBORObject,org.webpki.cbor.CBORMap)"><code>sign(CBORObject, CBORMap)</code></a> method
+ <i>overwrites</i> the input <code>map</code> object.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>flag</code> - If <code>true</code> input data will be cloned</dd>
+<dt>Returns:</dt>
+<dd>CBORSigner</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="sign(org.webpki.cbor.CBORObject,org.webpki.cbor.CBORMap)">
 <h3>sign</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">sign</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key,
@@ -207,6 +229,9 @@ var activeTableTab = "active-table-tab";
  
  <p>
  Adds an enveloped CSF object (signature) to a CBOR map.
+ </p>
+ <p>
+ Also see <a href="#setCloneMode(boolean)"><code>setCloneMode(boolean)</code></a>.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
