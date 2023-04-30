@@ -367,11 +367,11 @@ public class InstrumentedTest {
     private void oneShot(KeyAlgorithms ka,
                          KeyEncryptionAlgorithms kea,
                          ContentEncryptionAlgorithms cea,
-                         String staticProvider,
-                         String ephemeralProvider) throws Exception {
+                         String staticProvider) throws Exception {
         KeyPair keyPair = generateKeyPair(staticProvider != null, ka);
         if (ka.getKeyType() != KeyTypes.RSA) {
-            EncryptionCore.setEcProvider(staticProvider, ephemeralProvider);
+          // Apparently the private key information takes you to the proper provider
+          //  EncryptionCore.setEcProvider(staticProvider, ephemeralProvider);
         }
         byte[] encrypted = new CBORAsymKeyEncrypter(keyPair.getPublic(), kea, cea)
                 .encrypt(DATA_TO_ENCRYPT).encode();
@@ -384,24 +384,20 @@ public class InstrumentedTest {
         assertTrue("Enc2", Arrays.equals(DATA_TO_ENCRYPT,
                 new CBORAsymKeyDecrypter(keyPair.getPrivate())
                         .decrypt(CBORObject.decode(encrypted))));
-        EncryptionCore.setEcProvider(null, null);
-        EncryptionCore.setRsaProvider(null);
+ //       EncryptionCore.setEcProvider(null, null);
+ //       EncryptionCore.setRsaProvider(null);
     }
 
     private void providerShot(KeyAlgorithms ka,
                               KeyEncryptionAlgorithms kea,
                               ContentEncryptionAlgorithms cea) throws Exception {
         // Using the default provider
-        oneShot(ka, kea, cea, null, null);
-
-        // oneShot(ka, kea, cea, null, ANDROID_KEYSTORE);
+        oneShot(ka, kea, cea, null);
 
         if (Build.VERSION.SDK_INT >= 33) {
             // Protected client keys
-            oneShot(ka, kea, cea, ANDROID_KEYSTORE, null);
+            oneShot(ka, kea, cea, ANDROID_KEYSTORE);
         }
-
-        // oneShot(ka, kea, cea, ANDROID_KEYSTORE, ANDROID_KEYSTORE);
     }
 
     @Test
