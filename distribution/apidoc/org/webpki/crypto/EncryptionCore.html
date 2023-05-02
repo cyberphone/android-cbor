@@ -141,53 +141,61 @@ var activeTableTab = "active-table-tab";
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Key decryption convenience method.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static byte[]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#receiverKeyAgreement(boolean,java.security.PrivateKey,org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms,java.security.PublicKey,byte%5B%5D)" class="member-name-link">receiverKeyAgreement</a><wbr>(boolean&nbsp;coseMode,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="EncryptionCore.AsymmetricEncryptionResult.html" title="class in org.webpki.crypto">EncryptionCore.AsymmetricEncryptionResult</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#encryptKey(boolean,java.security.PublicKey,org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms)" class="member-name-link">encryptKey</a><wbr>(boolean&nbsp;coseMode,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;publicKey,
+ <a href="KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
+ <a href="ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Key encryption convenience method.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static byte[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#receiverKeyAgreement(boolean,java.security.PrivateKey,org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms,java.security.PublicKey,byte%5B%5D)" class="member-name-link">receiverKeyAgreement</a><wbr>(boolean&nbsp;coseMode,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey,
  <a href="KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
  <a href="ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;publicKey,
  byte[]&nbsp;encryptedKey)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Perform a receiver side ECDH operation.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static byte[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rsaDecryptKey(java.security.PrivateKey,org.webpki.crypto.KeyEncryptionAlgorithms,byte%5B%5D)" class="member-name-link">rsaDecryptKey</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static byte[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rsaDecryptKey(java.security.PrivateKey,org.webpki.crypto.KeyEncryptionAlgorithms,byte%5B%5D)" class="member-name-link">rsaDecryptKey</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey,
  <a href="KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
  byte[]&nbsp;encryptedKey)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Decrypt a symmetric key using an RSA cipher.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="EncryptionCore.AsymmetricEncryptionResult.html" title="class in org.webpki.crypto">EncryptionCore.AsymmetricEncryptionResult</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rsaEncryptKey(byte%5B%5D,org.webpki.crypto.KeyEncryptionAlgorithms,java.security.PublicKey)" class="member-name-link">rsaEncryptKey</a><wbr>(byte[]&nbsp;contentEncryptionKey,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="EncryptionCore.AsymmetricEncryptionResult.html" title="class in org.webpki.crypto">EncryptionCore.AsymmetricEncryptionResult</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#rsaEncryptKey(byte%5B%5D,org.webpki.crypto.KeyEncryptionAlgorithms,java.security.PublicKey)" class="member-name-link">rsaEncryptKey</a><wbr>(byte[]&nbsp;contentEncryptionKey,
  <a href="KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;publicKey)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Perform an RSA encrypt key operation.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="EncryptionCore.AsymmetricEncryptionResult.html" title="class in org.webpki.crypto">EncryptionCore.AsymmetricEncryptionResult</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#senderKeyAgreement(boolean,byte%5B%5D,org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms,java.security.PublicKey)" class="member-name-link">senderKeyAgreement</a><wbr>(boolean&nbsp;coseMode,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="EncryptionCore.AsymmetricEncryptionResult.html" title="class in org.webpki.crypto">EncryptionCore.AsymmetricEncryptionResult</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#senderKeyAgreement(boolean,byte%5B%5D,org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms,java.security.PublicKey)" class="member-name-link">senderKeyAgreement</a><wbr>(boolean&nbsp;coseMode,
  byte[]&nbsp;contentEncryptionKey,
  <a href="KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
  <a href="ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;publicKey)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Perform a sender side ECDH operation.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setAesProvider(java.lang.String)" class="member-name-link">setAesProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setAesProvider(java.lang.String)" class="member-name-link">setAesProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providerName)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Explicitly set provider for AES operations.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setEcProvider(java.lang.String,java.lang.String)" class="member-name-link">setEcProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ecStaticProviderName,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setEcProvider(java.lang.String,java.lang.String)" class="member-name-link">setEcProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ecStaticProviderName,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ecEphemeralProviderName)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Explicitly set provider for ECDH operations.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setRsaProvider(java.lang.String)" class="member-name-link">setRsaProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;rsaProviderName)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setRsaProvider(java.lang.String)" class="member-name-link">setRsaProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;rsaProviderName)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Explicitly set provider for RSA operations.</div>
 </div>
 </div>
@@ -366,29 +374,6 @@ var activeTableTab = "active-table-tab";
 </section>
 </li>
 <li>
-<section class="detail" id="decryptKey(boolean,java.security.PrivateKey,byte[],java.security.PublicKey,org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms)">
-<h3>decryptKey</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">decryptKey</span><wbr><span class="parameters">(boolean&nbsp;coseMode,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey,
- byte[]&nbsp;optionalEncryptedKey,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;optionalEphemeralKey,
- <a href="KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
- <a href="ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm)</span></div>
-<div class="block">Key decryption convenience method.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>coseMode</code> - <code>true</code> for COSE, <code>false</code> for JOSE</dd>
-<dd><code>privateKey</code> - Private decryption key</dd>
-<dd><code>optionalEncryptedKey</code> - For ECDH</dd>
-<dd><code>optionalEphemeralKey</code> - For key-wrapping algorithms</dd>
-<dd><code>keyEncryptionAlgorithm</code> - Key encryption algorithm</dd>
-<dd><code>contentEncryptionAlgorithm</code> - Content encryption algorithm</dd>
-<dt>Returns:</dt>
-<dd>Decrypted key</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="senderKeyAgreement(boolean,byte[],org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms,java.security.PublicKey)">
 <h3>senderKeyAgreement</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="EncryptionCore.AsymmetricEncryptionResult.html" title="class in org.webpki.crypto">EncryptionCore.AsymmetricEncryptionResult</a></span>&nbsp;<span class="element-name">senderKeyAgreement</span><wbr><span class="parameters">(boolean&nbsp;coseMode,
@@ -406,6 +391,48 @@ var activeTableTab = "active-table-tab";
 <dd><code>publicKey</code> - The receiver's (usually static) public key</dd>
 <dt>Returns:</dt>
 <dd>A composite object including the (plain text) data encryption key</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="encryptKey(boolean,java.security.PublicKey,org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms)">
+<h3>encryptKey</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="EncryptionCore.AsymmetricEncryptionResult.html" title="class in org.webpki.crypto">EncryptionCore.AsymmetricEncryptionResult</a></span>&nbsp;<span class="element-name">encryptKey</span><wbr><span class="parameters">(boolean&nbsp;coseMode,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;publicKey,
+ <a href="KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
+ <a href="ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm)</span></div>
+<div class="block">Key encryption convenience method.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>coseMode</code> - <code>true</code> for COSE, <code>false</code> for JOSE</dd>
+<dd><code>publicKey</code> - Public decryption key</dd>
+<dd><code>keyEncryptionAlgorithm</code> - Key encryption algorithm</dd>
+<dd><code>contentEncryptionAlgorithm</code> - Content encryption algorithm</dd>
+<dt>Returns:</dt>
+<dd>Encryption parameters including a content encryption key</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="decryptKey(boolean,java.security.PrivateKey,byte[],java.security.PublicKey,org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms)">
+<h3>decryptKey</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">decryptKey</span><wbr><span class="parameters">(boolean&nbsp;coseMode,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey,
+ byte[]&nbsp;optionalEncryptedKey,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;optionalEphemeralKey,
+ <a href="KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
+ <a href="ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm)</span></div>
+<div class="block">Key decryption convenience method.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>coseMode</code> - <code>true</code> for COSE, <code>false</code> for JOSE</dd>
+<dd><code>privateKey</code> - Private decryption key</dd>
+<dd><code>optionalEncryptedKey</code> - For key-wrapping algorithms</dd>
+<dd><code>optionalEphemeralKey</code> - For ECDH*</dd>
+<dd><code>keyEncryptionAlgorithm</code> - Key encryption algorithm</dd>
+<dd><code>contentEncryptionAlgorithm</code> - Content encryption algorithm</dd>
+<dt>Returns:</dt>
+<dd>Decrypted content encryption key</dd>
 </dl>
 </section>
 </li>

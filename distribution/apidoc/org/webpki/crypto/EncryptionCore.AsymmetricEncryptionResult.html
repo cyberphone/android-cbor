@@ -88,13 +88,19 @@ var activeTableTab = "active-table-tab";
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>byte[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getContentEncryptionKey()" class="member-name-link">getContentEncryptionKey</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get <i>unencrypted</i> content encryption key.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>byte[]</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEncryptedKey()" class="member-name-link">getEncryptedKey</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get encrypted key.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEphemeralKey()" class="member-name-link">getEphemeralKey</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get ephemeral key.</div>
+</div>
 </div>
 </div>
 </div>
@@ -116,18 +122,40 @@ var activeTableTab = "active-table-tab";
 <section class="detail" id="getContentEncryptionKey()">
 <h3>getContentEncryptionKey</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">getContentEncryptionKey</span>()</div>
+<div class="block">Get <i>unencrypted</i> content encryption key.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Content encryption key</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getEncryptedKey()">
 <h3>getEncryptedKey</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">getEncryptedKey</span>()</div>
+<div class="block">Get encrypted key.
+ <p>
+ This element is defined for key wrapping algorithms which currently
+ include all but <code>ECDH-ES</code>.
+ </p></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Encrypted key or <code>null</code></dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getEphemeralKey()">
 <h3>getEphemeralKey</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a></span>&nbsp;<span class="element-name">getEphemeralKey</span>()</div>
+<div class="block">Get ephemeral key.
+ <p>
+ This element is defined for all <code>ECDH*</code> algorithms.
+ </p></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Ephemeral key or <code>null</code></dd>
+</dl>
 </section>
 </li>
 </ul>
