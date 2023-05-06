@@ -26,7 +26,7 @@ To use the precompiled module, copy the AAR file located in
 https://github.com/cyberphone/android-cbor/tree/main/distribution
 to a ```libs``` folder in the application and then add the line
 ```code
-implementation files('libs/org.webpki-jlibcbor-1.0.2.aar')
+implementation files('libs/org.webpki-jlibcbor-1.0.3.aar')
 ```
 to the ```dependencies``` section of the Gradle file.
 
@@ -41,4 +41,4 @@ https://test.webpki.org/csf-lab/home.
 ### Updates
 See https://github.com/cyberphone/android-cbor/tree/main/RELEASE-NOTES.txt.
 
-Version 1.0.2, 2023-04-27
+Version 1.0.3, 2023-05-06
