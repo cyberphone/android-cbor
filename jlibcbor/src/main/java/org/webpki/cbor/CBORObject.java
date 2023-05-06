@@ -146,13 +146,13 @@ public abstract class CBORObject implements Cloneable {
         int length = 0;
         if (n < 0 || n > 23) {
             modifier = 27;
-            length = 8;
-            while (((MASK_LOWER_32 << ((length / 2) * 8)) & n) == 0) {
+            length = 32;
+            while (((MASK_LOWER_32 << length) & n) == 0) {
                 modifier--;
                 length >>= 1;
             }
         }
-        return encodeTagAndValue(majorType | modifier, length, n);
+        return encodeTagAndValue(majorType | modifier, length >> 2, n);
     }
 
     void checkTypeAndMarkAsRead(CBORTypes requestedCborType) {
@@ -186,8 +186,8 @@ public abstract class CBORObject implements Cloneable {
     }
 
     /**
-     * Returns Java <code>long</code> value.
-      * <p>
+     * Returns <code>long</code> value.
+     * <p>
      * This method requires that the object is a
      * {@link CBORInteger} and fits a Java <code>long</code>, 
      *({@link Long#MIN_VALUE} to {@link Long#MAX_VALUE}), 
@@ -207,7 +207,7 @@ public abstract class CBORObject implements Cloneable {
     }
 
     /**
-     * Returns Java <i>unsigned</i> <code>long</code> value.
+     * Returns <i>unsigned</i> <code>long</code> value.
      * <p>
      * This method requires that the object is an <i>unsigned</i>
      * {@link CBORInteger}, otherwise a {@link CBORException} is thrown.
@@ -224,7 +224,7 @@ public abstract class CBORObject implements Cloneable {
     }
 
     /**
-     * Returns Java <code>int</code> value.
+     * Returns <code>int</code> value.
      * <p>
      * This method requires that the object is a
      * {@link CBORInteger} and fits a Java <code>int</code>
@@ -244,7 +244,7 @@ public abstract class CBORObject implements Cloneable {
     }
 
     /**
-     * Returns Java <i>unsigned</i> <code>int</code> value.
+     * Returns <i>unsigned</i> <code>int</code> value.
      * <p>
      * This method requires that the object is a
      * {@link CBORInteger} and fits a Java <code>int</code>
@@ -253,18 +253,18 @@ public abstract class CBORObject implements Cloneable {
      * </p>
      * Also see {@link #getBigInteger()}.
      * 
-     * @return <code>int</code>
+     * @return <code>long</code>
      */
-    public int getUnsignedInt() {
+    public long getUnsignedInt() {
         long value = getUnsignedLong();
         if ((value & UINT32_MASK) != 0) {
             integerRangeError("int");
         }
-        return (int)value;
+        return value;
     }    
 
     /**
-     * Returns Java <code>short</code> value.
+     * Returns <code>short</code> value.
      * <p>
      * This method requires that the object is a
      * {@link CBORInteger} and fits a Java <code>short</code>
@@ -273,18 +273,18 @@ public abstract class CBORObject implements Cloneable {
      * </p>
      * Also see {@link #getBigInteger()}.
      * 
-     * @return <code>short</code>
+     * @return <code>int</code>
      */
-    public short getShort() {
+    public int getShort() {
         long value = getLong();
         if (value > Short.MAX_VALUE || value < Short.MIN_VALUE) {
             integerRangeError("short");
         }
-        return (short)value;
+        return (int)value;
     }
 
     /**
-     * Returns Java <i>unsigned</i> <code>short</code> value.
+     * Returns <i>unsigned</i> <code>short</code> value.
      * <p>
      * This method requires that the object is a
      * {@link CBORInteger} and fits a Java <code>short</code>
@@ -293,18 +293,18 @@ public abstract class CBORObject implements Cloneable {
      * </p>
      * Also see {@link #getBigInteger()}.
      * 
-     * @return <code>short</code>
+     * @return <code>int</code>
      */
-    public short getUnsignedShort() {
+    public int getUnsignedShort() {
         long value = getUnsignedLong();
         if ((value & UINT16_MASK) != 0) {
             integerRangeError("short");
         }
-        return (short)value;
+        return (int)value;
     }    
 
     /**
-     * Returns Java <code>byte</code> value.
+     * Returns <code>byte</code> value.
      * <p>
      * This method requires that the object is a
      * {@link CBORInteger} and fits a Java <code>byte</code>
@@ -313,18 +313,18 @@ public abstract class CBORObject implements Cloneable {
      * </p>
      * Also see {@link #getBigInteger()}.
      * 
-     * @return <code>byte</code>
+     * @return <code>int</code>
      */
-    public byte getByte() {
+    public int getByte() {
         long value = getLong();
         if (value > Byte.MAX_VALUE || value < Byte.MIN_VALUE) {
             integerRangeError("byte");
         }
-        return (byte)value;
+        return (int)value;
     }
 
     /**
-     * Returns Java <i>unsigned</i> <code>byte</code> value.
+     * Returns <i>unsigned</i> <code>byte</code> value.
      * <p>
      * This method requires that the object is a
      * {@link CBORInteger} and fits a Java <code>byte</code>
@@ -333,14 +333,14 @@ public abstract class CBORObject implements Cloneable {
      * </p>
      * Also see {@link #getBigInteger()}.
      * 
-     * @return <code>byte</code>
+     * @return <code>int</code>
      */
-    public byte getUnsignedByte() {
+    public int getUnsignedByte() {
         long value = getUnsignedLong();
         if ((value & UINT8_MASK) != 0) {
             integerRangeError("byte");
         }
-        return (byte)value;
+        return (int)value;
     }    
 
     /**
@@ -468,7 +468,7 @@ public abstract class CBORObject implements Cloneable {
     }
     
     /**
-     * Returns a fixed-length <code>array</code> object.
+     * Returns fixed-length <code>array</code> object.
      * <p>
      * This method requires that the object is a
      * {@link CBORArray} as well as holding
@@ -951,6 +951,18 @@ public abstract class CBORObject implements Cloneable {
             return false;
         }
         return Arrays.equals(((CBORObject) object).encode(), encode());
+    }
+
+    @Override
+    public int hashCode() {
+        byte[] encoded = encode();
+        int hash = 0;
+        int q = Math.min(encoded.length, 4);
+        while (--q >= 0) {
+            hash <<= 8;
+            hash += encoded[q];
+        }
+        return hash;
     }
 
     /**

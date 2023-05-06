@@ -116,7 +116,18 @@ var activeTableTab = "active-table-tab";
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#get(org.webpki.cbor.CBORObject)" class="member-name-link">get</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Retrieves map object.</div>
+<div class="block">Returns mapped object.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>byte[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBytesAndRemoveKey(org.webpki.cbor.CBORObject)" class="member-name-link">getBytesAndRemoveKey</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns <code>byte string</code> value, then deletes key.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getConditionally(org.webpki.cbor.CBORObject,org.webpki.cbor.CBORObject)" class="member-name-link">getConditionally</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key,
+ <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;defaultValue)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns mapped object conditionally.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>[]</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getKeys()" class="member-name-link">getKeys</a>()</code></div>
@@ -128,31 +139,26 @@ var activeTableTab = "active-table-tab";
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns core CBOR type.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>byte[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#readBytesAndRemoveKey(org.webpki.cbor.CBORObject)" class="member-name-link">readBytesAndRemoveKey</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#remove(org.webpki.cbor.CBORObject)" class="member-name-link">remove</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Reads a <code>byte string</code> value, then deletes key.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#remove(org.webpki.cbor.CBORObject)" class="member-name-link">remove</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Removes mapped object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#set(org.webpki.cbor.CBORObject,org.webpki.cbor.CBORObject)" class="member-name-link">set</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key,
- <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;value)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets map object.</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setBytes(org.webpki.cbor.CBORObject,byte%5B%5D)" class="member-name-link">setBytes</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key,
- byte[]&nbsp;byteString)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#set(org.webpki.cbor.CBORObject,org.webpki.cbor.CBORObject)" class="member-name-link">set</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key,
+ <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets mapped object.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setBytes(org.webpki.cbor.CBORObject,byte%5B%5D)" class="member-name-link">setBytes</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key,
+ byte[]&nbsp;byteString)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets a <code>byte string</code> value.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#size()" class="member-name-link">size</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#size()" class="member-name-link">size</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the size of the map.</div>
 </div>
 </div>
@@ -160,10 +166,10 @@ var activeTableTab = "active-table-tab";
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-org.webpki.cbor.CBORObject">Methods inherited from class&nbsp;org.webpki.cbor.<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></h3>
-<code><a href="CBORObject.html#checkForUnread()">checkForUnread</a>, <a href="CBORObject.html#clone()">clone</a>, <a href="CBORObject.html#decode(byte%5B%5D)">decode</a>, <a href="CBORObject.html#decode(java.io.InputStream,boolean,boolean,boolean,java.lang.Integer)">decode</a>, <a href="CBORObject.html#equals(java.lang.Object)">equals</a>, <a href="CBORObject.html#getArray()">getArray</a>, <a href="CBORObject.html#getArray(int)">getArray</a>, <a href="CBORObject.html#getBigInteger()">getBigInteger</a>, <a href="CBORObject.html#getBoolean()">getBoolean</a>, <a href="CBORObject.html#getByte()">getByte</a>, <a href="CBORObject.html#getBytes()">getBytes</a>, <a href="CBORObject.html#getDouble()">getDouble</a>, <a href="CBORObject.html#getFloat()">getFloat</a>, <a href="CBORObject.html#getInt()">getInt</a>, <a href="CBORObject.html#getLong()">getLong</a>, <a href="CBORObject.html#getMap()">getMap</a>, <a href="CBORObject.html#getShort()">getShort</a>, <a href="CBORObject.html#getString()">getString</a>, <a href="CBORObject.html#getTag()">getTag</a>, <a href="CBORObject.html#getUnsignedByte()">getUnsignedByte</a>, <a href="CBORObject.html#getUnsignedInt()">getUnsignedInt</a>, <a href="CBORObject.html#getUnsignedLong()">getUnsignedLong</a>, <a href="CBORObject.html#getUnsignedShort()">getUnsignedShort</a>, <a href="CBORObject.html#isNull()">isNull</a>, <a href="CBORObject.html#scan()">scan</a>, <a href="CBORObject.html#toString()">toString</a></code></div>
+<code><a href="CBORObject.html#checkForUnread()">checkForUnread</a>, <a href="CBORObject.html#clone()">clone</a>, <a href="CBORObject.html#decode(byte%5B%5D)">decode</a>, <a href="CBORObject.html#decode(java.io.InputStream,boolean,boolean,boolean,java.lang.Integer)">decode</a>, <a href="CBORObject.html#equals(java.lang.Object)">equals</a>, <a href="CBORObject.html#getArray()">getArray</a>, <a href="CBORObject.html#getArray(int)">getArray</a>, <a href="CBORObject.html#getBigInteger()">getBigInteger</a>, <a href="CBORObject.html#getBoolean()">getBoolean</a>, <a href="CBORObject.html#getByte()">getByte</a>, <a href="CBORObject.html#getBytes()">getBytes</a>, <a href="CBORObject.html#getDouble()">getDouble</a>, <a href="CBORObject.html#getFloat()">getFloat</a>, <a href="CBORObject.html#getInt()">getInt</a>, <a href="CBORObject.html#getLong()">getLong</a>, <a href="CBORObject.html#getMap()">getMap</a>, <a href="CBORObject.html#getShort()">getShort</a>, <a href="CBORObject.html#getString()">getString</a>, <a href="CBORObject.html#getTag()">getTag</a>, <a href="CBORObject.html#getUnsignedByte()">getUnsignedByte</a>, <a href="CBORObject.html#getUnsignedInt()">getUnsignedInt</a>, <a href="CBORObject.html#getUnsignedLong()">getUnsignedLong</a>, <a href="CBORObject.html#getUnsignedShort()">getUnsignedShort</a>, <a href="CBORObject.html#hashCode()">hashCode</a>, <a href="CBORObject.html#isNull()">isNull</a>, <a href="CBORObject.html#scan()">scan</a>, <a href="CBORObject.html#toString()">toString</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -216,24 +222,11 @@ var activeTableTab = "active-table-tab";
 </section>
 </li>
 <li>
-<section class="detail" id="containsKey(org.webpki.cbor.CBORObject)">
-<h3>containsKey</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">containsKey</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key)</span></div>
-<div class="block">Checks map for key presence.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>key</code> - Key</dd>
-<dt>Returns:</dt>
-<dd><code>true</code> if the key is present</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="set(org.webpki.cbor.CBORObject,org.webpki.cbor.CBORObject)">
 <h3>set</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></span>&nbsp;<span class="element-name">set</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key,
  <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;value)</span></div>
-<div class="block">Sets map object.
+<div class="block">Sets mapped object.
  <p>
  If <code>key</code> is already present, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
@@ -243,71 +236,6 @@ var activeTableTab = "active-table-tab";
 <dd><code>value</code> - Object</dd>
 <dt>Returns:</dt>
 <dd><code>this</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="get(org.webpki.cbor.CBORObject)">
-<h3>get</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">get</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key)</span></div>
-<div class="block">Retrieves map object.
- <p>
- If <code>key</code> is not present, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
- </p></div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>key</code> - Key</dd>
-<dt>Returns:</dt>
-<dd>Object</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="remove(org.webpki.cbor.CBORObject)">
-<h3>remove</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">remove</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key)</span></div>
-<div class="block">Removes mapped object.
- <p>
- If <code>key</code> is not present, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
- </p></div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>key</code> - Key</dd>
-<dt>Returns:</dt>
-<dd>The value mapped by the <code>key</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getKeys()">
-<h3>getKeys</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>[]</span>&nbsp;<span class="element-name">getKeys</span>()</div>
-<div class="block">Enumerates all keys in a map.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>Array of keys</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="readBytesAndRemoveKey(org.webpki.cbor.CBORObject)">
-<h3>readBytesAndRemoveKey</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">readBytesAndRemoveKey</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key)</span></div>
-<div class="block">Reads a <code>byte string</code> value, then deletes key.
- <p>
- If <code>key</code> is not present or the
- mapped data is not a CBOR <code>byte&nbsp;string</code>,
- a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
- </p>
- <p>
- This method is provided for supporting the validation phase
- of enveloped cryptographic constructs like CSF and CEF.
- </p></div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>key</code> - Key</dd>
-<dt>Returns:</dt>
-<dd>byte string</dd>
 </dl>
 </section>
 </li>
@@ -330,6 +258,103 @@ var activeTableTab = "active-table-tab";
 <dd><code>byteString</code> - Byte string</dd>
 <dt>Returns:</dt>
 <dd><code>this</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="get(org.webpki.cbor.CBORObject)">
+<h3>get</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">get</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key)</span></div>
+<div class="block">Returns mapped object.
+ <p>
+ If <code>key</code> is not present, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>key</code> - Key</dd>
+<dt>Returns:</dt>
+<dd><code>CBORObject</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getConditionally(org.webpki.cbor.CBORObject,org.webpki.cbor.CBORObject)">
+<h3>getConditionally</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">getConditionally</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key,
+ <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;defaultValue)</span></div>
+<div class="block">Returns mapped object conditionally.
+ <p>
+ If <code>key</code> is not present, <code>defaultValue</code> is returned.
+ <code>defaultValue</code> may be <code>null</code>.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>key</code> - Key</dd>
+<dd><code>defaultValue</code> - Default value</dd>
+<dt>Returns:</dt>
+<dd><code>CBORObject</code> or <code>defaultValue</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getBytesAndRemoveKey(org.webpki.cbor.CBORObject)">
+<h3>getBytesAndRemoveKey</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">getBytesAndRemoveKey</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key)</span></div>
+<div class="block">Returns <code>byte string</code> value, then deletes key.
+ <p>
+ If <code>key</code> is not present or the
+ mapped data is not a CBOR <code>byte&nbsp;string</code>,
+ a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p>
+ <p>
+ This convenience method is provided for supporting the validation phase
+ of enveloped cryptographic constructs like CSF and CEF.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>key</code> - Key</dd>
+<dt>Returns:</dt>
+<dd><code>byteArray</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="containsKey(org.webpki.cbor.CBORObject)">
+<h3>containsKey</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">containsKey</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key)</span></div>
+<div class="block">Checks map for key presence.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>key</code> - Key</dd>
+<dt>Returns:</dt>
+<dd><code>true</code> if the key is present</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="remove(org.webpki.cbor.CBORObject)">
+<h3>remove</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">remove</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key)</span></div>
+<div class="block">Removes mapped object.
+ <p>
+ If <code>key</code> is not present, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>key</code> - Key</dd>
+<dt>Returns:</dt>
+<dd>The <code>CBORObject</code> mapped by <code>key</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getKeys()">
+<h3>getKeys</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>[]</span>&nbsp;<span class="element-name">getKeys</span>()</div>
+<div class="block">Enumerates all keys in a map.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Array of keys</dd>
 </dl>
 </section>
 </li>
