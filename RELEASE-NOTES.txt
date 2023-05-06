@@ -23,3 +23,10 @@ Android CBOR - Relese Notes
     getUnsignedShort()
     getByte()
     getUnsignedByte()
+
+1.0.3
+- Updated JavaDoc
+
+- Changed get[integer] methods to follow Java rules + making unsigned return unsigned
+
+- hashCode() added making CBORObject useful as "key"
