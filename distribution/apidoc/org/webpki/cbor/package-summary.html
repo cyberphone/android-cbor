@@ -64,13 +64,13 @@ primitives and their mapping to Java:
 <table class='webpkitable' style='margin-left:2em'>
 <tr><th>CBOR&nbsp;Primitive</th><th>Notes</th><th>Java&nbsp;Mapping</th>
 <th>Implementation</th></tr>
-<tr><td><code>integer</code></td><td>1</td><td><code>long</code></td><td><a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a></td></tr>
-<tr><td><code>big&nbsp;integer</code></td><td>1, 2</td><td><code>BigInteger</code></td><td><a href="CBORBigInteger.html" title="class in org.webpki.cbor"><code>CBORBigInteger</code></a></td></tr>
-<tr><td><code>floating&nbsp;point</code></td><td>3</td><td><code>double</code></td><td><a href="CBORFloatingPoint.html" title="class in org.webpki.cbor"><code>CBORFloatingPoint</code></a></td></tr>
+<tr><td><code>integer</code></td><td>1</td><td><code>long</code></td><td><a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a></td></tr>
+<tr><td><code>big&nbsp;integer</code></td><td>1, 2</td><td><code>BigInteger</code></td><td><a href="CBORBigInt.html" title="class in org.webpki.cbor"><code>CBORBigInt</code></a></td></tr>
+<tr><td><code>floating&nbsp;point</code></td><td>3</td><td><code>double</code></td><td><a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a></td></tr>
 <tr><td><code>byte&nbsp;string</code></td><td></td><td><code>byte[]</code></td><td><a href="CBORBytes.html" title="class in org.webpki.cbor"><code>CBORBytes</code></a></td></tr>
 <tr><td><code>text&nbsp;string</code></td><td></td><td><code>String</code></td><td><a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a></td></tr>
-<tr><td><code>true</code></td><td></td><td><code>boolean</code></td><td><a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a></td></tr>
-<tr><td><code>false</code></td><td></td><td><code>boolean</code></td><td><a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a></td></tr>
+<tr><td><code>true</code></td><td></td><td><code>boolean</code></td><td><a href="CBORBool.html" title="class in org.webpki.cbor"><code>CBORBool</code></a></td></tr>
+<tr><td><code>false</code></td><td></td><td><code>boolean</code></td><td><a href="CBORBool.html" title="class in org.webpki.cbor"><code>CBORBool</code></a></td></tr>
 <tr><td><code>null</code></td><td></td><td><code>null</code></td><td><a href="CBORNull.html" title="class in org.webpki.cbor"><code>CBORNull</code></a></td></tr>
 </table>
 </div>
@@ -253,7 +253,7 @@ access to individual CBOR objects of the structure.
 </p>
 <p>
 If the underlying CBOR data type does not match the access method
-(like performing <a href="CBORObject.html#getInt()"><code>CBORObject.getInt()</code></a> on a <a href="CBORBigInteger.html" title="class in org.webpki.cbor"><code>CBORBigInteger</code></a>),
+(like performing <a href="CBORObject.html#getInt()"><code>CBORObject.getInt()</code></a> on a <a href="CBORBigInt.html" title="class in org.webpki.cbor"><code>CBORBigInt</code></a>),
 an exception is thrown.
 That is, this implementation performs <i>strict type checking</i>. 
 </p>
@@ -285,7 +285,7 @@ To aid the use of cryptography, support for
 <a href='doc-files/signatures.html'>Signatures</a> and 
 <a href='doc-files/encryption.html'>Encryption</a> is integrated in the package.
 <h3 id='diagnostic-notation'>Diagnostic Notation</h3>
-Through the <a href="CBORDiagnosticNotationDecoder.html" title="class in org.webpki.cbor"><code>CBORDiagnosticNotationDecoder</code></a> class, CBOR data may be provided
+Through the <a href="CBORDiagnosticNotation.html" title="class in org.webpki.cbor"><code>CBORDiagnosticNotation</code></a> class, CBOR data may be provided
 in diagnostic (textual) notation (as described in section 8 of RFC&nbsp;8949),
 making CBOR useful for "config" and test data files as well.
 <p>
@@ -294,8 +294,8 @@ By adhering to the
 specification above, CBOR data can be <i>bidirectionally</i>
 converted between its native (binary) format and diagnostic notation
 without getting corrupted.  Note though that a text-binary-text "roundtrip"
-does not necessarily return identical text; only the binary
-representation needs to remain deterministic.
+does not necessarily return identical text; <i>only the binary
+representation needs to remain deterministic</i>.
 Caveat: for reliable conversions, floating point values <b>must</b>
 be aligned with IEEE&nbsp;754 encoding and rounding rules.
 </p>
@@ -379,7 +379,7 @@ immediately preceding the newline may be used.</li>
 <li>Text strings may also include JavaScript compatible escape sequences
 (<code>'\''</code>, <code>'\"'</code>, <code>'\\'</code>, 
 <code>'\b'</code>, <code>'\f'</code>, <code>'\n'</code>, 
-<code>'\r'</code>, <code>'\t'</code>, <code>'\u'</code>).</li>
+<code>'\r'</code>, <code>'\t'</code>, <code>'\uhhhh'</code>).</li>
 <li>Zero-length strings (<code>''</code>) return byte strings of length zero.</li>
 <li>The IETF have yet to define a single line comment.</li>
 </ol></div>
@@ -421,11 +421,11 @@ immediately preceding the newline may be used.</li>
 <div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">Interface for dynamic key retrieval.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORBigInteger.html" title="class in org.webpki.cbor">CBORBigInteger</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORBigInt.html" title="class in org.webpki.cbor">CBORBigInt</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for holding CBOR <code>big&nbsp;integer</code> objects.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORBoolean.html" title="class in org.webpki.cbor">CBORBoolean</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORBool.html" title="class in org.webpki.cbor">CBORBool</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class for holding CBOR <code>boolean</code> objects.</div>
 </div>
@@ -457,7 +457,7 @@ immediately preceding the newline may be used.</li>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Base class for decrypting data.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORDiagnosticNotationDecoder.html" title="class in org.webpki.cbor">CBORDiagnosticNotationDecoder</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORDiagnosticNotation.html" title="class in org.webpki.cbor">CBORDiagnosticNotation</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class for converting diagnostic CBOR to CBOR.</div>
 </div>
@@ -469,11 +469,11 @@ immediately preceding the newline may be used.</li>
 <div class="col-last even-row-color class-summary class-summary-tab5">
 <div class="block">Wrapper for making the WebPKI CBOR library only throw unchecked exceptions.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORFloatingPoint.html" title="class in org.webpki.cbor">CBORFloatingPoint</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORFloat.html" title="class in org.webpki.cbor">CBORFloat</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for holding CBOR <code>floating&nbsp;point</code> objects.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab3"><a href="CBORFloatingPoint.IeeeVariant.html" title="enum class in org.webpki.cbor">CBORFloatingPoint.IeeeVariant</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab3"><a href="CBORFloat.IeeeVariant.html" title="enum class in org.webpki.cbor">CBORFloat.IeeeVariant</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab3">
 <div class="block">Underlying IEEE 754 type.</div>
 </div>
@@ -489,7 +489,7 @@ immediately preceding the newline may be used.</li>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for CBOR HMAC signature validation.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORInteger.html" title="class in org.webpki.cbor">CBORInteger</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class for holding CBOR <code>integer</code> objects.</div>
 </div>
@@ -590,7 +590,7 @@ immediately preceding the newline may be used.</li>
 </main>
 <footer role="contentinfo">
 <hr>
-<p class="legal-copy"><small><i>2005-2022 WebPKI.org.</i></small></p>
+<p class="legal-copy"><small><i>2005-2023 WebPKI.org.</i></small></p>
 </footer>
 </div>
 </div>
