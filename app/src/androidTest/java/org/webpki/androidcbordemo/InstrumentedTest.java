@@ -23,7 +23,7 @@ import org.webpki.cbor.CBORAsymKeyValidator;
 import org.webpki.cbor.CBORBytes;
 import org.webpki.cbor.CBORCryptoConstants;
 import org.webpki.cbor.CBORCryptoUtils;
-import org.webpki.cbor.CBORDiagnosticNotationDecoder;
+import org.webpki.cbor.CBORDiagnosticNotation;
 import org.webpki.cbor.CBORHmacValidator;
 import org.webpki.cbor.CBORKeyPair;
 import org.webpki.cbor.CBORMap;
@@ -257,13 +257,13 @@ public class InstrumentedTest {
 
                        */
                   }).setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null).decrypt(encryptionObject)));
-        byte[] tag = cefContainer.readBytesAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
+        byte[] tag = cefContainer.remove(CBORCryptoConstants.TAG_LABEL).getBytes();
         cefContainer.set(CBORCryptoConstants.TAG_LABEL, new CBORBytes(tag));
         new CBORAsymKeyDecrypter(privateKey)
                 .setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
                 .decrypt(encryptionObject);
 
-        tag = cefContainer.readBytesAndRemoveKey(CBORCryptoConstants.TAG_LABEL);
+        tag = cefContainer.remove(CBORCryptoConstants.TAG_LABEL).getBytes();
         tag[5]++;
         cefContainer.set(CBORCryptoConstants.TAG_LABEL, new CBORBytes(tag));
         try {
@@ -440,7 +440,7 @@ public class InstrumentedTest {
         new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
         byte[] signature =
         signedData.getMap().get(SIGNATURE_LABEL)
-                .getMap().readBytesAndRemoveKey(CBORCryptoConstants.SIGNATURE_LABEL);
+                .getMap().remove(CBORCryptoConstants.SIGNATURE_LABEL).getBytes();
         signature[5]++;
         try {
             signedData.getMap().get(SIGNATURE_LABEL)
@@ -608,11 +608,11 @@ public class InstrumentedTest {
 
     void utf8EncoderTest(String string, boolean ok) {
          try {
-            String encodedString = CBORDiagnosticNotationDecoder.decode(
+            String encodedString = CBORDiagnosticNotation.decode(
                     "\"" + string + "\"").getString();
             assertTrue("OK", ok);
             assertTrue("Conv", string.equals(encodedString));
-            byte[] encodedBytes = CBORDiagnosticNotationDecoder.decode(
+            byte[] encodedBytes = CBORDiagnosticNotation.decode(
                     "'" + string + "'").getBytes();
             assertTrue("OK", ok);
             assertTrue("Conv2", Arrays.equals(encodedBytes, string.getBytes("utf-8")));

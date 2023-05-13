@@ -30,3 +30,6 @@ Android CBOR - Relese Notes
 - Changed get[integer] methods to follow Java rules + making unsigned return unsigned
 
 - hashCode() added making CBORObject useful as "key"
+
+1.0.4
+- Name refactoring of basic CBOR types

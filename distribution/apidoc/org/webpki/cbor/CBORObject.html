@@ -70,7 +70,7 @@ var activeTableTab = "active-table-tab";
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></code>, <code><a href="CBORBigInteger.html" title="class in org.webpki.cbor">CBORBigInteger</a></code>, <code><a href="CBORBoolean.html" title="class in org.webpki.cbor">CBORBoolean</a></code>, <code><a href="CBORBytes.html" title="class in org.webpki.cbor">CBORBytes</a></code>, <code><a href="CBORFloatingPoint.html" title="class in org.webpki.cbor">CBORFloatingPoint</a></code>, <code><a href="CBORInteger.html" title="class in org.webpki.cbor">CBORInteger</a></code>, <code><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></code>, <code><a href="CBORNull.html" title="class in org.webpki.cbor">CBORNull</a></code>, <code><a href="CBORString.html" title="class in org.webpki.cbor">CBORString</a></code>, <code><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></code></dd>
+<dd><code><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></code>, <code><a href="CBORBigInt.html" title="class in org.webpki.cbor">CBORBigInt</a></code>, <code><a href="CBORBool.html" title="class in org.webpki.cbor">CBORBool</a></code>, <code><a href="CBORBytes.html" title="class in org.webpki.cbor">CBORBytes</a></code>, <code><a href="CBORFloat.html" title="class in org.webpki.cbor">CBORFloat</a></code>, <code><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code>, <code><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></code>, <code><a href="CBORNull.html" title="class in org.webpki.cbor">CBORNull</a></code>, <code><a href="CBORString.html" title="class in org.webpki.cbor">CBORString</a></code>, <code><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">CBORObject</span>
@@ -292,7 +292,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Returns <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link"><code>BigInteger</code></a> value.
  <p>
  This method requires that the object is a
- <a href="CBORBigInteger.html" title="class in org.webpki.cbor"><code>CBORBigInteger</code></a> or <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a>,
+ <a href="CBORBigInt.html" title="class in org.webpki.cbor"><code>CBORBigInt</code></a> or <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>,
  otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
@@ -308,7 +308,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Returns <code>long</code> value.
  <p>
  This method requires that the object is a
- <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a> and fits a Java <code>long</code>, 
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and fits a Java <code>long</code>, 
 (<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html#MIN_VALUE" title="class or interface in java.lang" class="external-link"><code>Long.MIN_VALUE</code></a> to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Long.MAX_VALUE</code></a>), 
  otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p>
@@ -326,7 +326,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Returns <i>unsigned</i> <code>long</code> value.
  <p>
  This method requires that the object is an <i>unsigned</i>
- <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -341,7 +341,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Returns <code>int</code> value.
  <p>
  This method requires that the object is a
- <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a> and fits a Java <code>int</code>
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and fits a Java <code>int</code>
 (<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html#MIN_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MIN_VALUE</code></a> to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MAX_VALUE</code></a>), 
  otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p>
@@ -359,7 +359,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Returns <i>unsigned</i> <code>int</code> value.
  <p>
  This method requires that the object is a
- <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a> and fits a Java <code>int</code>
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and fits a Java <code>int</code>
 (<code>0</code> to <code>0xffffffff</code>), 
  otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p>
@@ -377,7 +377,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Returns <code>short</code> value.
  <p>
  This method requires that the object is a
- <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a> and fits a Java <code>short</code>
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and fits a Java <code>short</code>
 (<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Short.html#MIN_VALUE" title="class or interface in java.lang" class="external-link"><code>Short.MIN_VALUE</code></a> to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Short.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Short.MAX_VALUE</code></a>), 
  otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p>
@@ -395,7 +395,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Returns <i>unsigned</i> <code>short</code> value.
  <p>
  This method requires that the object is a
- <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a> and fits a Java <code>short</code>
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and fits a Java <code>short</code>
 (<code>0</code> to <code>0xffff</code>), 
  otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p>
@@ -413,7 +413,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Returns <code>byte</code> value.
  <p>
  This method requires that the object is a
- <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a> and fits a Java <code>byte</code>
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and fits a Java <code>byte</code>
 (<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Byte.html#MIN_VALUE" title="class or interface in java.lang" class="external-link"><code>Byte.MIN_VALUE</code></a> to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Byte.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Byte.MAX_VALUE</code></a>), 
  otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p>
@@ -431,7 +431,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Returns <i>unsigned</i> <code>byte</code> value.
  <p>
  This method requires that the object is a
- <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a> and fits a Java <code>byte</code>
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and fits a Java <code>byte</code>
 (<code>0</code> to <code>0xff</code>), 
  otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p>
@@ -449,7 +449,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Returns <code>double</code> value.
  <p>
  This method requires that the object is a
- <a href="CBORFloatingPoint.html" title="class in org.webpki.cbor"><code>CBORFloatingPoint</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -464,7 +464,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Returns <code>float</code> value.
  <p>
  This method requires that the object is a
- <a href="CBORFloatingPoint.html" title="class in org.webpki.cbor"><code>CBORFloatingPoint</code></a> holding a 16 or 32-bit IEEE 754 value, 
+ <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a> holding a 16 or 32-bit IEEE 754 value, 
  otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
@@ -480,7 +480,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Returns <code>boolean</code> value.
  <p>
  This method requires that the object is a
- <a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ <a href="CBORBool.html" title="class in org.webpki.cbor"><code>CBORBool</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -656,7 +656,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <dd><code>sequenceFlag</code> - If <code>true</code> stop reading after decoding a CBOR object
  (no object returns <code>null</code>)</dd>
 <dd><code>nonDeterministic</code> - If <code>true</code> disable deterministic encoding check</dd>
-<dd><code>constrainedKeys</code> - If <code>true</code> limit <a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code></a> keys to <a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a> and <a href="CBORInteger.html" title="class in org.webpki.cbor"><code>CBORInteger</code></a> objects,
+<dd><code>constrainedKeys</code> - If <code>true</code> limit <a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code></a> keys to <a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a> and <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> objects,
  including flagging <i>mixing</i> of these objects in maps</dd>
 <dd><code>maxLength</code> - Holds maximum input size in 
  bytes or <code>null</code> (<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MAX_VALUE</code></a> is assumed)</dd>
@@ -743,7 +743,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </main>
 <footer role="contentinfo">
 <hr>
-<p class="legal-copy"><small><i>2005-2022 WebPKI.org.</i></small></p>
+<p class="legal-copy"><small><i>2005-2023 WebPKI.org.</i></small></p>
 </footer>
 </div>
 </div>
