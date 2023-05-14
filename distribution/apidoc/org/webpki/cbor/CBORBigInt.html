@@ -143,8 +143,8 @@ var activeTableTab = "active-table-tab";
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORBigInt</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link">BigInteger</a>&nbsp;value)</span></div>
 <div class="block">Creates a CBOR integer value of any size.
  <p>
- Note: if the <code>value</code> is within the CBOR <code>integer</code> range,
- <code>integer</code> encoding will be used, otherwise the <code>value</code>
+ Note: if <code>value</code> is within the CBOR <code>integer</code> range,
+ <code>integer</code> encoding (<a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>) will be used, otherwise <code>value</code>
  will be encoded as a CBOR <code>big&nbsp;integer</code>.
  </p></div>
 <dl class="notes">
