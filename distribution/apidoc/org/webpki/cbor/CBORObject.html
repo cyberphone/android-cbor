@@ -655,7 +655,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <dd><code>inputStream</code> - Stream holding CBOR data</dd>
 <dd><code>sequenceFlag</code> - If <code>true</code> stop reading after decoding a CBOR object
  (no object returns <code>null</code>)</dd>
-<dd><code>nonDeterministic</code> - If <code>true</code> disable deterministic encoding check</dd>
+<dd><code>nonDeterministic</code> - If <code>true</code> disable 
+ <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>
+ checks for number serialization and map sorting</dd>
 <dd><code>constrainedKeys</code> - If <code>true</code> limit <a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code></a> keys to <a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a> and <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> objects,
  including flagging <i>mixing</i> of these objects in maps</dd>
 <dd><code>maxLength</code> - Holds maximum input size in 
