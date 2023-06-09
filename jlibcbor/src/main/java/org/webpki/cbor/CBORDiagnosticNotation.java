@@ -28,13 +28,25 @@ import org.webpki.util.UTF8;
  */
 public class CBORDiagnosticNotation {
 
+    /**
+     * Diagnostic Notation Parser Exception.
+     */
+    public static class ParserException extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
+        ParserException(String message) {
+            super(message);
+        }
+    }
+    
     char[] cborText;
     int index;
-    boolean sequence;
+    boolean sequenceFlag;
     
-    CBORDiagnosticNotation(String cborText, boolean sequence) {
+    CBORDiagnosticNotation(String cborText, boolean sequenceFlag) {
         this.cborText = cborText.toCharArray();
-        this.sequence = sequence;
+        this.sequenceFlag = sequenceFlag;
     }
     
     /**
@@ -44,7 +56,7 @@ public class CBORDiagnosticNotation {
      * @return {@link CBORObject}
      */
     public static CBORObject decode(String cborText) {
-        return new CBORDiagnosticNotation(cborText, false).readToEOF();
+        return new CBORDiagnosticNotation(cborText, false).readSequenceToEOF()[0];
     }
 
     /**
@@ -93,31 +105,35 @@ public class CBORDiagnosticNotation {
                 lineNumber++;
             }
         }
-        throw new CBORException(complete.append("^\n\nError in line ")
-                                        .append(lineNumber)
-                                        .append(". ")
-                                        .append(error).toString());
+        throw new ParserException(complete.append("^\n\nError in line ")
+                                          .append(lineNumber)
+                                          .append(". ")
+                                          .append(error).toString());
     }
     
-    private CBORObject readToEOF() {
-        CBORObject cborObject = getObject();
-        if (index < cborText.length) {
-            readChar();
-            reportError("Unexpected data after token");
-        }
-        return cborObject;
-    }
-
     private CBORObject[] readSequenceToEOF() {
-        ArrayList<CBORObject> sequence = new ArrayList<>();
-        while (true) {
-            sequence.add(getObject());
-            if (index < cborText.length) {
-                scanFor(",");
-            } else {
-                return sequence.toArray(new CBORObject[0]);
+        try {
+            ArrayList<CBORObject> sequence = new ArrayList<>();
+            while (true) {
+                sequence.add(getObject());
+                if (index < cborText.length) {
+                    if (sequenceFlag) {
+                        scanFor(",");
+                    } else {
+                        readChar();
+                        reportError(CBORObject.STDERR_UNEXPECTED_DATA);
+                    }
+                } else {
+                    return sequence.toArray(new CBORObject[0]);
+                }
             }
+        } catch (ParserException pe) {
+            throw pe;
+        } catch (Exception e) {
+            // Exception from a deeper layer; convert to ParserError.
+            reportError(e.getMessage());
         }
+        return null;  // for the compiler...
     }
 
     private CBORObject getObject() {
@@ -234,6 +250,7 @@ public class CBORDiagnosticNotation {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     private CBORObject getNumberOrTag(boolean negative) {
         StringBuilder token = new StringBuilder();
         index--;
@@ -281,6 +298,12 @@ public class CBORDiagnosticNotation {
                 case '.':
                     floatingPoint = true;
                     continue;
+                    
+                case '_':
+                    if (prefix == null) {
+                        reportError("'_' is only permitted for 0b, 0o, and 0x numbers");
+                    }
+                    readChar();
 
                 default:
                     continue;
@@ -288,44 +311,34 @@ public class CBORDiagnosticNotation {
             break;
         }
         String number = token.toString();
-        try {
-            if (floatingPoint) {
-                testForNonDecimal(prefix);
-                Double value = Double.valueOf(number);
-                // Implicit overflow is not permitted
-                if (value.isInfinite()) {
-                    reportError("Floating point value out of range");
-                }
-                return new CBORFloat(negative ? -value : value);
+        if (floatingPoint) {
+            testForNonDecimal(prefix);
+            Double value = Double.valueOf(number);
+            // Implicit overflow is not permitted
+            if (value.isInfinite()) {
+                reportError("Floating point value out of range");
             }
-            if (nextChar() == '(') {
-                // Do not accept '-', 0xhhh, or leading zeros
-                testForNonDecimal(prefix);
-                if (negative || (number.length() > 1 && number.charAt(0) == '0')) {
-                    reportError("Tag syntax error");
-                }
-                readChar();
-                long tagNumber = Long.parseUnsignedLong(number);
-                CBORObject taggedObject = getObject();
-                if (tagNumber == CBORTag.RESERVED_TAG_COTX) {
-                    CBORArray array;
-                    if (taggedObject.getType() != CBORTypes.ARRAY ||
-                        (array = taggedObject.getArray()).size() != 2 ||
-                        (array.get(0).getType() != CBORTypes.TEXT_STRING)) {
-                        reportError("Special tag " + CBORTag.RESERVED_TAG_COTX + " syntax error");
-                    }
-                }
-                CBORTag cborTag = new CBORTag(tagNumber, taggedObject);
-                scanFor(")");
-                return cborTag;
-            }
-            BigInteger bigInteger = new BigInteger(number, prefix == null ? 10 : prefix);
-            // Clone: slight quirk to get the proper CBOR integer type  
-            return new CBORBigInt(negative ? bigInteger.negate() : bigInteger).clone();
-        } catch (IllegalArgumentException e) {
-            reportError(e.getMessage());
+            return new CBORFloat(negative ? -value : value);
         }
-        return null; // For the compiler...
+        if (nextChar() == '(') {
+            // Do not accept '-', 0xhhh, or leading zeros
+            testForNonDecimal(prefix);
+            if (negative || (number.length() > 1 && number.charAt(0) == '0')) {
+                reportError("Tag syntax error");
+            }
+            readChar();
+            long tagNumber = Long.parseUnsignedLong(number);
+            CBORObject taggedObject = getObject();
+            if (tagNumber == CBORTag.RESERVED_TAG_COTX) {
+                CBORObject.checkCOTX(taggedObject);
+            }
+            CBORTag cborTag = new CBORTag(tagNumber, taggedObject);
+            scanFor(")");
+            return cborTag;
+        }
+        BigInteger bigInteger = new BigInteger(number, prefix == null ? 10 : prefix);
+        // Clone: slight quirk to get the proper CBOR integer type  
+        return new CBORBigInt(negative ? bigInteger.negate() : bigInteger).clone();
     }
 
     private void testForNonDecimal(Integer nonDecimal) {
@@ -480,7 +493,7 @@ public class CBORDiagnosticNotation {
             return (char) (c - 'A' + 10);
         }
         reportError(String.format("Bad hex character: %s", toChar(c)));
-        return 0; // For the compiler...
+        return 0;  // For the compiler...
     }
 
     private char readChar() {

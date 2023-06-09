@@ -29,7 +29,9 @@ public class CBORArray extends CBORObject {
      * Creates an empty CBOR array <code>[]</code>.
      * 
      */
-    public CBORArray() {}
+    public CBORArray() {
+        super(CBORTypes.ARRAY);
+    }
     
     /**
      * Returns the size of the array.
@@ -72,12 +74,7 @@ public class CBORArray extends CBORObject {
     }
 
     @Override
-    public CBORTypes getType() {
-        return CBORTypes.ARRAY;
-    }
-
-    @Override
-    public byte[] encode() {
+    byte[] internalEncode() {
         byte[] encoded = encodeTagAndN(MT_ARRAY, elements.size());
         for (CBORObject cborObject : toArray()) {
             encoded = addByteArrays(encoded, cborObject.encode());
@@ -86,12 +83,13 @@ public class CBORArray extends CBORObject {
     }
 
     @Override
-    void internalToString(DiagnosticNotation cborPrinter) {
+    void internalToString(CborPrinter cborPrinter) {
         cborPrinter.append('[');
         boolean notFirst = false;
         for (CBORObject object : toArray()) {
             if (notFirst) {
-                cborPrinter.append(", ");
+                cborPrinter.append(',');
+                cborPrinter.space();
             }
             notFirst = true;
             object.internalToString(cborPrinter);

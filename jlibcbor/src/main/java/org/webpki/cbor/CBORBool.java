@@ -32,21 +32,17 @@ public class CBORBool extends CBORObject {
      * @param value <code>true</code> or <code>false</code>
      */
     public CBORBool(boolean value) {
+        super(CBORTypes.BOOLEAN);
         this.value = value;
     }
 
     @Override
-    public CBORTypes getType() {
-        return CBORTypes.BOOLEAN;
-    }
-
-    @Override
-    public byte[] encode() {
+    byte[] internalEncode() {
         return value ? TRUE : FALSE;
     }
 
     @Override
-    void internalToString(DiagnosticNotation cborPrinter) {
+    void internalToString(CborPrinter cborPrinter) {
         cborPrinter.append(String.valueOf(value));
     }
 }

@@ -31,22 +31,18 @@ public class CBORBytes extends CBORObject {
      * @param byteString The bytes constituting the string
      */
     public CBORBytes(byte[] byteString) {
+        super(CBORTypes.BYTES);
         this.byteString = byteString;
         nullCheck(byteString);
-   }
-    
-    @Override
-    public CBORTypes getType() {
-        return CBORTypes.BYTE_STRING;
     }
 
     @Override
-    public byte[] encode() {
-        return addByteArrays(encodeTagAndN(MT_BYTE_STRING, byteString.length), byteString);
+    byte[] internalEncode() {
+        return addByteArrays(encodeTagAndN(MT_BYTES, byteString.length), byteString);
     }
 
     @Override
-    void internalToString(DiagnosticNotation cborPrinter) {
+    void internalToString(CborPrinter cborPrinter) {
         cborPrinter.append("h'").append(HexaDecimal.encode(byteString)).append('\'');
     }
 }

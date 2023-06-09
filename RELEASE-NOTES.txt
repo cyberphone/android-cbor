@@ -33,3 +33,8 @@ Android CBOR - Relese Notes
 
 1.0.4
 - Name refactoring of basic CBOR types
+
+1.0.5
+- Added toDiagnosticNotation(prettyPrint) option
+
+- Minor restructuring to get a better JavaDoc

@@ -34,7 +34,11 @@ import org.webpki.util.UTF8;
  */
 public abstract class CBORObject implements Cloneable {
     
-    CBORObject() {}
+    CBORTypes cborType;
+    
+    CBORObject(CBORTypes cborType) {
+        this.cborType = cborType;
+    }
     
     // True if object has been read
     private boolean readFlag;
@@ -42,8 +46,8 @@ public abstract class CBORObject implements Cloneable {
     // Supported CBOR types
     static final int MT_UNSIGNED      = 0x00;
     static final int MT_NEGATIVE      = 0x20;
-    static final int MT_BYTE_STRING   = 0x40;
-    static final int MT_TEXT_STRING   = 0x60;
+    static final int MT_BYTES         = 0x40;
+    static final int MT_STRING        = 0x60;
     static final int MT_ARRAY         = 0x80;
     static final int MT_MAP           = 0xa0;
     static final int MT_TAG           = 0xc0;
@@ -86,13 +90,20 @@ public abstract class CBORObject implements Cloneable {
     static final long UINT16_MASK             = 0xffffffffffff0000L;
     static final long UINT8_MASK              = 0xffffffffffffff00L;
     
+    static final int  MAX_ERROR_MESSAGE       = 100;
+    
     /**
      * Returns core CBOR type.
      * 
      * @return CBOR core type
      */
-    public abstract CBORTypes getType();
- 
+    public CBORTypes getType() {
+        return cborType;
+    }
+
+    // This solution is simply to get a JavaDoc that is more logical...
+    abstract byte[] internalEncode();
+
     /**
      * Encodes CBOR object.
      * <p>
@@ -102,12 +113,26 @@ public abstract class CBORObject implements Cloneable {
      * 
      * @return CBOR encoded <code>byteArray</code>
      */
-    public abstract byte[] encode();
+    public byte[] encode() {
+        return internalEncode();
+    }
     
-    abstract void internalToString(DiagnosticNotation outputBuffer);
+    abstract void internalToString(CborPrinter outputBuffer);
 
     static void reportError(String error) {
+        if (error.length() > MAX_ERROR_MESSAGE) {
+            error = error.substring(0, MAX_ERROR_MESSAGE - 3) + " ...";
+        }
         throw new CBORException(error);
+    }
+
+    static CBORArray checkCOTX(CBORObject taggedObject) {
+        CBORArray holder = taggedObject.cborType == CBORTypes.ARRAY ? 
+                                            taggedObject.getArray() : null;
+        if (holder == null || holder.size() != 2 || holder.get(0).cborType != CBORTypes.STRING) {
+            reportError("Invalid COTX object: " + taggedObject.toDiagnosticNotation(false));
+        }
+        return holder;
     }
 
     static void unsupportedTag(int tag) {
@@ -156,8 +181,8 @@ public abstract class CBORObject implements Cloneable {
     }
 
     void checkTypeAndMarkAsRead(CBORTypes requestedCborType) {
-        if (getType() != requestedCborType) {
-            reportError("Is type: " + getType() + ", requested: " + requestedCborType);
+        if (cborType != requestedCborType) {
+            reportError("Is type: " + cborType + ", requested: " + requestedCborType);
         }
         readFlag = true;
     }
@@ -178,7 +203,7 @@ public abstract class CBORObject implements Cloneable {
      * @return <code>BigInteger</code>
      */
     public BigInteger getBigInteger() {
-        if (getType() == CBORTypes.INTEGER) {
+        if (cborType == CBORTypes.INTEGER) {
             return getCBORInt().toBigInteger();
         }
         checkTypeAndMarkAsRead(CBORTypes.BIG_INTEGER);
@@ -404,7 +429,7 @@ public abstract class CBORObject implements Cloneable {
      * @return <code>boolean</code>
      */
     public boolean isNull() {
-        if (getType() == CBORTypes.NULL) {
+        if (cborType == CBORTypes.NULL) {
             readFlag = true;
             return true;
         }
@@ -421,7 +446,7 @@ public abstract class CBORObject implements Cloneable {
      * @return <code>String</code>
      */
     public String getString() {
-        checkTypeAndMarkAsRead(CBORTypes.TEXT_STRING);
+        checkTypeAndMarkAsRead(CBORTypes.STRING);
         return ((CBORString) this).textString;
     }
 
@@ -435,7 +460,7 @@ public abstract class CBORObject implements Cloneable {
      * @return <code>byteArray</code>
      */
     public byte[] getBytes() {
-        checkTypeAndMarkAsRead(CBORTypes.BYTE_STRING);
+        checkTypeAndMarkAsRead(CBORTypes.BYTES);
         return ((CBORBytes) this).byteString;
     }
 
@@ -465,26 +490,6 @@ public abstract class CBORObject implements Cloneable {
     public CBORArray getArray() {
         checkTypeAndMarkAsRead(CBORTypes.ARRAY);
         return (CBORArray) this;
-    }
-    
-    /**
-     * Returns fixed-length <code>array</code> object.
-     * <p>
-     * This method requires that the object is a
-     * {@link CBORArray} as well as holding
-     * <code>requiredLength</code> number of elements, 
-     * otherwise a {@link CBORException} is thrown.
-     * </p>
-     * 
-     * @param requiredLength Required number of elements
-     * @return CBOR <code>array</code> object
-     */
-    public CBORArray getArray(int requiredLength) {
-        CBORArray cborArray = getArray();
-        if (cborArray.size() != requiredLength) {
-            reportError(STDERR_ARRAY_LENGTH);
-        }
-        return cborArray;
     }
     
     /**
@@ -536,7 +541,7 @@ public abstract class CBORObject implements Cloneable {
     }
 
     private void traverse(CBORObject holderObject, boolean check) {
-        switch (getType()) {
+        switch (cborType) {
             case MAP:
                 CBORMap cborMap = (CBORMap) this;
                 for (CBORMap.Entry entry = cborMap.root; entry != null; entry = entry.next) {
@@ -566,7 +571,7 @@ public abstract class CBORObject implements Cloneable {
                                 "Tagged object " +
                                 Long.toUnsignedString(((CBORTag)holderObject).tagNumber) : 
                                 "Map key " + holderObject.toString() + " with argument") +                    
-                            " of type=" + getType() + 
+                            " of type=" + cborType + 
                             " with value=" + toString() + " was never read");
             }
         } else {
@@ -778,15 +783,7 @@ public abstract class CBORObject implements Cloneable {
             // N successfully decoded, now switch on major type (upper three bits).
             switch (tag & 0xe0) {
                 case MT_TAG:
-                    CBORObject tagData = getObject();
-                    if (n == CBORTag.RESERVED_TAG_COTX) {
-                        CBORArray holder = tagData.getArray(2);
-                        if (holder.get(0).getType() != CBORTypes.TEXT_STRING) {
-                            reportError("Tag syntax " +  CBORTag.RESERVED_TAG_COTX +
-                                        "([\"string\", CBOR object]) expected");
-                        }
-                    }
-                    return new CBORTag(n, tagData);
+                    return new CBORTag(n, getObject());
 
                 case MT_UNSIGNED:
                     return new CBORInt(n, true);
@@ -794,10 +791,10 @@ public abstract class CBORObject implements Cloneable {
                 case MT_NEGATIVE:
                     return new CBORInt(n, false);
     
-                case MT_BYTE_STRING:
+                case MT_BYTES:
                     return new CBORBytes(readBytes(checkLength(n)));
     
-                case MT_TEXT_STRING:
+                case MT_STRING:
                     return new CBORString(UTF8.decode(readBytes(checkLength(n))));
     
                 case MT_ARRAY:
@@ -898,27 +895,37 @@ public abstract class CBORObject implements Cloneable {
                       cborData.length);
     }
     
-    class DiagnosticNotation {
+    class CborPrinter {
  
         static final String INDENT = "  ";
         
         private int indentationLevel;
         private StringBuilder outputBuffer;
+        private boolean prettyPrint;
                
-        private DiagnosticNotation() {
+        private CborPrinter(boolean prettyPrint) {
             outputBuffer = new StringBuilder();
+            this.prettyPrint = prettyPrint;
         }
 
         void newlineAndIndent() {
-            outputBuffer.append('\n');
-            for (int i = 0; i < indentationLevel; i++) {
-                outputBuffer.append(INDENT);
+            if (prettyPrint) {
+                outputBuffer.append('\n');
+                for (int i = 0; i < indentationLevel; i++) {
+                    outputBuffer.append(INDENT);
+                }
             }
         }
         
         void beginMap() {
             outputBuffer.append('{');
             indentationLevel++;
+        }
+        
+        void space() {
+            if (prettyPrint) {
+                outputBuffer.append(' ');
+            }
         }
 
         void endMap(boolean notEmpty) {
@@ -929,12 +936,12 @@ public abstract class CBORObject implements Cloneable {
             outputBuffer.append('}');
         }
 
-        DiagnosticNotation append(String text) {
+        CborPrinter append(String text) {
             outputBuffer.append(text);
             return this;
         }
 
-        DiagnosticNotation append(char c) {
+        CborPrinter append(char c) {
             outputBuffer.append(c);
             return this;
         }
@@ -968,14 +975,30 @@ public abstract class CBORObject implements Cloneable {
     }
 
     /**
-     * Returns the CBOR object in pretty-printed 
+     * Returns the CBOR object in
      * <a href='package-summary.html#diagnostic-notation'>Diagnostic Notation</a>.
+     * <p>
+     * @param prettyPrint If <code>true</code> white space is added to make the 
+     * result easier to read.  If <code>false</code> elements are output
+     * without additional white space (=single line).
+     * </p>
+     */
+    public String toDiagnosticNotation(boolean prettyPrint) {
+        CborPrinter outputBuffer = new CborPrinter(prettyPrint);
+        internalToString(outputBuffer);
+        return outputBuffer.getTextualCbor();
+    }
+
+    /**
+     * Returns the CBOR object in a pretty-printed form.
+     * <p>
+     * Equivalent to {@link #toDiagnosticNotation(boolean)}
+     * with the argument set to <code>true</code>.
+     * </p>
      */
     @Override
     public String toString() {
-        DiagnosticNotation outputBuffer = new DiagnosticNotation();
-        internalToString(outputBuffer);
-        return outputBuffer.getTextualCbor();
+        return toDiagnosticNotation(true);
     }
     
     /**
@@ -1021,9 +1044,6 @@ public abstract class CBORObject implements Cloneable {
     
     static final String STDERR_ARGUMENT_IS_NULL =
             "Argument \"null\" is not permitted";
-
-    static final String STDERR_ARRAY_LENGTH =
-            "Array length does not march request";
 
     static final String STDERR_FLOAT_RANGE =
             "Value out of range for\"float\"";

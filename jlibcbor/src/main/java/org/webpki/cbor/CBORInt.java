@@ -83,6 +83,7 @@ public class CBORInt extends CBORObject {
      * @param unsigned <code>true</code> if value should be considered as unsigned
      */
     public CBORInt(long value, boolean unsigned) {
+        super(CBORTypes.INTEGER);
         this.value = value;
         this.unsigned = unsigned;
     }
@@ -99,14 +100,9 @@ public class CBORInt extends CBORObject {
     public CBORInt(long value) {
         this(value >= 0 ? value : ~value, value >= 0);
     }
-    
-    @Override
-    public CBORTypes getType() {
-        return CBORTypes.INTEGER;
-    }
 
     @Override
-    public byte[] encode() {
+    byte[] internalEncode() {
         return encodeTagAndN(unsigned ? MT_UNSIGNED : MT_NEGATIVE, value);
     }
 
@@ -120,7 +116,7 @@ public class CBORInt extends CBORObject {
     }
 
     @Override
-    void internalToString(DiagnosticNotation cborPrinter) {
+    void internalToString(CborPrinter cborPrinter) {
         cborPrinter.append(toBigInteger().toString());
     }
 }

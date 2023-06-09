@@ -58,12 +58,7 @@ public class CBORMap extends CBORObject {
      * Creates an empty CBOR <code>map</code>.
      */
     public CBORMap() {
-    }
-    
-
-    @Override
-    public CBORTypes getType() {
-        return CBORTypes.MAP;
+        super(CBORTypes.MAP);
     }
 
     private CBORObject getKey(CBORObject key) {
@@ -249,7 +244,7 @@ public class CBORMap extends CBORObject {
     }
 
     @Override
-    public byte[] encode() {
+    byte[] internalEncode() {
         byte[] encoded = encodeTagAndN(MT_MAP, numberOfEntries);
         for (Entry entry = root; entry != null; entry = entry.next) {
             encoded = addByteArrays(encoded,
@@ -259,7 +254,7 @@ public class CBORMap extends CBORObject {
     }
         
     @Override
-    void internalToString(DiagnosticNotation cborPrinter) {
+    void internalToString(CborPrinter cborPrinter) {
         cborPrinter.beginMap();
         boolean notFirst = false;
         for (Entry entry = root; entry != null; entry = entry.next) {
@@ -269,7 +264,8 @@ public class CBORMap extends CBORObject {
             notFirst = true;
             cborPrinter.newlineAndIndent();
             entry.key.internalToString(cborPrinter);
-            cborPrinter.append(": ");
+            cborPrinter.append(':');
+            cborPrinter.space();
             entry.value.internalToString(cborPrinter);
         }
         cborPrinter.endMap(notFirst);
