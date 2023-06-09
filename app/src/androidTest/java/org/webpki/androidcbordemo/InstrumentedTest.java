@@ -82,7 +82,7 @@ public class InstrumentedTest {
     static byte[] DATA_TO_ENCRYPT;
 
     @BeforeClass
-    static public void initialize() throws Exception {
+    static public void initialize() {
         new RawReader(InstrumentationRegistry.getInstrumentation().getTargetContext());
         DATA_TO_ENCRYPT = RawReader.getRawResource(R.raw.data2beencrypted_txt);
     }
@@ -98,7 +98,7 @@ public class InstrumentedTest {
     int noPublicKey;
     void asymCoreEncryption(KeyPair keyPair,
                             KeyEncryptionAlgorithms kea,
-                            ContentEncryptionAlgorithms cea) throws Exception{
+                            ContentEncryptionAlgorithms cea) {
         // Every other use keyId
         useKeyId = !useKeyId;
         boolean wantPublicKey = (noPublicKey++ % 3) != 0 && !useKeyId;
@@ -162,13 +162,13 @@ public class InstrumentedTest {
          */
     }
 
-    void signatureTestVector(int resource, CBORValidator validator) throws Exception {
+    void signatureTestVector(int resource, CBORValidator validator) {
         CBORMap signedObject = CBORObject.decode(RawReader.getRawResource(resource)).getMap();
         validator.validate(SIGNATURE_LABEL, signedObject);
     }
 
     @Test
-    public void signatures() throws Exception {
+    public void signatures() {
         signatureTestVector(R.raw.a256_hs256_kid_cbor,
                             new CBORHmacValidator(RawReader.secretKey));
         signatureTestVector(R.raw.p256_es256_imp_cbor,
@@ -211,7 +211,7 @@ public class InstrumentedTest {
 
     void encryptionTestVector(int resource,
                               String keyId,
-                              PublicKey publicKey) throws Exception {
+                              PublicKey publicKey) {
         CBORObject encryptionObject = CBORObject.decode(RawReader.getRawResource(resource));
         CBORMap cefContainer = MainActivity.unwrapOptionalTag(encryptionObject);
         PrivateKey privateKey = cefContainer
@@ -277,7 +277,7 @@ public class InstrumentedTest {
     }
 
     @Test
-    public void encryption() throws Exception {
+    public void encryption() {
         for (KeyEncryptionAlgorithms kea : KeyEncryptionAlgorithms.values()) {
             for (ContentEncryptionAlgorithms cea : ContentEncryptionAlgorithms.values()) {
                 asymCoreEncryption(kea.isRsa() ? RawReader.rsaKeyPair : RawReader.ecKeyPair, kea, cea);
@@ -631,7 +631,7 @@ public class InstrumentedTest {
     }
 
     @Test
-    public void succeededED25519PrivateKey() throws Exception {
+    public void succeededED25519PrivateKey() {
         // In API 33? Nope.
         OkpSupport.raw2PrivateKey(
             HexaDecimal.decode("fe49acf5b92b6e923594f2e83368f680ac924be93cf533aecaf802e37757f8c9"),
@@ -639,7 +639,7 @@ public class InstrumentedTest {
     }
 
     @Test
-    public void succeededED25519KeyPair() throws Exception {
+    public void succeededED25519KeyPair() {
         // In API 33? Nope.
         CBORKeyPair.convert(CBORObject.decode(HexaDecimal.decode(
             "a401012006215820fe49acf5b92b6e923594f2e83368f680" +
@@ -648,14 +648,14 @@ public class InstrumentedTest {
     }
 
     @Test
-    public void succeededED25519PublicKey() throws Exception {
+    public void succeededED25519PublicKey() {
         // In API 33? Nope.
         CBORPublicKey.convert(CBORObject.decode(HexaDecimal.decode(
             "a301012006215820fe49acf5b92b6e923594f2e83368f680ac924be93cf533aecaf802e37757f8c9")));
     }
 
     @Test
-    public void succeededX25519KeyPair() throws Exception {
+    public void succeededX25519KeyPair() {
         CBORKeyPair.convert(CBORObject.decode(HexaDecimal.decode(
                 "a401012004215820e99a0cef205894960d9b1c05978513dcc" +
                 "b42a13bfbced523a51b8a117ad5f00c2358207317e5f3a115" +
@@ -663,7 +663,7 @@ public class InstrumentedTest {
     }
 
     @Test
-    public void succeededX25519PublicKey() throws Exception {
+    public void succeededX25519PublicKey() {
         CBORPublicKey.convert(CBORObject.decode(HexaDecimal.decode(
             "a301012004215820e99a0cef205894960d9b1c05978513dccb42a13bfbced523a51b8a117ad5f00c")));
     }
