@@ -43,17 +43,13 @@ public class CBORBigInt extends CBORObject {
      * @param value Integer in BigInteger format
      */
     public CBORBigInt(BigInteger value) {
+        super(CBORTypes.BIG_INTEGER);
         this.value = value;
         nullCheck(value);
     }
     
     @Override
-    public CBORTypes getType() {
-        return CBORTypes.BIG_INTEGER;
-    }
-
-    @Override
-    public byte[] encode() {
+    byte[] internalEncode() {
         boolean unsigned = value.compareTo(BigInteger.ZERO) >= 0;
         BigInteger cborAdjusted = unsigned ? value : value.negate().subtract(BigInteger.ONE);
         byte[] encoded = cborAdjusted.toByteArray();
@@ -73,7 +69,7 @@ public class CBORBigInt extends CBORObject {
     }
     
     @Override
-    void internalToString(DiagnosticNotation cborPrinter) {
+    void internalToString(CborPrinter cborPrinter) {
         cborPrinter.append(value.toString());
     }
 }

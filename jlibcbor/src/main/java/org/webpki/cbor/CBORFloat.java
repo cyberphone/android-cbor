@@ -27,16 +27,10 @@ package org.webpki.cbor;
  */
 public class CBORFloat extends CBORObject {
 
-    /**
-     * Underlying IEEE 754 type.  
-     */
-    public enum IeeeVariant {F16, F32, F64};
-
+    // Actual value.
     double value;
     
-    /**
-     * CBOR representation of value
-     */
+    // CBOR representation of value.
     int tag;
     long bitFormat;
     
@@ -54,6 +48,7 @@ public class CBORFloat extends CBORObject {
      * @param value Java double
      */
     public CBORFloat(double value) {
+        super(CBORTypes.FLOATING_POINT);
         this.value = value;
 
         // Initial assumption: the number is a plain vanilla 64-bit double.
@@ -114,18 +109,19 @@ public class CBORFloat extends CBORObject {
 
             // Check if we need to denormalize data.
             if (exponent <= 0) {
+                // For very small values we give up float16 immediately.
+                if (exponent < -FLOAT16_SIGNIFICAND_SIZE) {
+                    return;
+                }
                 // The implicit "1" becomes explicit using subnormal representation.
                 significand += 1l << FLOAT16_SIGNIFICAND_SIZE;
-                exponent--;
-                // Always perform at least one turn.
-                do {
-                    if ((significand & 1) != 0) {
-                        // Too off scale for float16.
-                        // This test also catches subnormal float32 numbers.
-                        return;
-                    }
-                    significand >>= 1;
-                } while (++exponent < 0);
+                long significandCopy = significand;
+                significand >>= (1 - exponent);
+                if (significandCopy != (significand << (1 - exponent))) {
+                    // Too off scale for float16.
+                    return;
+                }
+                exponent = 0;
             }
 
             // Seems like 16 bits indeed are sufficient!
@@ -157,28 +153,25 @@ public class CBORFloat extends CBORObject {
         return Double.toString(value).replace('E', 'e').replaceAll("e(\\d)", "e+$1");
     }
 
-    @Override
-    public CBORTypes getType() {
-        return CBORTypes.FLOATING_POINT;
-    }
-
     /**
-     * Returns actual IEEE 754 type.
-     * @return {@link IeeeVariant}
+     * Returns the size of the optimized IEEE 754 type.
+     * <p>
+     * Note that you must cast a {@link CBORObject} to {@link CBORFloat}
+     * in order to access {@link CBORFloat#size()}.
+     * </p>
+     * @return Size in bytes: 2, 4, or 8.
      */
-    public IeeeVariant getIeeeVariant() {
-       return tag == MT_FLOAT16 ?
-                IeeeVariant.F16 : tag == MT_FLOAT32 ? 
-                                    IeeeVariant.F32 : IeeeVariant.F64;
+    public int size() {
+       return 2 << (tag - MT_FLOAT16);
     }
 
     @Override
-    public byte[] encode() {
-        return encodeTagAndValue(tag, 2 << (tag - MT_FLOAT16), bitFormat);
+    byte[] internalEncode() {
+        return encodeTagAndValue(tag, size(), bitFormat);
     }
     
     @Override
-    void internalToString(DiagnosticNotation cborPrinter) {
+    void internalToString(CborPrinter cborPrinter) {
          cborPrinter.append(formatDouble(value));
     }
 }

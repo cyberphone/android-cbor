@@ -26,20 +26,17 @@ public class CBORNull extends CBORObject {
     /**
      * Creates a CBOR <code>null</code>.
      */
-    public CBORNull() {}
-
-    @Override
-    public CBORTypes getType() {
-        return CBORTypes.NULL;
+    public CBORNull() {
+        super(CBORTypes.NULL);
     }
 
     @Override
-    public byte[] encode() {
+    byte[] internalEncode() {
         return NULL_TAG;
     }
 
     @Override
-    void internalToString(DiagnosticNotation cborPrinter) {
+    void internalToString(CborPrinter cborPrinter) {
         cborPrinter.append("null");
     }
 }

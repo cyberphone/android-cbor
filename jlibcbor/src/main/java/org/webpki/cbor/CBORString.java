@@ -35,19 +35,15 @@ public class CBORString extends CBORObject {
      * </p>
      */
     public CBORString(String textString) {
+        super(CBORTypes.STRING);
         this.textString = textString;
         nullCheck(textString);
     }
 
     @Override
-    public CBORTypes getType() {
-        return CBORTypes.TEXT_STRING;
-    }
-
-    @Override
-    public byte[] encode() {
+    byte[] internalEncode() {
         byte[] utf8Bytes = UTF8.encode(textString);
-        return addByteArrays(encodeTagAndN(MT_TEXT_STRING, utf8Bytes.length), utf8Bytes);
+        return addByteArrays(encodeTagAndN(MT_STRING, utf8Bytes.length), utf8Bytes);
     }
 
     // JavaScript/JSON compatible escape character support
@@ -61,7 +57,7 @@ public class CBORString extends CBORObject {
          0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , '\\'};
     
     @Override
-    void internalToString(DiagnosticNotation cborPrinter) {
+    void internalToString(CborPrinter cborPrinter) {
         cborPrinter.append('"');
         for (char c : textString.toCharArray()) {
             if (c <= '\\') {

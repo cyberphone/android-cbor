@@ -317,7 +317,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (!csfCandidate.containsKey(CBORCryptoConstants.SIGNATURE_LABEL)) continue;
                 value = csfCandidate.get(CBORCryptoConstants.SIGNATURE_LABEL);
-                if (value.getType() != CBORTypes.BYTE_STRING) continue;
+                if (value.getType() != CBORTypes.BYTES) continue;
                 PublicKey tempPublicKey = null;
                 if (csfCandidate.containsKey(CBORCryptoConstants.PUBLIC_KEY_LABEL)) {
                     try {
