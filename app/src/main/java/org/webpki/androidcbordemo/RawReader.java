@@ -54,7 +54,7 @@ public class RawReader {
         return CBORKeyPair.convert(getCBORResource(resource));
     }
 
-    RawReader(Context appContext) throws Exception {
+    RawReader(Context appContext) {
         this.appContext = appContext;
         ecKeyId = "example.com:p256";
         ecKeyPair = getKeyPair(R.raw.ecprivatekey_cbor_txt);

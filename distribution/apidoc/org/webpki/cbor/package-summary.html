@@ -294,9 +294,10 @@ By adhering to the
 <a href='#deterministic-encoding'>Deterministic Encoding</a> 
 specification above, CBOR data can be <i>bidirectionally</i>
 converted between its native (binary) format and diagnostic notation
-without getting corrupted.  Note though that a text-binary-text "roundtrip"
-does not necessarily return identical text; <i>only the binary
-representation needs to remain deterministic</i>.
+without getting corrupted.  Note though that text-binary-text "roundtrips"
+do not necessarily return identical text: <code>0x10</code> used
+as diagnostic notation input will return <code>16</code> as
+diagnostic notation output.
 Caveat: for reliable conversions, floating point values <b>must</b>
 be aligned with IEEE&nbsp;754 encoding and rounding rules.
 </p>
@@ -314,7 +315,8 @@ Multi-line comments are treated as whitespace and may thus also be used
 <i>between</i> CBOR objects.</td></tr>
 <tr><td><code>#</code>&nbsp;<i>comment&nbsp;text</i></td>
 <td rowspan='2'>7</td><td rowspan='2'>Single-line comment.
-Single-line comments are terminated by a newline character (<code>'\n'</code>) or <code>EOF</code>.</td></tr>
+Single-line comments are terminated by a newline character (<code>'\n'</code>) or <code>EOF</code>.
+Single-line comments may also terminate lines holding regular CBOR items.</td></tr>
 <tr><td><code>//</code>&nbsp;<i>comment&nbsp;text</i></td></tr>
 <tr id='integer-diag'><td><code>integer</code></td>
 <td rowspan='2'><span style='white-space:nowrap'>{<i>sign</i>}{<code>0b</code>|<code>0o</code>|<code>0x</code>}<i>n</i></span></td>
