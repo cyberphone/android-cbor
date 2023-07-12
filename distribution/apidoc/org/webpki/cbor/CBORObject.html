@@ -70,7 +70,7 @@ var activeTableTab = "active-table-tab";
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></code>, <code><a href="CBORBigInt.html" title="class in org.webpki.cbor">CBORBigInt</a></code>, <code><a href="CBORBool.html" title="class in org.webpki.cbor">CBORBool</a></code>, <code><a href="CBORBytes.html" title="class in org.webpki.cbor">CBORBytes</a></code>, <code><a href="CBORFloat.html" title="class in org.webpki.cbor">CBORFloat</a></code>, <code><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code>, <code><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></code>, <code><a href="CBORNull.html" title="class in org.webpki.cbor">CBORNull</a></code>, <code><a href="CBORString.html" title="class in org.webpki.cbor">CBORString</a></code>, <code><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></code></dd>
+<dd><code><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></code>, <code><a href="CBORBigInt.html" title="class in org.webpki.cbor">CBORBigInt</a></code>, <code><a href="CBORBoolean.html" title="class in org.webpki.cbor">CBORBoolean</a></code>, <code><a href="CBORBytes.html" title="class in org.webpki.cbor">CBORBytes</a></code>, <code><a href="CBORFloat.html" title="class in org.webpki.cbor">CBORFloat</a></code>, <code><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code>, <code><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></code>, <code><a href="CBORNull.html" title="class in org.webpki.cbor">CBORNull</a></code>, <code><a href="CBORString.html" title="class in org.webpki.cbor">CBORString</a></code>, <code><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">CBORObject</span>
@@ -480,7 +480,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Returns <code>boolean</code> value.
  <p>
  This method requires that the object is a
- <a href="CBORBool.html" title="class in org.webpki.cbor"><code>CBORBool</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ <a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -611,7 +611,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  Verifies that all data from the current object including
  possible child objects have been read
  (through calling <a href="#getBytes()"><code>getBytes()</code></a> etc.),
- and throws <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> if this is not the case.
+ and throws a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> if this is not the case.
  </p>
  Also see <a href="#scan()"><code>scan()</code></a>.</div>
 </section>
@@ -729,7 +729,11 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <section class="detail" id="clone()">
 <h3>clone</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">clone</span>()</div>
-<div class="block">Deep copy of <code>CBORObject</code>.</div>
+<div class="block">Deep copy of <code>CBORObject</code>.
+ <p>
+ Note that the copy is assumed to be &quot;unread&quot;
+ (<a href="#checkForUnread()"><code>checkForUnread()</code></a>).
+ </p></div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>

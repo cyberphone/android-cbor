@@ -69,8 +69,8 @@ primitives and their mapping to Java:
 <tr><td><code>floating&nbsp;point</code></td><td>3</td><td><code>double</code></td><td><a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a></td></tr>
 <tr><td><code>byte&nbsp;string</code></td><td></td><td><code>byte[]</code></td><td><a href="CBORBytes.html" title="class in org.webpki.cbor"><code>CBORBytes</code></a></td></tr>
 <tr><td><code>text&nbsp;string</code></td><td></td><td><code>String</code></td><td><a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a></td></tr>
-<tr><td><code>true</code></td><td></td><td><code>boolean</code></td><td><a href="CBORBool.html" title="class in org.webpki.cbor"><code>CBORBool</code></a></td></tr>
-<tr><td><code>false</code></td><td></td><td><code>boolean</code></td><td><a href="CBORBool.html" title="class in org.webpki.cbor"><code>CBORBool</code></a></td></tr>
+<tr><td><code>true</code></td><td></td><td><code>boolean</code></td><td><a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a></td></tr>
+<tr><td><code>false</code></td><td></td><td><code>boolean</code></td><td><a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a></td></tr>
 <tr><td><code>null</code></td><td></td><td><code>null</code></td><td><a href="CBORNull.html" title="class in org.webpki.cbor"><code>CBORNull</code></a></td></tr>
 </table>
 </div>
@@ -286,9 +286,12 @@ To aid the use of cryptography, support for
 <a href='doc-files/signatures.html'>Signatures</a> and 
 <a href='doc-files/encryption.html'>Encryption</a> is integrated in the package.
 <h3 id='diagnostic-notation'>Diagnostic Notation</h3>
-Through the <a href="CBORDiagnosticNotation.html" title="class in org.webpki.cbor"><code>CBORDiagnosticNotation</code></a> class, CBOR data may be provided
-in diagnostic (textual) notation (as described in section 8 of RFC&nbsp;8949),
-making CBOR useful for "config" and test data files as well.
+Creating CBOR data in diagnostic notation (as described in section 8 of RFC&nbsp;8949),
+is provided by the <a href="CBORObject.html#toString()"><code>CBORObject.toString()</code></a> method.
+<p>
+However, through the <a href="CBORDiagnosticNotation.html" title="class in org.webpki.cbor"><code>CBORDiagnosticNotation</code></a> class, CBOR data may also be provided
+in diagnostic (textual) notation, making CBOR useful for "config" and test data files as well.
+</p>
 <p>
 By adhering to the
 <a href='#deterministic-encoding'>Deterministic Encoding</a> 
@@ -300,9 +303,6 @@ as diagnostic notation input will return <code>16</code> as
 diagnostic notation output.
 Caveat: for reliable conversions, floating point values <b>must</b>
 be aligned with IEEE&nbsp;754 encoding and rounding rules.
-</p>
-<p>
-Creating CBOR data in diagnostic notation is provided by <a href="CBORObject.html#toString()"><code>CBORObject.toString()</code></a>.
 </p>
 The following table shows how CBOR objects should be represented in 
 diagnostic notation:
@@ -359,7 +359,7 @@ Padding with <code>'='</code> characters is <i>optional</i>.</td></tr>
 <td rowspan='2'>Boolean value.</td></tr>
 <tr><td><code>false</code></td><td><code>false</code></td></tr>
 <tr><td><code>null</code></td><td><code>null</code></td><td></td><td>Null value.</td></tr>
-<tr><td><code>array</code></td><td><code>[</code>&nbsp;<i>elements</i>&nbsp;<code>]</code></td>
+<tr><td><code>array</code></td><td><code>[</code>&nbsp;<i>objects</i>&nbsp;<code>]</code></td>
 <td></td><td>Array with zero or more comma separated CBOR objects.</td></tr>
 <tr><td><code>map</code></td><td><code>{</code>&nbsp;<i>key</i><code>:</code><i>value</i>&nbsp;<code>}</code></td>
 <td></td><td>Map with zero or more comma separated key/value pairs.
@@ -430,7 +430,7 @@ immediately preceding the newline may be used.</li>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for holding CBOR <code>big&nbsp;integer</code> objects.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORBool.html" title="class in org.webpki.cbor">CBORBool</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORBoolean.html" title="class in org.webpki.cbor">CBORBoolean</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class for holding CBOR <code>boolean</code> objects.</div>
 </div>
