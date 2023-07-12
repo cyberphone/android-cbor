@@ -104,9 +104,9 @@ var activeTableTab = "active-table-tab";
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#add(org.webpki.cbor.CBORObject)" class="member-name-link">add</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;element)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#add(org.webpki.cbor.CBORObject)" class="member-name-link">add</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;cborObject)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Appends object to the list.</div>
+<div class="block">Appends object to the array.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#get(int)" class="member-name-link">get</a><wbr>(int&nbsp;index)</code></div>
@@ -176,7 +176,7 @@ var activeTableTab = "active-table-tab";
 <div class="block">Retrieves object at a specific position.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>index</code> - The position (0 - size-1)</dd>
+<dd><code>index</code> - The position (0..size()-1)</dd>
 <dt>Returns:</dt>
 <dd>CBOR object</dd>
 </dl>
@@ -185,11 +185,11 @@ var activeTableTab = "active-table-tab";
 <li>
 <section class="detail" id="add(org.webpki.cbor.CBORObject)">
 <h3>add</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></span>&nbsp;<span class="element-name">add</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;element)</span></div>
-<div class="block">Appends object to the list.</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></span>&nbsp;<span class="element-name">add</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;cborObject)</span></div>
+<div class="block">Appends object to the array.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>element</code> - Object to be appended</dd>
+<dd><code>cborObject</code> - Object to be appended to the array.</dd>
 <dt>Returns:</dt>
 <dd><code>this</code></dd>
 </dl>

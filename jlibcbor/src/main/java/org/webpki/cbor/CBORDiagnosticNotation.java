@@ -146,7 +146,6 @@ public class CBORDiagnosticNotation {
     private boolean continueList(char validStop) {
         if (nextChar() == ',') {
             readChar();
-            scanNonSignficantData();
             return true;
         }
         scanFor(String.valueOf(validStop));
@@ -206,11 +205,11 @@ public class CBORDiagnosticNotation {
                 
             case 't':
                 scanFor("rue");
-                return new CBORBool(true);
+                return new CBORBoolean(true);
        
             case 'f':
                 scanFor("alse");
-                return new CBORBool(false);
+                return new CBORBoolean(false);
        
             case 'n':
                 scanFor("ull");
@@ -343,7 +342,7 @@ public class CBORDiagnosticNotation {
 
     private void testForNonDecimal(Integer nonDecimal) {
         if (nonDecimal != null) {
-            parserError("Hexadecimal not permitted here");
+            parserError("0b, 0o, and 0x prefixes are only permited for integers");
         }
     }
 

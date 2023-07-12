@@ -405,14 +405,14 @@ public abstract class CBORObject implements Cloneable {
      * Returns <code>boolean</code> value.
      * <p>
      * This method requires that the object is a
-     * {@link CBORBool}, otherwise a {@link CBORException} is thrown.
+     * {@link CBORBoolean}, otherwise a {@link CBORException} is thrown.
      * </p>
      * 
      * @return <code>boolean</code>
      */
     public boolean getBoolean() {
         checkTypeAndMarkAsRead(CBORTypes.BOOLEAN);
-        return ((CBORBool) this).value;
+        return ((CBORBoolean) this).value;
     }
 
     /**
@@ -531,7 +531,7 @@ public abstract class CBORObject implements Cloneable {
      * Verifies that all data from the current object including
      * possible child objects have been read
      * (through calling {@link #getBytes()} etc.),
-     * and throws {@link CBORException} if this is not the case.
+     * and throws a {@link CBORException} if this is not the case.
      * </p>
      * Also see {@link #scan()}.
      * 
@@ -545,7 +545,7 @@ public abstract class CBORObject implements Cloneable {
             case MAP:
                 CBORMap cborMap = (CBORMap) this;
                 for (CBORMap.Entry entry = cborMap.root; entry != null; entry = entry.next) {
-                     entry.value.traverse(entry.key, check);
+                    entry.value.traverse(entry.key, check);
                 }
                 break;
         
@@ -570,9 +570,9 @@ public abstract class CBORObject implements Cloneable {
                                 holderObject instanceof CBORTag ?
                                 "Tagged object " +
                                 Long.toUnsignedString(((CBORTag)holderObject).tagNumber) : 
-                                "Map key " + holderObject.toString() + " with argument") +                    
+                                "Map key " + holderObject.toDiagnosticNotation(false) + " with argument") +                    
                             " of type=" + cborType + 
-                            " with value=" + toString() + " was never read");
+                            " with value=" + toDiagnosticNotation(false) + " was never read");
             }
         } else {
             readFlag = true;
@@ -660,12 +660,12 @@ public abstract class CBORObject implements Cloneable {
             return (int)n;
         }
 
-        private CBORFloat checkDoubleConversion(int tag, long bitFormat, long rawDouble) {
-            CBORFloat value = new CBORFloat(Double.longBitsToDouble(rawDouble));
-            if ((value.tag != tag || value.bitFormat != bitFormat) && deterministicMode) {
-                cborError(String.format(STDERR_NON_DETERMINISTIC_FLOAT + "%2x", tag & 0xff));
+        private CBORFloat checkDoubleConversion(int tag, long bitFormat, double value) {
+            CBORFloat cborFloat = new CBORFloat(value);
+            if ((cborFloat.tag != tag || cborFloat.bitFormat != bitFormat) && deterministicMode) {
+                cborError(String.format(STDERR_NON_DETERMINISTIC_FLOAT + "%2x", tag));
             }
-            return value;
+            return cborFloat;
         }
 
         private CBORObject getObject() throws IOException {
@@ -692,66 +692,57 @@ public abstract class CBORObject implements Cloneable {
                     return CBORBigInt;
 
                 case MT_FLOAT16:
-                    long float16 = getLongFromBytes(2);
-                    long unsignedResult = float16 & ~FLOAT16_NEG_ZERO;
+                    double float64;
+                    long f16Binary = getLongFromBytes(2);
+
+                    // Get the significand
+                    long significand = f16Binary & ((1l << FLOAT16_SIGNIFICAND_SIZE) - 1);
+                    // Get the exponent.
+                    long exponent = f16Binary & FLOAT16_POS_INFINITY;
 
                     // Begin with the edge cases.
-                    
-                    if ((unsignedResult & FLOAT16_POS_INFINITY) == FLOAT16_POS_INFINITY) {
+          
+                    if (exponent == FLOAT16_POS_INFINITY) {
+
                         // Special "number"
-                        unsignedResult = (unsignedResult == FLOAT16_POS_INFINITY) ?
-                            // Non-deterministic representations of NaN will be flagged later.
-                            // NaN "signaling" is not supported, "quiet" NaN is all there is.
-                            FLOAT64_POS_INFINITY : FLOAT64_NOT_A_NUMBER;
+                        
+                        // Non-deterministic representations of NaN will be flagged later.
+                        // NaN "signaling" is not supported, "quiet" NaN is all there is.
+                        float64 = significand == 0 ? Double.POSITIVE_INFINITY : Double.NaN;
+                            
+                    } else {
 
-                    } else if (unsignedResult != FLOAT16_POS_ZERO){
-
-                        // It is a "regular" non-zero number.
-                    
-                        // Get the bare (but still biased) float16 exponent.
-                        long exponent = (unsignedResult >>> FLOAT16_SIGNIFICAND_SIZE);
-                        // Relocate float16 significand bits to their proper float64 position.
-                        long significand = 
-                            (unsignedResult << (FLOAT64_SIGNIFICAND_SIZE - FLOAT16_SIGNIFICAND_SIZE));
-                        if (exponent == 0) {
-                            // Subnormal float16 - In float64 that must translate to normalized.
-                            exponent++;
-                            do {
-                                exponent--;
-                                significand <<= 1;
-                                // Continue until the implicit "1" is in the proper position.
-                            } while ((significand & (1l << FLOAT64_SIGNIFICAND_SIZE)) == 0);
+                        // It is a "regular" number.
+                     
+                        if (exponent > 0) {
+                            // Normal representation, add the implicit "1.".
+                            significand += (1l << FLOAT16_SIGNIFICAND_SIZE);
+                            // -1: Keep fractional point in line with subnormal numbers.
+                            significand <<= ((exponent >> FLOAT16_SIGNIFICAND_SIZE) - 1);
                         }
-                        unsignedResult = 
-                        // Exponent.  Set the proper bias and put result in front of significand.
-                        ((exponent + (FLOAT64_EXPONENT_BIAS - FLOAT16_EXPONENT_BIAS)) 
-                            << FLOAT64_SIGNIFICAND_SIZE) +
-                        // Significand.  Remove everything above.
-                        (significand & ((1l << FLOAT64_SIGNIFICAND_SIZE) - 1));
+                        // Multiply with: 1 / (2 ^ (Exponent offset + Size of significand - 1)).
+                        float64 = (double)significand * 
+                            (1.0 / (1l << (FLOAT16_EXPONENT_BIAS + FLOAT16_SIGNIFICAND_SIZE - 1)));
                     }
                     return checkDoubleConversion(tag,
-                                                 float16, 
-                                                 unsignedResult +
-                                                 // Put sign bit in position.
-                                                 ((float16 & FLOAT16_NEG_ZERO) << (64 - 16)));
+                                                 f16Binary,
+                                                 f16Binary >= FLOAT16_NEG_ZERO ? 
+                                                                      -float64 : float64);
 
                 case MT_FLOAT32:
-                    long float32 = getLongFromBytes(4);
-                    return checkDoubleConversion(tag, 
-                                                 float32,
-                                                 Double.doubleToLongBits(
-                                                         Float.intBitsToFloat((int)float32)));
+                    long f32Bin = getLongFromBytes(4);
+                    return checkDoubleConversion(tag, f32Bin, Float.intBitsToFloat((int)f32Bin));
  
                 case MT_FLOAT64:
-                    long float64 = getLongFromBytes(8);
-                    return checkDoubleConversion(tag, float64, float64);
+                    long f64Bin = getLongFromBytes(8);
+                    return checkDoubleConversion(tag, f64Bin, Double.longBitsToDouble(f64Bin));
 
                 case MT_NULL:
                     return new CBORNull();
                     
                 case MT_TRUE:
                 case MT_FALSE:
-                    return new CBORBool(tag == MT_TRUE);
+                    return new CBORBoolean(tag == MT_TRUE);
             }
 
             // Then decode CBOR types that blend length of data in the tag byte.
@@ -1002,6 +993,10 @@ public abstract class CBORObject implements Cloneable {
     
     /**
      * Deep copy of <code>CBORObject</code>.
+     * <p>
+     * Note that the copy is assumed to be &quot;unread&quot;
+     * ({@link #checkForUnread()}).
+     * </p>
      */
     @Override
     public CBORObject clone() {
