@@ -110,10 +110,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Decodes CBOR data.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#decode(java.io.InputStream,boolean,boolean,boolean,java.lang.Integer)" class="member-name-link">decode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/InputStream.html" title="class or interface in java.io" class="external-link">InputStream</a>&nbsp;inputStream,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#decode(java.io.InputStream,boolean,boolean,java.lang.Integer)" class="member-name-link">decode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/InputStream.html" title="class or interface in java.io" class="external-link">InputStream</a>&nbsp;inputStream,
  boolean&nbsp;sequenceFlag,
  boolean&nbsp;nonDeterministic,
- boolean&nbsp;constrainedKeys,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;maxLength)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Decodes CBOR data with options.</div>
@@ -617,12 +616,11 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="decode(java.io.InputStream,boolean,boolean,boolean,java.lang.Integer)">
+<section class="detail" id="decode(java.io.InputStream,boolean,boolean,java.lang.Integer)">
 <h3>decode</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">decode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/InputStream.html" title="class or interface in java.io" class="external-link">InputStream</a>&nbsp;inputStream,
  boolean&nbsp;sequenceFlag,
  boolean&nbsp;nonDeterministic,
- boolean&nbsp;constrainedKeys,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;maxLength)</span></div>
 <div class="block">Decodes CBOR data with options.
  <p>
@@ -639,8 +637,6 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <dd><code>nonDeterministic</code> - If <code>true</code> disable 
  <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>
  checks for number serialization and map sorting</dd>
-<dd><code>constrainedKeys</code> - If <code>true</code> limit <a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code></a> keys to <a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a> and <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> objects,
- including flagging <i>mixing</i> of these objects in maps</dd>
 <dd><code>maxLength</code> - Holds maximum input size in 
  bytes or <code>null</code> (<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MAX_VALUE</code></a> is assumed)</dd>
 <dt>Returns:</dt>
@@ -657,7 +653,6 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  This method is identical to:
  <pre>  decode(new ByteArrayInputStream(cborData),
          false, 
-         false,
          false,
          cborData.length);
 </pre>

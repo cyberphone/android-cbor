@@ -42,3 +42,4 @@ Android CBOR - Relese Notes
 1.0.6
 - Refactoring CBORBoolean
 - Refactoring CBORTag
+- Removing constrained key option
