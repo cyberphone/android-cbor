@@ -69,7 +69,7 @@
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CBORBigInt</span>
 <span class="extends-implements">extends <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span></div>
-<div class="block">Class for holding CBOR <code>big&nbsp;integer</code> objects.
+<div class="block">Class for holding CBOR <code>bignum</code> objects.
  <p>
  Note that the encoder is adaptive, selecting the shortest possible
  representation in order to produce a fully deterministic result.
@@ -120,8 +120,8 @@
 <div class="block">Creates a CBOR integer value of any size.
  <p>
  Note: if <code>value</code> is within the CBOR <code>integer</code> range,
- <code>integer</code> encoding (<a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>) will be used, otherwise <code>value</code>
- will be encoded as a CBOR <code>big&nbsp;integer</code>.
+ <code>integer</code> encoding will be used, otherwise <code>value</code>
+ will be encoded as a CBOR <code>bignum</code>.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
