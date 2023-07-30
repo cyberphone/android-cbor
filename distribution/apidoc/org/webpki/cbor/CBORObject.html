@@ -638,7 +638,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>
  checks for number serialization and map sorting</dd>
 <dd><code>maxLength</code> - Holds maximum input size in 
- bytes or <code>null</code> (<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MAX_VALUE</code></a> is assumed)</dd>
+ bytes or <code>null</code> (<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MAX_VALUE</code></a> is assumed).
+ Since malformed CBOR objects can request arbitrary amounts of memory,
+ it is <i>highly recommended</i> setting <code>maxLength</code> to
+ a value that is adapted to the actual application.</dd>
 <dt>Returns:</dt>
 <dd><code>CBORObject</code></dd>
 </dl>
