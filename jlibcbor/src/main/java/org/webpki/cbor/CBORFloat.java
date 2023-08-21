@@ -16,6 +16,8 @@
  */
 package org.webpki.cbor;
 
+import org.webpki.util.DoubleCoreSerializer;
+
 /**
  * Class for holding CBOR <code>floating&nbsp;point</code> objects.
  * <p>
@@ -145,8 +147,12 @@ public class CBORFloat extends CBORObject {
      * @param value The double
      * @return The double in string format
      */
-    public static String formatDouble(double value) {
-        return Double.toString(value).replace('E', 'e').replaceAll("e(\\d)", "e+$1");
+    public static String formatDouble(Double value) {
+        // Catch things the serializer is not designed for.
+        if (value == 0 || value.isInfinite() || value.isNaN()) {
+            return value.toString();
+        }
+        return DoubleCoreSerializer.serialize(value, false);
     }
 
     /**
