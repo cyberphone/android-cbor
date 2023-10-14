@@ -43,3 +43,6 @@ Android CBOR - Relese Notes
 - Refactoring CBORBoolean
 - Refactoring CBORTag
 - Removing constrained key option
+
+1.0.7
+- Diagnostic notation: '#' is now the only way to specify a single line comment
