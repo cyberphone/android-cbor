@@ -69,19 +69,23 @@ primitives and their mapping to Java:
 <tr><td><code>floating&nbsp;point</code></td><td>2</td><td><code>double</code></td><td><a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a></td></tr>
 <tr><td><code>byte&nbsp;string</code></td><td></td><td><code>byte[]</code></td><td><a href="CBORBytes.html" title="class in org.webpki.cbor"><code>CBORBytes</code></a></td></tr>
 <tr><td><code>text&nbsp;string</code></td><td></td><td><code>String</code></td><td><a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a></td></tr>
-<tr><td><code>true</code></td><td></td><td><code>boolean</code></td><td><a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a></td></tr>
-<tr><td><code>false</code></td><td></td><td><code>boolean</code></td><td><a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a></td></tr>
-<tr><td><code>null</code></td><td></td><td><code>null</code></td><td><a href="CBORNull.html" title="class in org.webpki.cbor"><code>CBORNull</code></a></td></tr>
+<tr><td><code>true</code>/<code>false</code></td><td></td><td><code>boolean</code></td><td><a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a></td></tr>
+<tr><td><code>null</code></td><td></td><td></td><td><a href="CBORNull.html" title="class in org.webpki.cbor"><code>CBORNull</code></a></td></tr>
+<tr><td><code>array</code></td><td></td><td></td><td><a href="CBORArray.html" title="class in org.webpki.cbor"><code>CBORArray</code></a></td></tr>
+<tr><td><code>map</code></td><td></td><td></td><td><a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code></a></td></tr>
+<tr><td><code>tag</code></td><td></td><td></td><td><a href="CBORTag.html" title="class in org.webpki.cbor"><code>CBORTag</code></a></td></tr>
 </table>
 </div>
 <ol style='margin:0 0'>
 <li>The distinction between unsigned and negative values is
  dealt with automatically.</li>
-<li>Floating point data covers the 16, 32, and 64-bit IEEE&nbsp;754 variants.</li>
+<li>Floating point data covers the 16, 32, and 64-bit IEEE&nbsp;754 variants.
+The encoded representation is determined by the size and precision of a value.</li>
 </ol>
 <p>
-In addition to the primitives above, this implementation also supports
-arbitrary tagged objects based on CBOR major type 6 (<a href="CBORTag.html" title="class in org.webpki.cbor"><code>CBORTag</code></a>).
+This implementation does not support CBOR &quot;simple&quot; values beyond
+<code>true</code>, <code>false</code>, <code>null</code>, and
+the three floating point variants.
 </p>
 <h3 id='deterministic-encoding'>Deterministic Encoding</h3>
 For certain security related applications, it has been proven

@@ -41,4 +41,4 @@ https://test.webpki.org/csf-lab/home.
 ### Updates
 See https://github.com/cyberphone/android-cbor/tree/main/RELEASE-NOTES.txt.
 
-Version 1.0.7, 2023-10-14
+Version 1.0.8, 2023-12-06

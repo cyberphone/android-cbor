@@ -46,3 +46,7 @@ Android CBOR - Relese Notes
 
 1.0.7
 - Diagnostic notation: '#' is now the only way to specify a single line comment
+
+1.0.8
+- Improved map through binary search and insertion
+- Added CBORMap.setSortingMode() method

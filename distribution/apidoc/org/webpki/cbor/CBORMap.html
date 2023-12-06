@@ -135,9 +135,14 @@ var activeTableTab = "active-table-tab";
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets mapped object.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#size()" class="member-name-link">size</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSortingMode(boolean)" class="member-name-link">setSortingMode</a><wbr>(boolean&nbsp;preSortedKeys)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets sorting mode for a CBOR <code>map</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#size()" class="member-name-link">size</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the size of the map.</div>
 </div>
 </div>
@@ -164,7 +169,10 @@ var activeTableTab = "active-table-tab";
 <section class="detail" id="&lt;init&gt;()">
 <h3>CBORMap</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORMap</span>()</div>
-<div class="block">Creates an empty CBOR <code>map</code>.</div>
+<div class="block">Creates an empty CBOR <code>map</code>.
+ <p>
+ Equivalent to <code>CBORMap().setSortingMode(false)</code>.
+ </p></div>
 </section>
 </li>
 </ul>
@@ -199,6 +207,33 @@ var activeTableTab = "active-table-tab";
 <dt>Parameters:</dt>
 <dd><code>key</code> - Key</dd>
 <dd><code>value</code> - Value</dd>
+<dt>Returns:</dt>
+<dd><code>this</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setSortingMode(boolean)">
+<h3>setSortingMode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></span>&nbsp;<span class="element-name">setSortingMode</span><wbr><span class="parameters">(boolean&nbsp;preSortedKeys)</span></div>
+<div class="block">Sets sorting mode for a CBOR <code>map</code>.
+ <p>
+ This method provides an opportunity using keys that are <i>sorted</i> 
+ (in lexicographic order), which in maps with many keys can 
+ offer performance improvements.
+ </p>
+ <p>
+ Note that <code>setSortingMode</code> is only effective during <i>encoding</i>.
+ The <code>setSortingMode</code> method may be called multiple times,
+ permitting certain keys to be automatically sorted and others
+ to be provided in a presorted fashion.
+ See also <a href="CBORObject.html#decode(java.io.InputStream,boolean,boolean,java.lang.Integer)"><code>CBORObject.decode(java.io.InputStream, boolean, boolean, Integer)</code></a>.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>preSortedKeys</code> - If <code>true</code>, keys <b>must</b> be
+ sorted.  If a key is not properly sorted when calling
+ <a href="#set(org.webpki.cbor.CBORObject,org.webpki.cbor.CBORObject)"><code>set(CBORObject, CBORObject)</code></a>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.</dd>
 <dt>Returns:</dt>
 <dd><code>this</code></dd>
 </dl>
