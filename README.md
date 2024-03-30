@@ -15,9 +15,9 @@ The latter is only intended for testing and demonstrating the cryptographic func
 
 The CBOR library API is described in:
 https://cyberphone.github.io/android-cbor/distribution/apidoc/org/webpki/cbor/package-summary.html.
-Note that Ed25519 only works on Android 13+ and that Ed25519 signatures
+Note that Ed25519 only works on Android 14+ and that Ed25519 signatures
 cannot be validated, only generated.  This is due to limitations in Android
-and will presumably be fixed in Android 14.
+and will presumably be fixed in Android 15.
 
 The rest of the library has been verified to work from Android 7 (API 24) and up.
 
@@ -26,7 +26,7 @@ To use the precompiled module, copy the AAR file located in
 https://github.com/cyberphone/android-cbor/tree/main/distribution
 to a ```libs``` folder in the application and then add the line
 ```code
-implementation files('libs/org.webpki-jlibcbor-1.0.8.aar')
+implementation files('libs/org.webpki-jlibcbor-1.0.9.aar')
 ```
 to the ```dependencies``` section of the Gradle file.
 
@@ -41,4 +41,4 @@ https://test.webpki.org/csf-lab/home.
 ### Updates
 See https://github.com/cyberphone/android-cbor/tree/main/RELEASE-NOTES.txt.
 
-Version 1.0.8, 2023-12-06
+Version 1.0.9, 2024-03-30
