@@ -15,7 +15,7 @@ The latter is only intended for testing and demonstrating the cryptographic func
 
 The CBOR library API is described in:
 https://cyberphone.github.io/android-cbor/distribution/apidoc/org/webpki/cbor/package-summary.html.
-Note that Ed25519 only works on Android 14+ and that Ed25519 signatures
+Note that Ed25519 only works on Android 13+ and that Ed25519 signatures
 cannot be validated, only generated.  This is due to limitations in Android
 and will presumably be fixed in Android 15.
 
