@@ -516,7 +516,7 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     encrypter = new CBORSymKeyEncrypter(RawReader.secretKey,
                                                         ContentEncryptionAlgorithms.A128CBC_HS256)
-                        .setKeyId(RawReader.secretKeyId);
+                        .setKeyId(new CBORString(RawReader.secretKeyId));
             }
             decryptData(encrypter.encrypt(unencryptedData).toString());
         } catch (Exception e) {
@@ -543,7 +543,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             CBORObject cefObject = CBORDiagnosticNotation.decode(cborEncryptionObject);
             CBORMap cefMap = unwrapOptionalTag(cefObject);
-            CBORDecrypter decrypter;
+            CBORDecrypter<?> decrypter;
             String encryptionInfo;
             if (cefMap.containsKey(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)) {
                 if (cefMap.get(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)

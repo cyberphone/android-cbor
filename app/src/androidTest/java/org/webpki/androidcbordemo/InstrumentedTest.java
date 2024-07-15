@@ -103,8 +103,8 @@ public class InstrumentedTest {
         useKeyId = !useKeyId;
         boolean wantPublicKey = (noPublicKey++ % 3) != 0 && !useKeyId;
         CBORObject encrypted = new CBORAsymKeyEncrypter(keyPair.getPublic(), kea, cea)
-                .setPublicKeyOption(wantPublicKey)
                 .setKeyId(useKeyId ? new CBORString(KEY_1) : null)
+                .setPublicKeyOption(wantPublicKey)
                 .encrypt(DATA_TO_ENCRYPT);
         // Simple decryption
         assertTrue("enc1",
@@ -162,7 +162,7 @@ public class InstrumentedTest {
          */
     }
 
-    void signatureTestVector(int resource, CBORValidator validator) {
+    void signatureTestVector(int resource, CBORValidator<?> validator) {
         CBORMap signedObject = CBORObject.decode(RawReader.getRawResource(resource)).getMap();
         validator.validate(SIGNATURE_LABEL, signedObject);
     }

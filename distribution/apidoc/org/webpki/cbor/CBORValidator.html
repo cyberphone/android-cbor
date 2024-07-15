@@ -73,10 +73,10 @@
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">org.webpki.cbor</a></div>
-<h1 title="Class CBORValidator" class="title">Class CBORValidator</h1>
+<h1 title="Class CBORValidator" class="title">Class CBORValidator&lt;T extends CBORValidator&lt;T&gt;&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">org.webpki.cbor.CBORValidator</div>
+<div class="inheritance">org.webpki.cbor.CBORValidator&lt;T&gt;</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
@@ -84,7 +84,7 @@
 <dd><code><a href="CBORAsymKeyValidator.html" title="class in org.webpki.cbor">CBORAsymKeyValidator</a></code>, <code><a href="CBORHmacValidator.html" title="class in org.webpki.cbor">CBORHmacValidator</a></code>, <code><a href="CBORX509Validator.html" title="class in org.webpki.cbor">CBORX509Validator</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">CBORValidator</span>
+<div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">CBORValidator&lt;T extends CBORValidator&lt;T&gt;&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Base class for validating signatures.
  <p>
@@ -109,13 +109,13 @@
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORValidator.html" title="class in org.webpki.cbor">CBORValidator</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORValidator.html" title="type parameter in CBORValidator">T</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCustomDataPolicy(org.webpki.cbor.CBORCryptoUtils.POLICY,org.webpki.cbor.CBORCryptoUtils.Collector)" class="member-name-link">setCustomDataPolicy</a><wbr>(<a href="CBORCryptoUtils.POLICY.html" title="enum class in org.webpki.cbor">CBORCryptoUtils.POLICY</a>&nbsp;customDataPolicy,
  <a href="CBORCryptoUtils.Collector.html" title="interface in org.webpki.cbor">CBORCryptoUtils.Collector</a>&nbsp;customDataCollector)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets custom data policy.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORValidator.html" title="class in org.webpki.cbor">CBORValidator</a></code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORValidator.html" title="type parameter in CBORValidator">T</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTagPolicy(org.webpki.cbor.CBORCryptoUtils.POLICY,org.webpki.cbor.CBORCryptoUtils.Collector)" class="member-name-link">setTagPolicy</a><wbr>(<a href="CBORCryptoUtils.POLICY.html" title="enum class in org.webpki.cbor">CBORCryptoUtils.POLICY</a>&nbsp;tagPolicy,
  <a href="CBORCryptoUtils.Collector.html" title="interface in org.webpki.cbor">CBORCryptoUtils.Collector</a>&nbsp;tagCollector)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -147,7 +147,7 @@
 <li>
 <section class="detail" id="setCustomDataPolicy(org.webpki.cbor.CBORCryptoUtils.POLICY,org.webpki.cbor.CBORCryptoUtils.Collector)">
 <h3>setCustomDataPolicy</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORValidator.html" title="class in org.webpki.cbor">CBORValidator</a></span>&nbsp;<span class="element-name">setCustomDataPolicy</span><wbr><span class="parameters">(<a href="CBORCryptoUtils.POLICY.html" title="enum class in org.webpki.cbor">CBORCryptoUtils.POLICY</a>&nbsp;customDataPolicy,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORValidator.html" title="type parameter in CBORValidator">T</a></span>&nbsp;<span class="element-name">setCustomDataPolicy</span><wbr><span class="parameters">(<a href="CBORCryptoUtils.POLICY.html" title="enum class in org.webpki.cbor">CBORCryptoUtils.POLICY</a>&nbsp;customDataPolicy,
  <a href="CBORCryptoUtils.Collector.html" title="interface in org.webpki.cbor">CBORCryptoUtils.Collector</a>&nbsp;customDataCollector)</span></div>
 <div class="block">Sets custom data policy.
  <p>
@@ -162,14 +162,14 @@
 <dd><code>customDataPolicy</code> - Define level of support</dd>
 <dd><code>customDataCollector</code> - Interface for reading custom data</dd>
 <dt>Returns:</dt>
-<dd><code>this</code></dd>
+<dd><code>this</code> of subclass</dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="setTagPolicy(org.webpki.cbor.CBORCryptoUtils.POLICY,org.webpki.cbor.CBORCryptoUtils.Collector)">
 <h3>setTagPolicy</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORValidator.html" title="class in org.webpki.cbor">CBORValidator</a></span>&nbsp;<span class="element-name">setTagPolicy</span><wbr><span class="parameters">(<a href="CBORCryptoUtils.POLICY.html" title="enum class in org.webpki.cbor">CBORCryptoUtils.POLICY</a>&nbsp;tagPolicy,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORValidator.html" title="type parameter in CBORValidator">T</a></span>&nbsp;<span class="element-name">setTagPolicy</span><wbr><span class="parameters">(<a href="CBORCryptoUtils.POLICY.html" title="enum class in org.webpki.cbor">CBORCryptoUtils.POLICY</a>&nbsp;tagPolicy,
  <a href="CBORCryptoUtils.Collector.html" title="interface in org.webpki.cbor">CBORCryptoUtils.Collector</a>&nbsp;tagCollector)</span></div>
 <div class="block">Sets tag wrapping policy.
  <p>
@@ -183,7 +183,7 @@
 <dd><code>tagPolicy</code> - Define level of support</dd>
 <dd><code>tagCollector</code> - Interface for reading tag</dd>
 <dt>Returns:</dt>
-<dd><code>this</code></dd>
+<dd><code>this</code> of subclass</dd>
 </dl>
 </section>
 </li>
