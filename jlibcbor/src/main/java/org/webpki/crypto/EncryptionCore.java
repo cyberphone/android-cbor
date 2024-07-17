@@ -662,7 +662,7 @@ public class EncryptionCore {
                                                  keyEncryptionAlgorithm,
                                                  publicKey)
                                               :
-                    EncryptionCore.senderKeyAgreement(true,
+                    EncryptionCore.senderKeyAgreement(coseMode,
                                                       contentEncryptionKey,
                                                       keyEncryptionAlgorithm,
                                                       contentEncryptionAlgorithm,
