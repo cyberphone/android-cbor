@@ -260,13 +260,14 @@
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">get</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key)</span></div>
 <div class="block">Returns mapped object.
  <p>
- If <code>key</code> is not present, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ If <code>key</code> is present, the associated <code>value</code> is returned,
+ else a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>key</code> - Key</dd>
 <dt>Returns:</dt>
-<dd><code>CBORObject</code></dd>
+<dd><code>value</code></dd>
 </dl>
 </section>
 </li>
@@ -277,15 +278,16 @@
  <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;defaultValue)</span></div>
 <div class="block">Returns mapped object conditionally.
  <p>
- If <code>key</code> is not present, <code>defaultValue</code> is returned.
- <code>defaultValue</code> may be <code>null</code>.
+ If <code>key</code> is present, the associated <code>value</code> is returned,
+ else <code>defaultValue</code> is returned.
+ Note: <code>defaultValue</code> may be <code>null</code>.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>key</code> - Key</dd>
 <dd><code>defaultValue</code> - Default value</dd>
 <dt>Returns:</dt>
-<dd><code>CBORObject</code> or <code>defaultValue</code></dd>
+<dd><code>value</code> or <code>defaultValue</code></dd>
 </dl>
 </section>
 </li>
@@ -308,13 +310,18 @@
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">remove</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;key)</span></div>
 <div class="block">Removes mapped object.
  <p>
- If <code>key</code> is not present, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ If <code>key</code> is present, the associated <code>value</code> is returned,
+ else a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p>
+ <p>
+ After saving <code>value</code> for return, the <code>key</code> and its
+ associated <code>value</code> are removed.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>key</code> - Key</dd>
 <dt>Returns:</dt>
-<dd>The <code>CBORObject</code> mapped by <code>key</code></dd>
+<dd><code>value</code></dd>
 </dl>
 </section>
 </li>
