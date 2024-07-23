@@ -142,9 +142,6 @@ dt code {
     vertical-align:top;
     padding-top:4px;
 }
-sup {
-    font-size:8px;
-}
 button {
     font-family: var(--body-font-family);
     font-size: 1em;
@@ -1342,13 +1339,4 @@ pre.snippet .highlighted {
 .webpkihighlite {
   background: black;
   color: white;
-}
-
-.webpkisuper {
-  font-size: 0.8em;
-  position: relative;
-  bottom: 0.5em;
-  left: 0.1em;
-  display: inline-block;
-  padding: 0.3em 0.1em 0 0;
 }
