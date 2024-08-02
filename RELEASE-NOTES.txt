@@ -53,3 +53,6 @@ Android CBOR - Relese Notes
 
 1.0.9
 - Refactored for 2023.1 version of Android Studio
+
+1.1.0
+- Refactored integer and float access methods

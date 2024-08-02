@@ -127,12 +127,12 @@
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a>[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#decodeCertificateArray(org.webpki.cbor.CBORArray)" class="member-name-link">decodeCertificateArray</a><wbr>(<a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a>&nbsp;array)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Decodes a certificate path from a CBOR array.</div>
+<div class="block">Decode a certificate path from a CBOR array.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#encodeCertificateArray(java.security.cert.X509Certificate%5B%5D)" class="member-name-link">encodeCertificateArray</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a>[]&nbsp;certificatePath)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Encodes certificate path into a CBOR array.</div>
+<div class="block">Encode certificate path into a CBOR array.</div>
 </div>
 </div>
 </div>
@@ -155,7 +155,7 @@
 <section class="detail" id="decodeCertificateArray(org.webpki.cbor.CBORArray)">
 <h3>decodeCertificateArray</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a>[]</span>&nbsp;<span class="element-name">decodeCertificateArray</span><wbr><span class="parameters">(<a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a>&nbsp;array)</span></div>
-<div class="block">Decodes a certificate path from a CBOR array.
+<div class="block">Decode a certificate path from a CBOR array.
 <p>
  The CBOR array is assumed to hold one or more X.509 certificates in DER format,
  each encoded as a CBOR <code>byte&nbsp;string</code>. 
@@ -179,7 +179,7 @@
 <section class="detail" id="encodeCertificateArray(java.security.cert.X509Certificate[])">
 <h3>encodeCertificateArray</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></span>&nbsp;<span class="element-name">encodeCertificateArray</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a>[]&nbsp;certificatePath)</span></div>
-<div class="block">Encodes certificate path into a CBOR array.
+<div class="block">Encode certificate path into a CBOR array.
  <p>
  Note that the certificates must be featured in <i>ascending order</i>
  with respect to parenthood.  That is,

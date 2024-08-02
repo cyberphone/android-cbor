@@ -106,16 +106,16 @@
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.security.PrivateKey)" class="member-name-link">CBORAsymKeySigner</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Initializes a signer with a private key.</div>
+<div class="block">Creates a signer object with a private key.</div>
 </div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.security.PrivateKey,org.webpki.crypto.AsymSignatureAlgorithms)" class="member-name-link">CBORAsymKeySigner</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey,
  <a href="../crypto/AsymSignatureAlgorithms.html" title="enum class in org.webpki.crypto">AsymSignatureAlgorithms</a>&nbsp;algorithm)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Initializes a signer with a private key.</div>
+<div class="block">Creates a signer object with a private key.</div>
 </div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.webpki.crypto.AsymKeySignerInterface)" class="member-name-link">CBORAsymKeySigner</a><wbr>(<a href="../crypto/AsymKeySignerInterface.html" title="interface in org.webpki.crypto">AsymKeySignerInterface</a>&nbsp;signer)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Initializes a signer with an external interface.</div>
+<div class="block">Creates a signer object with an external interface.</div>
 </div>
 </div>
 </section>
@@ -134,7 +134,7 @@
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORAsymKeySigner.html" title="class in org.webpki.cbor">CBORAsymKeySigner</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPublicKey(java.security.PublicKey)" class="member-name-link">setPublicKey</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;publicKey)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Puts a public key into the signature container.</div>
+<div class="block">Put a public key into the signature container.</div>
 </div>
 </div>
 </div>
@@ -160,7 +160,7 @@
 <section class="detail" id="&lt;init&gt;(org.webpki.crypto.AsymKeySignerInterface)">
 <h3>CBORAsymKeySigner</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORAsymKeySigner</span><wbr><span class="parameters">(<a href="../crypto/AsymKeySignerInterface.html" title="interface in org.webpki.crypto">AsymKeySignerInterface</a>&nbsp;signer)</span></div>
-<div class="block">Initializes a signer with an external interface.</div>
+<div class="block">Creates a signer object with an external interface.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>signer</code> - Custom signer</dd>
@@ -171,7 +171,7 @@
 <section class="detail" id="&lt;init&gt;(java.security.PrivateKey)">
 <h3>CBORAsymKeySigner</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORAsymKeySigner</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey)</span></div>
-<div class="block">Initializes a signer with a private key.
+<div class="block">Creates a signer object with a private key.
  <p>
  The default signature algorithm to use is based on the recommendations
  in RFC 7518.
@@ -187,7 +187,7 @@
 <h3>CBORAsymKeySigner</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORAsymKeySigner</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey,
  <a href="../crypto/AsymSignatureAlgorithms.html" title="enum class in org.webpki.crypto">AsymSignatureAlgorithms</a>&nbsp;algorithm)</span></div>
-<div class="block">Initializes a signer with a private key.</div>
+<div class="block">Creates a signer object with a private key.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>privateKey</code> - Signature key</dd>
@@ -207,7 +207,7 @@
 <section class="detail" id="setPublicKey(java.security.PublicKey)">
 <h3>setPublicKey</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORAsymKeySigner.html" title="class in org.webpki.cbor">CBORAsymKeySigner</a></span>&nbsp;<span class="element-name">setPublicKey</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;publicKey)</span></div>
-<div class="block">Puts a public key into the signature container.
+<div class="block">Put a public key into the signature container.
  
  <p>
  Note that a public key value of <code>null</code> 

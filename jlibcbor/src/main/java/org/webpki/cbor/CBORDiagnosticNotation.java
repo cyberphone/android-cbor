@@ -25,6 +25,10 @@ import org.webpki.util.UTF8;
 
 /**
  * Class for converting diagnostic notation CBOR to CBOR.
+ * <p>
+ * Note: generated CBOR always conform to 
+ * <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>.
+ * </p>
  */
 public class CBORDiagnosticNotation {
     
@@ -38,7 +42,7 @@ public class CBORDiagnosticNotation {
     }
     
     /**
-     * Decodes diagnostic notation CBOR to CBOR.
+     * Decode diagnostic notation CBOR to CBOR.
      * 
      * @param cborText String holding diagnostic (textual) CBOR
      * @return {@link CBORObject}
@@ -49,7 +53,7 @@ public class CBORDiagnosticNotation {
     }
 
     /**
-     * Decodes diagnostic notation CBOR sequence to CBOR.
+     * Decode diagnostic notation CBOR sequence to CBOR.
      * 
      * @param cborText String holding diagnostic (textual) CBOR
      * @return {@link CBORObject}[] Non-empty array of CBOR objects
@@ -365,17 +369,24 @@ public class CBORDiagnosticNotation {
         while (true) {
             char c;
             switch (c = readChar()) {
-                // Multiline extension
-                case '\n':
+                // Special character handling.
                 case '\r':
+                    if (nextChar() == '\n') {
+                        continue;  // CRLF => LF
+                    }
+                    c = '\n';  // Single CR => LF
+                    break;
+
+                case '\n':
                 case '\t':
                     break;
 
                 case '\\':
                     switch (c = readChar()) {
                         case '\n':
-                            continue;
+                            continue;  // Line continuation
 
+                        // JSON compatible escape sequences
                         case '\'':
                         case '"':
                         case '\\':
@@ -426,7 +437,8 @@ public class CBORDiagnosticNotation {
                         return new CBORBytes(UTF8.encode(s.toString()));
                     }
                     break;
-                    
+
+                // Normal character handling
                 default:
                     if (c < ' ') {
                         parserError(String.format("Unexpected control character: %s", toChar(c)));

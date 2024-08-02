@@ -115,16 +115,18 @@
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORSequenceBuilder.html" title="class in org.webpki.cbor">CBORSequenceBuilder</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#add(org.webpki.cbor.CBORObject)" class="member-name-link">add</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;object)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Appends object to the sequence.</div>
+<div class="block">Add object to CBOR sequence.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>byte[]</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#encode()" class="member-name-link">encode</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the completed sequence.</div>
+<div class="block">Get completed CBOR sequence.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Render CBOR sequence in diagnostic notation.</div>
+</div>
 </div>
 </div>
 </div>
@@ -164,7 +166,7 @@
 <section class="detail" id="add(org.webpki.cbor.CBORObject)">
 <h3>add</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORSequenceBuilder.html" title="class in org.webpki.cbor">CBORSequenceBuilder</a></span>&nbsp;<span class="element-name">add</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;object)</span></div>
-<div class="block">Appends object to the sequence.</div>
+<div class="block">Add object to CBOR sequence.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>object</code> - Object to be appended</dd>
@@ -177,7 +179,7 @@
 <section class="detail" id="encode()">
 <h3>encode</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">encode</span>()</div>
-<div class="block">Returns the completed sequence.</div>
+<div class="block">Get completed CBOR sequence.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>CBOR sequence</dd>
@@ -188,9 +190,12 @@
 <section class="detail" id="toString()">
 <h3>toString</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toString</span>()</div>
+<div class="block">Render CBOR sequence in diagnostic notation.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+<dt>Returns:</dt>
+<dd>String</dd>
 </dl>
 </section>
 </li>

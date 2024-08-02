@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!csfCandidate.containsKey(CBORCryptoConstants.ALGORITHM_LABEL)) continue;
                 value = csfCandidate.get(CBORCryptoConstants.ALGORITHM_LABEL);
                 if (value.getType() != CBORTypes.INTEGER) continue;
-                int tempAlgorithm = value.getInt();
+                int tempAlgorithm = value.getInt32();
                 CBORObject tempKeyId = null;
                 if (csfCandidate.containsKey(CBORCryptoConstants.KEY_ID_LABEL)) {
                     tempKeyId = csfCandidate.get(CBORCryptoConstants.KEY_ID_LABEL);

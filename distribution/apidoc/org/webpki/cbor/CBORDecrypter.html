@@ -112,19 +112,19 @@
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>byte[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#decrypt(org.webpki.cbor.CBORObject)" class="member-name-link">decrypt</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;encryptionObject)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Decrypts data.</div>
+<div class="block">Decrypt data.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORDecrypter.html" title="type parameter in CBORDecrypter">T</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCustomDataPolicy(org.webpki.cbor.CBORCryptoUtils.POLICY,org.webpki.cbor.CBORCryptoUtils.Collector)" class="member-name-link">setCustomDataPolicy</a><wbr>(<a href="CBORCryptoUtils.POLICY.html" title="enum class in org.webpki.cbor">CBORCryptoUtils.POLICY</a>&nbsp;customDataPolicy,
  <a href="CBORCryptoUtils.Collector.html" title="interface in org.webpki.cbor">CBORCryptoUtils.Collector</a>&nbsp;customDataCallBack)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets custom extension data policy.</div>
+<div class="block">Set custom extension data policy.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORDecrypter.html" title="type parameter in CBORDecrypter">T</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTagPolicy(org.webpki.cbor.CBORCryptoUtils.POLICY,org.webpki.cbor.CBORCryptoUtils.Collector)" class="member-name-link">setTagPolicy</a><wbr>(<a href="CBORCryptoUtils.POLICY.html" title="enum class in org.webpki.cbor">CBORCryptoUtils.POLICY</a>&nbsp;tagPolicy,
  <a href="CBORCryptoUtils.Collector.html" title="interface in org.webpki.cbor">CBORCryptoUtils.Collector</a>&nbsp;tagCallBack)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets tag wrapping policy.</div>
+<div class="block">Set tag wrapping policy.</div>
 </div>
 </div>
 </div>
@@ -148,7 +148,7 @@
 <h3>setCustomDataPolicy</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORDecrypter.html" title="type parameter in CBORDecrypter">T</a></span>&nbsp;<span class="element-name">setCustomDataPolicy</span><wbr><span class="parameters">(<a href="CBORCryptoUtils.POLICY.html" title="enum class in org.webpki.cbor">CBORCryptoUtils.POLICY</a>&nbsp;customDataPolicy,
  <a href="CBORCryptoUtils.Collector.html" title="interface in org.webpki.cbor">CBORCryptoUtils.Collector</a>&nbsp;customDataCallBack)</span></div>
-<div class="block">Sets custom extension data policy.
+<div class="block">Set custom extension data policy.
  <p>
  By default custom data elements (<a href="CBORCryptoConstants.html#CUSTOM_DATA_LABEL"><code>CBORCryptoConstants.CUSTOM_DATA_LABEL</code></a>) 
  are rejected (<a href="CBORCryptoUtils.POLICY.html#FORBIDDEN"><code>CBORCryptoUtils.POLICY.FORBIDDEN</code></a>).
@@ -170,7 +170,7 @@
 <h3>setTagPolicy</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORDecrypter.html" title="type parameter in CBORDecrypter">T</a></span>&nbsp;<span class="element-name">setTagPolicy</span><wbr><span class="parameters">(<a href="CBORCryptoUtils.POLICY.html" title="enum class in org.webpki.cbor">CBORCryptoUtils.POLICY</a>&nbsp;tagPolicy,
  <a href="CBORCryptoUtils.Collector.html" title="interface in org.webpki.cbor">CBORCryptoUtils.Collector</a>&nbsp;tagCallBack)</span></div>
-<div class="block">Sets tag wrapping policy.
+<div class="block">Set tag wrapping policy.
  <p>
  By default wrapped containers are rejected (<a href="CBORCryptoUtils.POLICY.html#FORBIDDEN"><code>CBORCryptoUtils.POLICY.FORBIDDEN</code></a>).
  </p>
@@ -190,7 +190,7 @@
 <section class="detail" id="decrypt(org.webpki.cbor.CBORObject)">
 <h3>decrypt</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">decrypt</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;encryptionObject)</span></div>
-<div class="block">Decrypts data.
+<div class="block">Decrypt data.
  <p>
  This method presumes that <code>encryptionObject</code> holds
  an encryption object according to CEF.

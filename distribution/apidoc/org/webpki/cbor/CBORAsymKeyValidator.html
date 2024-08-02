@@ -118,11 +118,11 @@
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.security.PublicKey)" class="member-name-link">CBORAsymKeyValidator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;publicKey)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Initializes a validator with a public key.</div>
+<div class="block">Creates a validator object with a public key.</div>
 </div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(org.webpki.cbor.CBORAsymKeyValidator.KeyLocator)" class="member-name-link">CBORAsymKeyValidator</a><wbr>(<a href="CBORAsymKeyValidator.KeyLocator.html" title="interface in org.webpki.cbor">CBORAsymKeyValidator.KeyLocator</a>&nbsp;keyLocator)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Initializes a validator with a key locator.</div>
+<div class="block">Creates a validator object with a key locator.</div>
 </div>
 </div>
 </section>
@@ -152,7 +152,7 @@
 <section class="detail" id="&lt;init&gt;(java.security.PublicKey)">
 <h3>CBORAsymKeyValidator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORAsymKeyValidator</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;publicKey)</span></div>
-<div class="block">Initializes a validator with a public key.
+<div class="block">Creates a validator object with a public key.
  <p>
  This constructor presumes that the validation key is given by the context
  and that the supplied algorithm meets the policy.
@@ -173,7 +173,7 @@
 <section class="detail" id="&lt;init&gt;(org.webpki.cbor.CBORAsymKeyValidator.KeyLocator)">
 <h3>CBORAsymKeyValidator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORAsymKeyValidator</span><wbr><span class="parameters">(<a href="CBORAsymKeyValidator.KeyLocator.html" title="interface in org.webpki.cbor">CBORAsymKeyValidator.KeyLocator</a>&nbsp;keyLocator)</span></div>
-<div class="block">Initializes a validator with a key locator.
+<div class="block">Creates a validator object with a key locator.
  <p>
  This constructor provides full control for the verifier
  regarding in-lined public keys and key identifiers.
