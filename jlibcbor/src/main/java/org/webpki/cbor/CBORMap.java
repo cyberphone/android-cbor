@@ -43,6 +43,7 @@ public class CBORMap extends CBORObject {
         }
         
         int compare(byte[] testKey) {
+            // API 33 eliminates this...
             int minIndex = Math.min(encodedKey.length, testKey.length);
             for (int i = 0; i < minIndex; i++) {
                 int diff = (encodedKey[i] & 0xff) - (testKey[i] & 0xff);

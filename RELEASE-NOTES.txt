@@ -56,3 +56,5 @@ Android CBOR - Relese Notes
 
 1.1.0
 - Refactored integer and float access methods
+- Added CBORFloat.disableInvalidFloats property
+- Added support for java.lang.Comparable

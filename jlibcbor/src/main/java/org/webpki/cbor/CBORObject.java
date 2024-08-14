@@ -32,7 +32,7 @@ import org.webpki.util.UTF8;
  * In this implementation "object" should be regarded as equivalent to the RFC 8949 "data item".
  * </p>
  */
-public abstract class CBORObject implements Cloneable {
+public abstract class CBORObject implements Cloneable, Comparable<CBORObject>{
     
     CBORTypes cborType;
     
@@ -91,6 +91,8 @@ public abstract class CBORObject implements Cloneable {
     static final long UINT8_MASK              = 0xffffffffffffff00L;
     
     static final int  MAX_ERROR_MESSAGE       = 100;
+
+    static final BigInteger MAX_INTEGER       = new BigInteger("ffffffffffffffff", 16);
     
     /**
      * Get core CBOR type.
@@ -227,7 +229,7 @@ public abstract class CBORObject implements Cloneable {
         CBORInt CBORInt = getCBORInt();
         long value = CBORInt.unsigned ? CBORInt.value : ~CBORInt.value;
         if (CBORInt.unsigned == (value < 0)) {
-            integerRangeError("long");
+            integerRangeError("Int64");
         }
         return value;
     }
@@ -247,7 +249,7 @@ public abstract class CBORObject implements Cloneable {
     public long getUint64() {
         CBORInt CBORInt = getCBORInt();
         if (!CBORInt.unsigned) {
-            cborError(STDERR_NOT_UNSIGNED);
+            integerRangeError("Uint64");
         }
         return CBORInt.value;
     }
@@ -267,7 +269,7 @@ public abstract class CBORObject implements Cloneable {
     public int getInt32() {
         long value = getInt64();
         if (value > Integer.MAX_VALUE || value < Integer.MIN_VALUE) {
-            integerRangeError("int");
+            integerRangeError("Int32");
         }
         return (int)value;
     }
@@ -285,9 +287,9 @@ public abstract class CBORObject implements Cloneable {
      * @throws CBORException
      */
     public long getUint32() {
-        long value = getUint64();
+        long value = getInt64();
         if ((value & UINT32_MASK) != 0) {
-            integerRangeError("int");
+            integerRangeError("Uint32");
         }
         return value;
     }    
@@ -307,7 +309,7 @@ public abstract class CBORObject implements Cloneable {
     public int getInt16() {
         long value = getInt64();
         if (value > Short.MAX_VALUE || value < Short.MIN_VALUE) {
-            integerRangeError("short");
+            integerRangeError("Int16");
         }
         return (int)value;
     }
@@ -325,9 +327,9 @@ public abstract class CBORObject implements Cloneable {
      * @throws CBORException
      */
     public int getUint16() {
-        long value = getUint64();
+        long value = getInt64();
         if ((value & UINT16_MASK) != 0) {
-            integerRangeError("short");
+            integerRangeError("Uint16");
         }
         return (int)value;
     }    
@@ -347,7 +349,7 @@ public abstract class CBORObject implements Cloneable {
     public int getInt8() {
         long value = getInt64();
         if (value > Byte.MAX_VALUE || value < Byte.MIN_VALUE) {
-            integerRangeError("byte");
+            integerRangeError("Int8");
         }
         return (int)value;
     }
@@ -365,9 +367,9 @@ public abstract class CBORObject implements Cloneable {
      * @throws CBORException
      */
     public int getUint8() {
-        long value = getUint64();
+        long value = getInt64();
         if ((value & UINT8_MASK) != 0) {
-            integerRangeError("byte");
+            integerRangeError("Uint8");
         }
         return (int)value;
     }    
@@ -679,19 +681,24 @@ public abstract class CBORObject implements Cloneable {
                 case MT_BIG_NEGATIVE:
                 case MT_BIG_UNSIGNED:
                     byte[] byteArray = getObject().getBytes();
-                    if ((byteArray.length <= 8 || byteArray[0] == 0) && deterministicMode) {
-                        cborError(STDERR_NON_DETERMINISTIC_BIGNUM);
+                    BigInteger bigInteger = new BigInteger(1, byteArray);
+                    if (deterministicMode) {
+                        if (byteArray.length <= 8 || byteArray[0] == 0) {
+                            cborError(STDERR_NON_DETERMINISTIC_BIGNUM);
+                        }
+                    } else {
+                        // Potentially sloppy serialization.
+                        if (bigInteger.compareTo(MAX_INTEGER) < 1) {
+                            return new CBORInt(bigInteger.longValue(), tag == MT_BIG_UNSIGNED);
+                        }
                     }
-                    return new CBORBigInt((tag == MT_BIG_NEGATIVE) ?
-                        new BigInteger(-1, byteArray).subtract(BigInteger.ONE)
-                                           :
-                        new BigInteger(1, byteArray));
+                    return new CBORBigInt(tag == MT_BIG_UNSIGNED ? bigInteger : bigInteger.not());
  
                 case MT_FLOAT16:
                     double float64;
                     long f16Binary = getLongFromBytes(2);
 
-                    // Get the significand
+                    // Get the significand.
                     long significand = f16Binary & ((1l << FLOAT16_SIGNIFICAND_SIZE) - 1);
                     // Get the exponent.
                     long exponent = f16Binary & FLOAT16_POS_INFINITY;
@@ -944,6 +951,24 @@ public abstract class CBORObject implements Cloneable {
     }
 
     /**
+     * Compare CBOR objects for magnitude.
+     */
+    @Override
+    public int compareTo(CBORObject object) {
+        // API 33 eliminates this...
+        byte[] a = encode();
+        byte[] b = object.encode();
+        int minIndex = Math.min(a.length, b.length);
+        for (int i = 0; i < minIndex; i++) {
+            int diff = (a[i] & 0xff) - (b[i] & 0xff);
+            if (diff != 0) {
+                return diff;
+            }
+        }
+        return a.length - b.length;
+    }
+
+    /**
      * Calculate hash code of CBOR object.
      */
     @Override
@@ -996,9 +1021,6 @@ public abstract class CBORObject implements Cloneable {
     public CBORObject clone() {
         return CBORObject.decode(encode());
     }
-    
-    static final String STDERR_NOT_UNSIGNED =
-            "CBOR negative integer does not match \"unsigned\"";
 
     static final String STDERR_UNSUPPORTED_TAG =
             "Unsupported tag: ";
