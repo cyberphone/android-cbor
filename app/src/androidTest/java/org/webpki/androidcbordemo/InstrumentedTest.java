@@ -23,6 +23,7 @@ import org.webpki.cbor.CBORAsymKeyValidator;
 import org.webpki.cbor.CBORBytes;
 import org.webpki.cbor.CBORCryptoConstants;
 import org.webpki.cbor.CBORCryptoUtils;
+import org.webpki.cbor.CBORDecoder;
 import org.webpki.cbor.CBORDiagnosticNotation;
 import org.webpki.cbor.CBORHmacValidator;
 import org.webpki.cbor.CBORKeyPair;
@@ -163,7 +164,7 @@ public class InstrumentedTest {
     }
 
     void signatureTestVector(int resource, CBORValidator<?> validator) {
-        CBORMap signedObject = CBORObject.decode(RawReader.getRawResource(resource)).getMap();
+        CBORMap signedObject = CBORDecoder.decode(RawReader.getRawResource(resource)).getMap();
         validator.validate(SIGNATURE_LABEL, signedObject);
     }
 
@@ -212,7 +213,7 @@ public class InstrumentedTest {
     void encryptionTestVector(int resource,
                               String keyId,
                               PublicKey publicKey) {
-        CBORObject encryptionObject = CBORObject.decode(RawReader.getRawResource(resource));
+        CBORObject encryptionObject = CBORDecoder.decode(RawReader.getRawResource(resource));
         CBORMap cefContainer = MainActivity.unwrapOptionalTag(encryptionObject);
         PrivateKey privateKey = cefContainer
                 .get(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
@@ -302,7 +303,7 @@ public class InstrumentedTest {
             assertTrue("kid",
                     optionalKeyId.getString().equals(RawReader.secretKeyId));
             return RawReader.secretKey;
-        }).decrypt(CBORObject.decode(
+        }).decrypt(CBORDecoder.decode(
                 RawReader.getRawResource(R.raw.a256_a128cbc_hs256_kid_cbor)))));
     }
 
@@ -377,13 +378,13 @@ public class InstrumentedTest {
                 .encrypt(DATA_TO_ENCRYPT).encode();
         assertTrue("Enc", Arrays.equals(DATA_TO_ENCRYPT,
                 new CBORAsymKeyDecrypter(keyPair.getPrivate())
-                        .decrypt(CBORObject.decode(encrypted))));
+                        .decrypt(CBORDecoder.decode(encrypted))));
         encrypted = new CBORAsymKeyEncrypter(keyPair.getPublic(), kea, cea)
                 .setPublicKeyOption(true)
                 .encrypt(DATA_TO_ENCRYPT).encode();
         assertTrue("Enc2", Arrays.equals(DATA_TO_ENCRYPT,
                 new CBORAsymKeyDecrypter(keyPair.getPrivate())
-                        .decrypt(CBORObject.decode(encrypted))));
+                        .decrypt(CBORDecoder.decode(encrypted))));
  //       EncryptionCore.setEcProvider(null, null);
  //       EncryptionCore.setRsaProvider(null);
     }
@@ -598,7 +599,7 @@ public class InstrumentedTest {
     void utf8DecoderTest(String hex, boolean ok) {
         byte[] cbor = HexaDecimal.decode(hex);
         try {
-            byte[] roundTrip = CBORObject.decode(cbor).encode();
+            byte[] roundTrip = CBORDecoder.decode(cbor).encode();
             assertTrue("OK", ok);
             assertTrue("Conv", Arrays.equals(cbor, roundTrip));
         } catch (Exception e) {
@@ -641,7 +642,7 @@ public class InstrumentedTest {
     @Test
     public void succeededED25519KeyPair() {
         // In API 33? Nope.
-        CBORKeyPair.convert(CBORObject.decode(HexaDecimal.decode(
+        CBORKeyPair.convert(CBORDecoder.decode(HexaDecimal.decode(
             "a401012006215820fe49acf5b92b6e923594f2e83368f680" +
              "ac924be93cf533aecaf802e37757f8c9235820d1f96bfba" +
              "6d7b38e7d7fdab002adb466cdcd8b34c62041f9feb4c3168ba6155e")));
@@ -650,13 +651,13 @@ public class InstrumentedTest {
     @Test
     public void succeededED25519PublicKey() {
         // In API 33? Nope.
-        CBORPublicKey.convert(CBORObject.decode(HexaDecimal.decode(
+        CBORPublicKey.convert(CBORDecoder.decode(HexaDecimal.decode(
             "a301012006215820fe49acf5b92b6e923594f2e83368f680ac924be93cf533aecaf802e37757f8c9")));
     }
 
     @Test
     public void succeededX25519KeyPair() {
-        CBORKeyPair.convert(CBORObject.decode(HexaDecimal.decode(
+        CBORKeyPair.convert(CBORDecoder.decode(HexaDecimal.decode(
                 "a401012004215820e99a0cef205894960d9b1c05978513dcc" +
                 "b42a13bfbced523a51b8a117ad5f00c2358207317e5f3a115" +
                 "99caab474ee65843427f517fe4d8b99add55886c84441e90d6f0")));
@@ -664,7 +665,7 @@ public class InstrumentedTest {
 
     @Test
     public void succeededX25519PublicKey() {
-        CBORPublicKey.convert(CBORObject.decode(HexaDecimal.decode(
+        CBORPublicKey.convert(CBORDecoder.decode(HexaDecimal.decode(
             "a301012004215820e99a0cef205894960d9b1c05978513dccb42a13bfbced523a51b8a117ad5f00c")));
     }
 
