@@ -60,6 +60,7 @@ import org.webpki.cbor.CBORBoolean;
 import org.webpki.cbor.CBORBytes;
 import org.webpki.cbor.CBORCryptoConstants;
 import org.webpki.cbor.CBORCryptoUtils;
+import org.webpki.cbor.CBORDecoder;
 import org.webpki.cbor.CBORDecrypter;
 import org.webpki.cbor.CBORDiagnosticNotation;
 import org.webpki.cbor.CBOREncrypter;
@@ -382,7 +383,7 @@ public class MainActivity extends AppCompatActivity {
             // Clone the data to make sure the not-read check can do its work
             validator.setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
                      .setCustomDataPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
-                     .validate(csfLabel, CBORObject.decode(signedData.encode()));
+                     .validate(csfLabel, CBORDecoder.decode(signedData.encode()));
 
             loadHtml("",
                     "Valid Signature!",

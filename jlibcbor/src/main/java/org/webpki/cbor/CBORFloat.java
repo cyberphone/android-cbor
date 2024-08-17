@@ -18,6 +18,8 @@ package org.webpki.cbor;
 
 import org.webpki.util.DoubleCoreSerializer;
 
+import static org.webpki.cbor.CBORInternal.*;
+
 /**
  * Class for holding CBOR <code>floating&nbsp;point</code> objects.
  * <p>
@@ -28,18 +30,6 @@ import org.webpki.util.DoubleCoreSerializer;
  * </p>
  */
 public class CBORFloat extends CBORObject {
-
-    /**
-     * Controls acceptance of exceptional floating point values.
-     * <p>
-     * By default, this implementation supports <code>NaN</code>, <code>Infinity</code>, 
-     * and <code>-Infinity</code>. In case these variants are not applicable for the
-     * application in question, they can be "outlawed" (causing a {@link CBORException} 
-     * if encountered), by setting this <i>global</i> property to <code>true</code>.
-     * Note: this setting affects both encoding and decoding.
-     * </p>
-     */
-    public static boolean disableInvalidFloats = false;
 
     // Actual value.
     double value;
@@ -81,9 +71,6 @@ public class CBORFloat extends CBORObject {
         } else if ((bitFormat & FLOAT64_POS_INFINITY) == FLOAT64_POS_INFINITY) {
 
             // Special "number".
-            if (disableInvalidFloats) {
-                cborError(STDERR_INVALID_FLOAT_DISABLED);
-            }
             tag = MT_FLOAT16;
             bitFormat = (bitFormat == FLOAT64_POS_INFINITY) ?
                 FLOAT16_POS_INFINITY : (bitFormat == FLOAT64_NEG_INFINITY) ?
@@ -127,14 +114,15 @@ public class CBORFloat extends CBORObject {
             // Check if we need to denormalize data.
 
             if (exponent <= 0) {
-                // The implicit "1" becomes explicit using subnormal representation.
-                significand += 1l << FLOAT16_SIGNIFICAND_SIZE;
-                long significandCopy = significand;
-                significand >>= (1 - exponent);
-                if (significandCopy != (significand << (1 - exponent))) {
+                if ((significand & ((1l << (1 - exponent)) - 1)) != 0) {
                     // Too off scale for denormalized float16.
                     return;
                 }
+                // The implicit "1" becomes explicit using subnormal representation.
+                significand += (1l << FLOAT16_SIGNIFICAND_SIZE);
+                // Put significand in position.
+                significand >>= (1 - exponent);
+                // Denormalized exponents are always zero.
                 exponent = 0;
             }
 
@@ -195,7 +183,4 @@ public class CBORFloat extends CBORObject {
     void internalToString(CborPrinter cborPrinter) {
          cborPrinter.append(formatDouble(value));
     }
-
-    static final String STDERR_INVALID_FLOAT_DISABLED = 
-            "\"NaN\" and \"Infinity\" support is disabled";
 }

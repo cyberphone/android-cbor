@@ -3,6 +3,7 @@ package org.webpki.androidcbordemo;
 import android.content.Context;
 
 import org.webpki.cbor.CBORCryptoUtils;
+import org.webpki.cbor.CBORDecoder;
 import org.webpki.cbor.CBORDiagnosticNotation;
 import org.webpki.cbor.CBORKeyPair;
 import org.webpki.cbor.CBORObject;
@@ -47,7 +48,7 @@ public class RawReader {
     }
 
     static String getCBORText(int resource) {
-        return CBORObject.decode(getRawResource(resource)).toString();
+        return CBORDecoder.decode(getRawResource(resource)).toString();
     }
 
     static KeyPair getKeyPair(int resource)  {
