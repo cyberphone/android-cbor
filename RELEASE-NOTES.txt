@@ -58,3 +58,4 @@ Android CBOR - Relese Notes
 - Refactored integer and float access methods
 - Added CBORDecoder class
 - Added support for java.lang.Comparable
+- Improved documentation

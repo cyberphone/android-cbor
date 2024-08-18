@@ -100,7 +100,7 @@
  boolean&nbsp;rejectNaNFlag,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;maxLength)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Create CBOR decoder.</div>
+<div class="block">Create a parameterized CBOR decoder.</div>
 </div>
 </div>
 </section>
@@ -125,6 +125,11 @@
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#decodeWithOptions()" class="member-name-link">decodeWithOptions</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Decode CBOR data with options.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getByteCount()" class="member-name-link">getByteCount</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get decoder byte count.</div>
 </div>
 </div>
 </div>
@@ -151,7 +156,7 @@
  boolean&nbsp;lenientFlag,
  boolean&nbsp;rejectNaNFlag,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;maxLength)</span></div>
-<div class="block">Create CBOR decoder.
+<div class="block">Create a parameterized CBOR decoder.
  <p>
  To be used with <a href="#decodeWithOptions()"><code>decodeWithOptions()</code></a>.
  </p></div>
@@ -159,8 +164,14 @@
 <dt>Parameters:</dt>
 <dd><code>inputStream</code> - Stream holding CBOR data.  If <code>sequenceFlag</code> is <code>false</code>,
  <code>inputStream</code> must hold exactly one CBOR object.</dd>
-<dd><code>sequenceFlag</code> - If <code>true</code> stop reading after decoding a CBOR object
- (no object returns <code>null</code>).</dd>
+<dd><code>sequenceFlag</code> - If <code>true</code> the following apply:
+ <ul>
+ <li>Returns after decoding a CBOR object, while preparing the decoder for the next item.</li>
+ <li>If no data is found (EOF), <code>null</code> is returned (<i>empty</i> sequences are permitted).</li>
+ <li>Data <i>succeeding</i> a just decoded CBOR object is not verified for correctness.
+ This can be used for FIDO attestations which mixes CBOR objects with proprietary data formats.
+ Also see <a href="#getByteCount()"><code>getByteCount()</code></a>.</li>  
+ </ul></dd>
 <dd><code>lenientFlag</code> - If <code>true</code> disable 
  <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>
  checks for number serialization and map <i>sorting</i>.
@@ -199,7 +210,21 @@
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd><a href="CBORObject.html" title="class in org.webpki.cbor"><code>CBORObject</code></a> or <code>null</code> (for end-of-sequence only).</dd>
+<dd><a href="CBORObject.html" title="class in org.webpki.cbor"><code>CBORObject</code></a> or <code>null</code> (for EOF sequences only).</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getByteCount()">
+<h3>getByteCount</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getByteCount</span>()</div>
+<div class="block">Get decoder byte count.
+ <p>
+ This is equivalent to the position of the next item to be read.
+ </p></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The number of bytes read so far.</dd>
 </dl>
 </section>
 </li>
@@ -222,7 +247,7 @@
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>cborData</code> - CBOR binary data holding exactly one CBOR object.</dd>
+<dd><code>cborData</code> - CBOR binary data <i>holding exactly one CBOR object</i>.</dd>
 <dt>Returns:</dt>
 <dd><a href="CBORObject.html" title="class in org.webpki.cbor"><code>CBORObject</code></a></dd>
 </dl>

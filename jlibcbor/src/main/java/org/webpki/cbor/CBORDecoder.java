@@ -40,14 +40,20 @@ public class CBORDecoder {
     private int byteCount;
 
     /**
-    * Create CBOR decoder.
+    * Create a parameterized CBOR decoder.
     * <p>
     * To be used with {@link CBORDecoder#decodeWithOptions()}.
     * </p>
     * @param inputStream Stream holding CBOR data.  If <code>sequenceFlag</code> is <code>false</code>,
     * <code>inputStream</code> must hold exactly one CBOR object.
-    * @param sequenceFlag If <code>true</code> stop reading after decoding a CBOR object
-    * (no object returns <code>null</code>).
+    * @param sequenceFlag If <code>true</code> the following apply:
+    * <ul>
+    * <li>Returns after decoding a CBOR object, while preparing the decoder for the next item.</li>
+    * <li>If no data is found (EOF), <code>null</code> is returned (<i>empty</i> sequences are permitted).</li>
+    * <li>Data <i>succeeding</i> a just decoded CBOR object is not verified for correctness.
+    * This can be used for FIDO attestations which mixes CBOR objects with proprietary data formats.
+    * Also see {@link #getByteCount()}.</li>  
+    * </ul>
     * @param lenientFlag If <code>true</code> disable 
     * <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>
     * checks for number serialization and map <i>sorting</i>.
@@ -202,8 +208,7 @@ public class CBORDecoder {
                 }
                 return checkDoubleConversion(tag,
                                              f16Binary,
-                                             f16Binary >= FLOAT16_NEG_ZERO ? 
-                                                                  -float64 : float64);
+                                             f16Binary >= FLOAT16_NEG_ZERO ? -float64 : float64);
 
             case MT_FLOAT32:
                 long f32Bin = getLongFromBytes(4);
@@ -292,7 +297,7 @@ public class CBORDecoder {
      * <p>
      * Decoding errors throw {@link CBORException}.
      * </p>
-     * @return {@link CBORObject} or <code>null</code> (for end-of-sequence only).
+     * @return {@link CBORObject} or <code>null</code> (for EOF sequences only).
      */
     public CBORObject decodeWithOptions() {        
         try {
@@ -312,6 +317,17 @@ public class CBORDecoder {
     }
 
     /**
+     * Get decoder byte count.
+     * <p>
+     * This is equivalent to the position of the next item to be read.
+     * </p>
+     * @return The number of bytes read so far.
+     */
+    public int getByteCount() {
+        return byteCount;
+    }
+
+    /**
      * Decode CBOR data.
      * <p>
      * This method is identical to:
@@ -325,14 +341,14 @@ public class CBORDecoder {
      * <p>
      * Decoding errors throw {@link CBORException}.
      * </p>
-     * @param cborData CBOR binary data holding exactly one CBOR object.
+     * @param cborData CBOR binary data <i>holding exactly one CBOR object</i>.
      * @return {@link CBORObject}
      */
     public static CBORObject decode(byte[] cborData) {
         return new CBORDecoder(new ByteArrayInputStream(cborData),
-                  false, 
-              false,
-          false,
+                               false, 
+                               false,
+                               false,
                                cborData.length).decodeWithOptions();
     }
     

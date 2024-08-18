@@ -87,8 +87,7 @@ and their mapping to Java:
  dealt with automatically.</li>
 <li>Floating point data covers the 16, 32, and 64-bit IEEE&nbsp;754 variants.
 The encoded representation is determined by the size and precision of a value.
-Also see flag <code>disableInvalidFloats</code>
-in <a href="CBORDecoder.html#%3Cinit%3E(java.io.InputStream,boolean,boolean,boolean,java.lang.Integer)"><code>CBORDecoder(inputStream, boolean, boolean, boolean, Integer)</code></a>.</li>
+Also see the decoder <a href="CBORDecoder.html#%3Cinit%3E(java.io.InputStream,boolean,boolean,boolean,java.lang.Integer)"><code>rejectNaNFlag</code></a>.</li>
 </ol>
 <p>
 This implementation does not support CBOR &quot;simple&quot; values beyond
