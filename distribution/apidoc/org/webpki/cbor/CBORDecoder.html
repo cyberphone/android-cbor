@@ -94,11 +94,7 @@
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.io.InputStream,boolean,boolean,boolean,java.lang.Integer)" class="member-name-link">CBORDecoder</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/InputStream.html" title="class or interface in java.io" class="external-link">InputStream</a>&nbsp;inputStream,
- boolean&nbsp;sequenceFlag,
- boolean&nbsp;lenientFlag,
- boolean&nbsp;rejectNaNFlag,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;maxLength)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.io.InputStream)" class="member-name-link">CBORDecoder</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/InputStream.html" title="class or interface in java.io" class="external-link">InputStream</a>&nbsp;inputStream)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Create a parameterized CBOR decoder.</div>
 </div>
@@ -129,7 +125,27 @@
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getByteCount()" class="member-name-link">getByteCount</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get decoder byte count.</div>
+<div class="block">Get CBOR decoder byte count.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDeterminismMode(boolean)" class="member-name-link">setDeterminismMode</a><wbr>(boolean&nbsp;enforce)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set CBOR decoder determinism mode.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setInputLength(int)" class="member-name-link">setInputLength</a><wbr>(int&nbsp;maxLength)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set CBOR decoder input max length.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setNaNSupport(boolean)" class="member-name-link">setNaNSupport</a><wbr>(boolean&nbsp;reject)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set CBOR decoder <code>NaN/Infinity</code> support.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSequenceMode(boolean)" class="member-name-link">setSequenceMode</a><wbr>(boolean&nbsp;sequence)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set CBOR decoder sequence mode.</div>
 </div>
 </div>
 </div>
@@ -149,45 +165,22 @@
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.io.InputStream,boolean,boolean,boolean,java.lang.Integer)">
+<section class="detail" id="&lt;init&gt;(java.io.InputStream)">
 <h3>CBORDecoder</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORDecoder</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/InputStream.html" title="class or interface in java.io" class="external-link">InputStream</a>&nbsp;inputStream,
- boolean&nbsp;sequenceFlag,
- boolean&nbsp;lenientFlag,
- boolean&nbsp;rejectNaNFlag,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;maxLength)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORDecoder</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/InputStream.html" title="class or interface in java.io" class="external-link">InputStream</a>&nbsp;inputStream)</span></div>
 <div class="block">Create a parameterized CBOR decoder.
+ <p>
+ See <a href="#setDeterminismMode(boolean)"><code>setDeterminismMode(boolean)</code></a>,
+ <a href="#setInputLength(int)"><code>setInputLength(int)</code></a>,
+ <a href="#setNaNSupport(boolean)"><code>setNaNSupport(boolean)</code></a>, and
+ <a href="#setSequenceMode(boolean)"><code>setSequenceMode(boolean)</code></a>
+ </p>
  <p>
  To be used with <a href="#decodeWithOptions()"><code>decodeWithOptions()</code></a>.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>inputStream</code> - Stream holding CBOR data.  If <code>sequenceFlag</code> is <code>false</code>,
- <code>inputStream</code> must <i>hold exactly one CBOR object</i>.</dd>
-<dd><code>sequenceFlag</code> - If <code>sequenceFlag</code> is <code>true</code> the following apply:
- <ul>
- <li>Immediately return after decoding a CBOR object, while preparing the decoder for the next item.
- See also <a href="#getByteCount()"><code>getByteCount()</code></a>.</li>
- <li>If no data is found (EOF), <code>null</code> is returned (<i>empty</i> sequences are permitted).</li>
- <li>Note that data <i>succeeding</i> a just decoded CBOR object is not verified for correctness.</li>  
- </ul></dd>
-<dd><code>lenientFlag</code> - If <code>lenientFlag</code> is <code>true</code> the decoder will accept CBOR 
- code that does not conform to the
- <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a> rules.
- This option may be needed for dealing with &quot;legacy&quot; CBOR implementations.
- The flag disables the map sorting and preferred number serialization requirements.
- See also <a href="CBORMap.html#setSortingMode(boolean)"><code>CBORMap.setSortingMode(boolean)</code></a>.</dd>
-<dd><code>rejectNaNFlag</code> - By default, this implementation supports 
- <code>NaN</code>, <code>Infinity</code>, 
- and <code style='white-space:nowrap'>-Infinity</code>. In case these variants 
- are not applicable for the
- application in question, they can be "outlawed" (causing a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> 
- if encountered), by setting <code>rejectNaNFlag</code> to <code>true</code>.</dd>
-<dd><code>maxLength</code> - Holds maximum input size in 
- bytes or <code>null</code> (<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MAX_VALUE</code></a> is assumed).
- Since malformed CBOR objects can request arbitrary amounts of memory,
- it is <i>highly recommended</i> setting <code>maxLength</code> to
- a value that is adapted to the actual application.</dd>
+<dd><code>inputStream</code> - Stream holding CBOR data.</dd>
 </dl>
 </section>
 </li>
@@ -203,16 +196,12 @@
 <section class="detail" id="decodeWithOptions()">
 <h3>decodeWithOptions</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">decodeWithOptions</span>()</div>
-<div class="block">Decode CBOR data with options.
- <p>
- Also see <a href="CBORSequenceBuilder.html" title="class in org.webpki.cbor"><code>CBORSequenceBuilder</code></a>.
- </p>
- <p>
- Decoding errors throw <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a>.
- </p></div>
+<div class="block">Decode CBOR data with options.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><a href="CBORObject.html" title="class in org.webpki.cbor"><code>CBORObject</code></a> or <code>null</code> (for EOF sequences only).</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code> - For decoding errors.</dd>
 </dl>
 </section>
 </li>
@@ -220,7 +209,7 @@
 <section class="detail" id="getByteCount()">
 <h3>getByteCount</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getByteCount</span>()</div>
-<div class="block">Get decoder byte count.
+<div class="block">Get CBOR decoder byte count.
  <p>
  This is equivalent to the position of the next item to be read.
  </p></div>
@@ -231,27 +220,122 @@
 </section>
 </li>
 <li>
+<section class="detail" id="setInputLength(int)">
+<h3>setInputLength</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></span>&nbsp;<span class="element-name">setInputLength</span><wbr><span class="parameters">(int&nbsp;maxLength)</span></div>
+<div class="block">Set CBOR decoder input max length.
+ <p>
+ By default the CBOR decoder accepts up to (<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Integer.MAX_VALUE</code></a>
+ bytes of input data.
+ Since malformed CBOR objects can request arbitrary amounts of memory,
+ it is <i>highly recommended</i> to select a value that is adapted to
+ the actual application.
+ This method enables overriding the default.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>maxLength</code> - Maximum length of CBOR input in bytes.
+ Exceeding this limit will cause a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> to be thrown.</dd>
+<dt>Returns:</dt>
+<dd><code>this</code> (updated <a href="CBORDecoder.html" title="class in org.webpki.cbor"><code>CBORDecoder</code></a> object)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setNaNSupport(boolean)">
+<h3>setNaNSupport</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></span>&nbsp;<span class="element-name">setNaNSupport</span><wbr><span class="parameters">(boolean&nbsp;reject)</span></div>
+<div class="block">Set CBOR decoder <code>NaN/Infinity</code> support.
+ <p>
+ By default the decoder supports 
+ <code>NaN</code>, <code>Infinity</code>, 
+ and <code style='white-space:nowrap'>-Infinity</code>. 
+ In case these variants are not applicable for the application in question,
+ this method enables overriding the default.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>reject</code> - If the <code>reject</code> flag is set to <code>true</code>,
+ the mentioned exceptional floating point values will (if encountered),
+ cause a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> to be thrown.</dd>
+<dt>Returns:</dt>
+<dd><code>this</code> (updated <a href="CBORDecoder.html" title="class in org.webpki.cbor"><code>CBORDecoder</code></a> object)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setDeterminismMode(boolean)">
+<h3>setDeterminismMode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></span>&nbsp;<span class="element-name">setDeterminismMode</span><wbr><span class="parameters">(boolean&nbsp;enforce)</span></div>
+<div class="block">Set CBOR decoder determinism mode.
+ <p>
+ By default the decoder assumes that CBOR data conforms to the
+ <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a> rules.
+ This method enables overriding the default.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>enforce</code> - If the <code>enforce</code> flag is set to <code>false</code>,
+ the decoder will accept CBOR data that does not adhere to the map sorting
+ and preferred number serialization requirements.
+ This option may be needed for dealing with &quot;legacy&quot; CBOR implementations.
+ Note: duplicate keys and other invalid (or not supported) CBOR constructs
+ will still cause a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> to be thrown.</dd>
+<dt>Returns:</dt>
+<dd><code>this</code> (updated <a href="CBORDecoder.html" title="class in org.webpki.cbor"><code>CBORDecoder</code></a> object)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setSequenceMode(boolean)">
+<h3>setSequenceMode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></span>&nbsp;<span class="element-name">setSequenceMode</span><wbr><span class="parameters">(boolean&nbsp;sequence)</span></div>
+<div class="block">Set CBOR decoder sequence mode.
+ <p>
+ By default the decoder assumes that CBOR data constitutes
+ of a single CBOR object.
+ This method enables overriding the default.
+ </p>
+ <p>
+ Also see <a href="CBORSequenceBuilder.html" title="class in org.webpki.cbor"><code>CBORSequenceBuilder</code></a>.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>sequence</code> - If the <code>sequence</code> flag is set to <code>true</code>,
+ the following apply:
+ <ul>
+ <li>Immediately return after decoding a CBOR object, while preparing the 
+ decoder for the next item.
+ See also <a href="#getByteCount()"><code>getByteCount()</code></a>.</li>
+ <li>If no data is found (EOF), <code>null</code> is returned
+ (<i>empty</i> sequences are permitted).</li>
+ <li>Note that data <i>succeeding</i> a just decoded CBOR object 
+ is not verified for correctness.</li>  
+ </ul></dd>
+<dt>Returns:</dt>
+<dd><code>this</code> (updated <a href="CBORDecoder.html" title="class in org.webpki.cbor"><code>CBORDecoder</code></a> object)</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="decode(byte[])">
 <h3>decode</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">decode</span><wbr><span class="parameters">(byte[]&nbsp;cbor)</span></div>
 <div class="block">Decode CBOR data.
  <p>
- This method is identical to:
- <pre>  new CBORDecoder(new ByteArrayInputStream(cbor),
-                  false, 
-                  false,
-                  false,
-                  cborData.length).decodeWithOptions();
-</pre>
- </p>
- <p>
- Decoding errors throw <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a>.
+ This conveniance method is identical to:
+ <pre>  new CBORDecoder(new ByteArrayInputStream(cbor))
+      .setInputLength(cbor.length)
+      .decodeWithOptions();
+ </pre>
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>cbor</code> - CBOR binary data <i>holding exactly one CBOR object</i>.</dd>
 <dt>Returns:</dt>
 <dd><a href="CBORObject.html" title="class in org.webpki.cbor"><code>CBORObject</code></a></dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code> - For decoding errors.</dd>
 </dl>
 </section>
 </li>

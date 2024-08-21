@@ -87,7 +87,7 @@ and their mapping to Java:
  dealt with automatically.</li>
 <li>Floating point data covers the 16, 32, and 64-bit IEEE&nbsp;754 variants.
 The encoded representation is determined by the size and precision of a value.
-Also see the decoder <a href="CBORDecoder.html#%3Cinit%3E(java.io.InputStream,boolean,boolean,boolean,java.lang.Integer)"><code>rejectNaNFlag</code></a>.</li>
+Also see the decoder <a href="CBORDecoder.html#setNaNSupport(boolean)"><code>CBORDecoder.setNaNSupport(boolean)</code></a>.</li>
 </ol>
 <p>
 This implementation does not support CBOR &quot;simple&quot; values beyond
@@ -229,7 +229,7 @@ may also be provided in
 Any deviation from the rules above will throw exceptions using the standard decoder
 (<a href="CBORDecoder.html#decode(byte%5B%5D)"><code>CBORDecoder.decode(byte[])</code></a>).
 For more control of the decoding process including dealing with CBOR sequences, see:
-<a href="CBORDecoder.html#%3Cinit%3E(java.io.InputStream,boolean,boolean,boolean,java.lang.Integer)"><code>CBOR&nbsp;decoding&nbsp;options</code></a>.
+<a href="CBORDecoder.html#%3Cinit%3E(java.io.InputStream)"><code>CBOR&nbsp;decoding&nbsp;options</code></a>.
 <p>
 On output (<a href="CBORObject.html#encode()"><code>CBORObject.encode()</code></a>)
 deterministic encoding is always performed

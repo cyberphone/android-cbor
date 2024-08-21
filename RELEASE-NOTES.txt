@@ -59,3 +59,6 @@ Android CBOR - Relese Notes
 - Added CBORDecoder class
 - Added support for java.lang.Comparable
 - Improved documentation
+
+1.1.1
+- Refactored the CBORDecoder option scheme
