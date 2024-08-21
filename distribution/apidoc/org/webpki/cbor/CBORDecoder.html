@@ -128,9 +128,9 @@
 <div class="block">Get CBOR decoder byte count.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDeterminismMode(boolean)" class="member-name-link">setDeterminismMode</a><wbr>(boolean&nbsp;enforce)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDeterministicMode(boolean)" class="member-name-link">setDeterministicMode</a><wbr>(boolean&nbsp;enforce)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Set CBOR decoder determinism mode.</div>
+<div class="block">Set CBOR decoder deterministic mode.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setInputLength(int)" class="member-name-link">setInputLength</a><wbr>(int&nbsp;maxLength)</code></div>
@@ -138,7 +138,7 @@
 <div class="block">Set CBOR decoder input max length.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setNaNSupport(boolean)" class="member-name-link">setNaNSupport</a><wbr>(boolean&nbsp;reject)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setNaNSupport(boolean)" class="member-name-link">setNaNSupport</a><wbr>(boolean&nbsp;accept)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Set CBOR decoder <code>NaN/Infinity</code> support.</div>
 </div>
@@ -170,7 +170,7 @@
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORDecoder</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/InputStream.html" title="class or interface in java.io" class="external-link">InputStream</a>&nbsp;inputStream)</span></div>
 <div class="block">Create a CBOR decoder supporting options.
  <p>
- See <a href="#setDeterminismMode(boolean)"><code>setDeterminismMode(boolean)</code></a>,
+ See <a href="#setDeterministicMode(boolean)"><code>setDeterministicMode(boolean)</code></a>,
  <a href="#setInputLength(int)"><code>setInputLength(int)</code></a>,
  <a href="#setNaNSupport(boolean)"><code>setNaNSupport(boolean)</code></a>, and
  <a href="#setSequenceMode(boolean)"><code>setSequenceMode(boolean)</code></a>
@@ -244,7 +244,7 @@
 <li>
 <section class="detail" id="setNaNSupport(boolean)">
 <h3>setNaNSupport</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></span>&nbsp;<span class="element-name">setNaNSupport</span><wbr><span class="parameters">(boolean&nbsp;reject)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></span>&nbsp;<span class="element-name">setNaNSupport</span><wbr><span class="parameters">(boolean&nbsp;accept)</span></div>
 <div class="block">Set CBOR decoder <code>NaN/Infinity</code> support.
  <p>
  By default the decoder supports 
@@ -255,7 +255,7 @@
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>reject</code> - If the <code>reject</code> flag is set to <code>true</code>,
+<dd><code>accept</code> - If the <code>accept</code> flag is set to <code>false</code>,
  the mentioned exceptional floating point values will (if encountered),
  cause a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> to be thrown.</dd>
 <dt>Returns:</dt>
@@ -264,10 +264,10 @@
 </section>
 </li>
 <li>
-<section class="detail" id="setDeterminismMode(boolean)">
-<h3>setDeterminismMode</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></span>&nbsp;<span class="element-name">setDeterminismMode</span><wbr><span class="parameters">(boolean&nbsp;enforce)</span></div>
-<div class="block">Set CBOR decoder determinism mode.
+<section class="detail" id="setDeterministicMode(boolean)">
+<h3>setDeterministicMode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></span>&nbsp;<span class="element-name">setDeterministicMode</span><wbr><span class="parameters">(boolean&nbsp;enforce)</span></div>
+<div class="block">Set CBOR decoder deterministic mode.
  <p>
  By default the decoder assumes that CBOR data conforms to the
  <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a> rules.
