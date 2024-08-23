@@ -172,22 +172,22 @@ public class InstrumentedTest {
     public void signatures() {
         signatureTestVector(R.raw.a256_hs256_kid_cbor,
                             new CBORHmacValidator(RawReader.secretKey));
-        signatureTestVector(R.raw.p256_es256_imp_cbor,
+        signatureTestVector(R.raw.p256_esp256_imp_cbor,
                 new CBORAsymKeyValidator(RawReader.ecKeyPair.getPublic()));
-        signatureTestVector(R.raw.p256_es256_imp_cbor,
+        signatureTestVector(R.raw.p256_esp256_imp_cbor,
                 new CBORAsymKeyValidator((optionalPublicKey, optionalKeyId, algorithm) -> {
                     assertTrue("imp",
                             optionalKeyId == null && optionalPublicKey == null);
                     return RawReader.ecKeyPair.getPublic();
                 }));
-        signatureTestVector(R.raw.p256_es256_kid_cbor,
+        signatureTestVector(R.raw.p256_esp256_kid_cbor,
                 new CBORAsymKeyValidator((optionalPublicKey, optionalKeyId, algorithm) -> {
                     assertTrue("kid",
                             RawReader.ecKeyId.equals(optionalKeyId.getString()) &&
                                     optionalPublicKey == null);
                     return RawReader.ecKeyPair.getPublic();
                 }));
-        signatureTestVector(R.raw.p256_es256_pub_cbor,
+        signatureTestVector(R.raw.p256_esp256_pub_cbor,
                 new CBORAsymKeyValidator((optionalPublicKey, optionalKeyId, algorithm) -> {
                     assertTrue("kid",
                             optionalKeyId == null &&
