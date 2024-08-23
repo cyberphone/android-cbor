@@ -140,6 +140,8 @@
 <dd><code>keyPair</code> - in Java/JCE format</dd>
 <dt>Returns:</dt>
 <dd>Private key in COSE format</dd>
+<dt>Throws:</dt>
+<dd><code><a href="../crypto/CryptoException.html" title="class in org.webpki.crypto">CryptoException</a></code></dd>
 </dl>
 </section>
 </li>
@@ -147,12 +149,19 @@
 <section class="detail" id="convert(org.webpki.cbor.CBORObject)">
 <h3>convert</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/KeyPair.html" title="class or interface in java.security" class="external-link">KeyPair</a></span>&nbsp;<span class="element-name">convert</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;cosePrivateKey)</span></div>
-<div class="block">Convert COSE private key to JCE.</div>
+<div class="block">Convert COSE private key to JCE.
+ <p>
+ Note: there <b>must not</b> be any additional items like key identifiers
+ or mandated signature algorithms.
+ </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>cosePrivateKey</code> - Private key in COSE format</dd>
 <dt>Returns:</dt>
 <dd>KeyPair as a Java/JCE object</dd>
+<dt>Throws:</dt>
+<dd><code><a href="../crypto/CryptoException.html" title="class in org.webpki.crypto">CryptoException</a></code></dd>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
 </dl>
 </section>
 </li>

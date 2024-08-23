@@ -137,6 +137,8 @@
 <dd><code>jcePublicKey</code> - Public key in Java/JCE format</dd>
 <dt>Returns:</dt>
 <dd>Public key in COSE format</dd>
+<dt>Throws:</dt>
+<dd><code><a href="../crypto/CryptoException.html" title="class in org.webpki.crypto">CryptoException</a></code></dd>
 </dl>
 </section>
 </li>
@@ -147,9 +149,16 @@
 <div class="block">Convert COSE public key to JCE.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>cosePublicKey</code> - Public key in COSE format</dd>
+<dd><code>cosePublicKey</code> - Public key in COSE format
+ <p>
+ Note: there <b>must not</b> be any additional items like key identifiers
+ or mandated signature algorithms.
+ </p></dd>
 <dt>Returns:</dt>
 <dd>Public key as a Java/JCE object</dd>
+<dt>Throws:</dt>
+<dd><code><a href="../crypto/CryptoException.html" title="class in org.webpki.crypto">CryptoException</a></code></dd>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
 </dl>
 </section>
 </li>

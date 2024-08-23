@@ -58,7 +58,7 @@ enabling constructs like the following:
 &nbsp;&nbsp;3: "FR7630002111110020050014382",<br>
 &nbsp;&nbsp;4: "https://banknet2.org",<br>
 &nbsp;&nbsp;5: "05768401",<br>
-&nbsp;&nbsp;6: "2022-09-29T09:34:08-05:00",<br>
+&nbsp;&nbsp;6: "2024-08-22T09:34:08-05:00",<br>
 &nbsp;&nbsp;7: {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;1: 38.8882,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;2: 77.0199<br>
@@ -79,7 +79,7 @@ enabling constructs like the following:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-3: h'9826dcbd4ce6e388f72edd9be413f2425a10f75b5fd83d95fa0cde53159a51d8'<br>
 &nbsp;&nbsp;&nbsp;&nbsp;},<br>
 <div style='height:0.5em'></div>&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:grey'>/ Signature value /</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class='webpkihighlite'>6: h'85972b2ed7a2c0fef035b73bf76381aa79f76600719ef243fbe5cedc501fce352e3af8f6966851e2398aa6f71529976fb27f57cbc7eb202b82d51043897a98cc'</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class='webpkihighlite'>6: h'fdfe515197a79f1ebf149ee8a107c7578a7ec90bb7452df972f11f6105479b05963f2fe1f5a79fa9515af9bd5eece61a90b346527fe34b59b18732361be55746'</span><br>
 &nbsp;&nbsp;}<br>
 }
 </div>
@@ -88,7 +88,7 @@ enabling constructs like the following:
 The same object expressed as hex-encoded CBOR:
 </p>
 <div class='webpkihexbox'>
-a801a3016a53706163652053686f7002663433352e30300363555344026d737061636573686f702e636f6d03781b465237363330303032313131313130303230303530303134333832047468747470733a2f2f62616e6b6e6574322e6f726705683035373638343031067819323032322d30392d32395430393a33343a30382d30353a303007a201fb404371b089a0275202fb405341460aa64c3020a3012804a401022001215820e812b1a6dcbc708f9ec43cc2921fa0a14e9d5eadcc6dc63471dd4b680c6236b52258209826dcbd4ce6e388f72edd9be413f2425a10f75b5fd83d95fa0cde53159a51d806584085972b2ed7a2c0fef035b73bf76381aa79f76600719ef243fbe5cedc501fce352e3af8f6966851e2398aa6f71529976fb27f57cbc7eb202b82d51043897a98cc
+a801a3016a53706163652053686f7002663433352e30300363555344026d737061636573686f702e636f6d03781b465237363330303032313131313130303230303530303134333832047468747470733a2f2f62616e6b6e6574322e6f726705683035373638343031067819323032342d30382d32325430393a33343a30382d30353a303007a201fb404371b089a0275202fb405341460aa64c3020a3012804a401022001215820e812b1a6dcbc708f9ec43cc2921fa0a14e9d5eadcc6dc63471dd4b680c6236b52258209826dcbd4ce6e388f72edd9be413f2425a10f75b5fd83d95fa0cde53159a51d8065840fdfe515197a79f1ebf149ee8a107c7578a7ec90bb7452df972f11f6105479b05963f2fe1f5a79fa9515af9bd5eece61a90b346527fe34b59b18732361be55746
 </div>
 <i>Explanation: </i>
 Labels <code>1</code>-<code>7</code> represent application data
@@ -125,6 +125,8 @@ A compliant <code>keyId</code> <b>must</b> uniquely identify a specific signatur
 <td><i>Optional</i> public key in COSE format.  
 Note that ECDSA public keys <b>must</b> be supplied with a <i>value parameter</i>
 for the y-coordinate as well.
+The public key object <b>must not</b> contain any additional information like
+key identifiers or algorithms.
 </td></tr>
 
 <tr><td style='text-align:center'><code>5</code></td><td><code>certificatePath</code></td>
@@ -174,11 +176,11 @@ Currently supported signature algorithms:
 <tr style='text-align:center'><td><code>HS256</code></td><td>5</td><td></td></tr>
 <tr style='text-align:center'><td><code>HS384</code></td><td>6</td><td></td></tr>
 <tr style='text-align:center'><td><code>HS512</code></td><td>7</td><td></td></tr>
-<tr style='text-align:center'><td><code>Ed25519</code></td><td>-8</td><td>1</td></tr>
-<tr style='text-align:center'><td><code>Ed448</code></td><td>-9</td><td>1</td></tr>
-<tr style='text-align:center'><td><code>ESP256</code></td><td>-7</td><td>1</td></tr>
-<tr style='text-align:center'><td><code>ESP384</code></td><td>-35</td><td>1</td></tr>
-<tr style='text-align:center'><td><code>ESP512</code></td><td>-36</td><td>1</td></tr>
+<tr style='text-align:center'><td><code>Ed25519</code></td><td>-50</td><td>1</td></tr>
+<tr style='text-align:center'><td><code>Ed448</code></td><td>-51</td><td>1</td></tr>
+<tr style='text-align:center'><td><code>ESP256</code></td><td>-9</td><td>1</td></tr>
+<tr style='text-align:center'><td><code>ESP384</code></td><td>-48</td><td>1</td></tr>
+<tr style='text-align:center'><td><code>ESP512</code></td><td>-49</td><td>1</td></tr>
 <tr style='text-align:center'><td><code>PS256</code></td><td>-37</td><td></td></tr>
 <tr style='text-align:center'><td><code>PS384</code></td><td>-38</td><td></td></tr>
 <tr style='text-align:center'><td><code>PS512</code></td><td>-39</td><td></td></tr>

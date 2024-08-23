@@ -100,6 +100,7 @@ public class CBORMap extends CBORObject {
      * @param key Key
      * @param value Value
      * @return <code>this</code>
+     * @throws CBORException
      */
     public CBORMap set(CBORObject key, CBORObject value) {
         key = getKey(key);
@@ -197,6 +198,7 @@ public class CBORMap extends CBORObject {
      * 
      * @param key Key
      * @return <code>value</code>
+     * @throws CBORException
      */
     public CBORObject get(CBORObject key) {
         return lookup(key, true).value;
@@ -242,6 +244,7 @@ public class CBORMap extends CBORObject {
      * 
      * @param key Key
      * @return <code>value</code>
+     * @throws CBORException
      */
     public CBORObject remove(CBORObject key) {
         Entry targetEntry = lookup(key, true);
