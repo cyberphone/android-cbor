@@ -44,7 +44,7 @@ public class RawReader {
     }
 
     static CBORObject getCBORResource(int resource) {
-        return CBORDiagnosticNotation.decode(getStringResource(resource));
+        return CBORDiagnosticNotation.convert(getStringResource(resource));
     }
 
     static String getCBORText(int resource) {

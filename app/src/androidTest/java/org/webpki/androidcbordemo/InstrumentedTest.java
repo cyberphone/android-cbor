@@ -609,11 +609,11 @@ public class InstrumentedTest {
 
     void utf8EncoderTest(String string, boolean ok) {
          try {
-            String encodedString = CBORDiagnosticNotation.decode(
+            String encodedString = CBORDiagnosticNotation.convert(
                     "\"" + string + "\"").getString();
             assertTrue("OK", ok);
             assertTrue("Conv", string.equals(encodedString));
-            byte[] encodedBytes = CBORDiagnosticNotation.decode(
+            byte[] encodedBytes = CBORDiagnosticNotation.convert(
                     "'" + string + "'").getBytes();
             assertTrue("OK", ok);
             assertTrue("Conv2", Arrays.equals(encodedBytes, string.getBytes("utf-8")));

@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
     public void doVerify(String cborData) {
         try {
             // Normally you SHOULD know what to expect so this code is a bit over-the-top
-            CBORObject signedData = CBORDiagnosticNotation.decode(cborData);
+            CBORObject signedData = CBORDiagnosticNotation.convert(cborData);
             CBORMap coreMap = unwrapOptionalTag(signedData);
             CBORObject csfLabel = null;
             publicKey = null;
@@ -422,7 +422,7 @@ public class MainActivity extends AppCompatActivity {
     public void doSign(String cborData, String keyType) {
         try {
             KEY_TYPES sigType = KEY_TYPES.valueOf(keyType);
-            final CBORObject dataToBeSigned = CBORDiagnosticNotation.decode(cborData);
+            final CBORObject dataToBeSigned = CBORDiagnosticNotation.convert(cborData);
             CBORMap cborMap = unwrapOptionalTag(dataToBeSigned);
             CBORObject csfLabel = new CBORInt(0);
             if (cborMap.size() > 0) {
@@ -542,7 +542,7 @@ public class MainActivity extends AppCompatActivity {
     @JavascriptInterface
     public void doDecrypt(String cborEncryptionObject) {
         try {
-            CBORObject cefObject = CBORDiagnosticNotation.decode(cborEncryptionObject);
+            CBORObject cefObject = CBORDiagnosticNotation.convert(cborEncryptionObject);
             CBORMap cefMap = unwrapOptionalTag(cefObject);
             CBORDecrypter<?> decrypter;
             String encryptionInfo;
