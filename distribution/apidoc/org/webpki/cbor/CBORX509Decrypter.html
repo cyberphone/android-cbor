@@ -102,6 +102,11 @@
 <div class="col-last even-row-color">
 <div class="block">Decrypter engine implementation interface.</div>
 </div>
+<div class="col-first odd-row-color"><code>static interface&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="CBORX509Decrypter.KeyLocator.html" class="type-name-link" title="interface in org.webpki.cbor">CBORX509Decrypter.KeyLocator</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Decrypter private key locator.</div>
+</div>
 </div>
 </section>
 </li>
@@ -116,6 +121,10 @@
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.webpki.cbor.CBORX509Decrypter.DecrypterImpl)" class="member-name-link">CBORX509Decrypter</a><wbr>(<a href="CBORX509Decrypter.DecrypterImpl.html" title="interface in org.webpki.cbor">CBORX509Decrypter.DecrypterImpl</a>&nbsp;decrypterImpl)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates a decrypter object with a decrypter interface.</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(org.webpki.cbor.CBORX509Decrypter.KeyLocator)" class="member-name-link">CBORX509Decrypter</a><wbr>(<a href="CBORX509Decrypter.KeyLocator.html" title="interface in org.webpki.cbor">CBORX509Decrypter.KeyLocator</a>&nbsp;keyLocator)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Creates a decrypter object with a key locator interface.</div>
 </div>
 </div>
 </section>
@@ -141,6 +150,20 @@
 <section class="constructor-details" id="constructor-detail">
 <h2>Constructor Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="&lt;init&gt;(org.webpki.cbor.CBORX509Decrypter.KeyLocator)">
+<h3>CBORX509Decrypter</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORX509Decrypter</span><wbr><span class="parameters">(<a href="CBORX509Decrypter.KeyLocator.html" title="interface in org.webpki.cbor">CBORX509Decrypter.KeyLocator</a>&nbsp;keyLocator)</span></div>
+<div class="block">Creates a decrypter object with a key locator interface.
+ <p>
+ Uses the Java crypto provider system.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>keyLocator</code> - Key locator implementation</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="&lt;init&gt;(org.webpki.cbor.CBORX509Decrypter.DecrypterImpl)">
 <h3>CBORX509Decrypter</h3>

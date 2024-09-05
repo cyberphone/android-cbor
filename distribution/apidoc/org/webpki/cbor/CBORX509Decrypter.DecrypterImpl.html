@@ -98,20 +98,13 @@
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>byte[]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#decrypt(java.security.PrivateKey,byte%5B%5D,java.security.PublicKey,org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms)" class="member-name-link">decrypt</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#decrypt(java.security.cert.X509Certificate%5B%5D,byte%5B%5D,java.security.PublicKey,org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms)" class="member-name-link">decrypt</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a>[]&nbsp;certificatePath,
  byte[]&nbsp;optionalEncryptedKey,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;optionalEphemeralKey,
  <a href="../crypto/KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
  <a href="../crypto/ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Decrypt encrypted key.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#locate(java.security.cert.X509Certificate%5B%5D,org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms)" class="member-name-link">locate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a>[]&nbsp;certificatePath,
- <a href="../crypto/KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
- <a href="../crypto/ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Locate private decryption key.</div>
 </div>
 </div>
 </div>
@@ -128,45 +121,27 @@
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="locate(java.security.cert.X509Certificate[],org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms)">
-<h3>locate</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a></span>&nbsp;<span class="element-name">locate</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a>[]&nbsp;certificatePath,
- <a href="../crypto/KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
- <a href="../crypto/ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm)</span></div>
-<div class="block">Locate private decryption key.
- <p>
- Implementations should preferably throw <a href="../crypto/CryptoException.html" title="class in org.webpki.crypto"><code>CryptoException</code></a> for
- errors related to cryptography and security.
- </p>
- <p>
- This interface also enables encryption parameter verification.
- </p></div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>certificatePath</code> - Certificate path in the encryption objectt</dd>
-<dd><code>keyEncryptionAlgorithm</code> - The requested key encryption algorithm</dd>
-<dd><code>contentEncryptionAlgorithm</code> - The requested content encryption algorithm</dd>
-<dt>Returns:</dt>
-<dd>Private decryption key.</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="decrypt(java.security.PrivateKey,byte[],java.security.PublicKey,org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms)">
+<section class="detail" id="decrypt(java.security.cert.X509Certificate[],byte[],java.security.PublicKey,org.webpki.crypto.KeyEncryptionAlgorithms,org.webpki.crypto.ContentEncryptionAlgorithms)">
 <h3>decrypt</h3>
-<div class="member-signature"><span class="return-type">byte[]</span>&nbsp;<span class="element-name">decrypt</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey,
+<div class="member-signature"><span class="return-type">byte[]</span>&nbsp;<span class="element-name">decrypt</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/cert/X509Certificate.html" title="class or interface in java.security.cert" class="external-link">X509Certificate</a>[]&nbsp;certificatePath,
  byte[]&nbsp;optionalEncryptedKey,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/PublicKey.html" title="class or interface in java.security" class="external-link">PublicKey</a>&nbsp;optionalEphemeralKey,
  <a href="../crypto/KeyEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">KeyEncryptionAlgorithms</a>&nbsp;keyEncryptionAlgorithm,
  <a href="../crypto/ContentEncryptionAlgorithms.html" title="enum class in org.webpki.crypto">ContentEncryptionAlgorithms</a>&nbsp;contentEncryptionAlgorithm)</span></div>
 <div class="block">Decrypt encrypted key.
  <p>
- Implementations should preferably throw <a href="../crypto/CryptoException.html" title="class in org.webpki.crypto"><code>CryptoException</code></a> for
+ This interface assumes that the private key resides in an external
+ hardware or software solution.  The private key is either implicit
+ or located by the <code>optionalPublicKey</code> or
+ <code>optionalKeyId</code> parameters. 
+ </p>
+ <p>
+ Implementations <b>must</b> throw <a href="../crypto/CryptoException.html" title="class in org.webpki.crypto"><code>CryptoException</code></a> for
  errors related to cryptography and security.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>privateKey</code> - The private decryption key</dd>
+<dd><code>certificatePath</code> - Certificate path in the encryption object</dd>
 <dd><code>optionalEncryptedKey</code> - Optional encrypted key</dd>
 <dd><code>optionalEphemeralKey</code> - Optional ephemeral key</dd>
 <dd><code>keyEncryptionAlgorithm</code> - The requested key encryption algorithm</dd>

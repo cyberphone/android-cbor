@@ -102,6 +102,11 @@
 <div class="col-last even-row-color">
 <div class="block">Decrypter engine implementation interface.</div>
 </div>
+<div class="col-first odd-row-color"><code>static interface&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="CBORAsymKeyDecrypter.KeyLocator.html" class="type-name-link" title="interface in org.webpki.cbor">CBORAsymKeyDecrypter.KeyLocator</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Decrypter private key locator.</div>
+</div>
 </div>
 </section>
 </li>
@@ -120,6 +125,10 @@
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(org.webpki.cbor.CBORAsymKeyDecrypter.DecrypterImpl)" class="member-name-link">CBORAsymKeyDecrypter</a><wbr>(<a href="CBORAsymKeyDecrypter.DecrypterImpl.html" title="interface in org.webpki.cbor">CBORAsymKeyDecrypter.DecrypterImpl</a>&nbsp;decrypterImpl)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Creates a decrypter object with a decrypter interface.</div>
+</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.webpki.cbor.CBORAsymKeyDecrypter.KeyLocator)" class="member-name-link">CBORAsymKeyDecrypter</a><wbr>(<a href="CBORAsymKeyDecrypter.KeyLocator.html" title="interface in org.webpki.cbor">CBORAsymKeyDecrypter.KeyLocator</a>&nbsp;keyLocator)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Creates a decrypter object with a key locator interface.</div>
 </div>
 </div>
 </section>
@@ -151,11 +160,28 @@
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORAsymKeyDecrypter</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/PrivateKey.html" title="class or interface in java.security" class="external-link">PrivateKey</a>&nbsp;privateKey)</span></div>
 <div class="block">Creates a decrypter object with a private key.
  <p>
+ Uses the Java crypto provider system.
+ </p>
+ <p>
  This constructor presumes that the decryption key is given by the context.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>privateKey</code> - Decryption key</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(org.webpki.cbor.CBORAsymKeyDecrypter.KeyLocator)">
+<h3>CBORAsymKeyDecrypter</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORAsymKeyDecrypter</span><wbr><span class="parameters">(<a href="CBORAsymKeyDecrypter.KeyLocator.html" title="interface in org.webpki.cbor">CBORAsymKeyDecrypter.KeyLocator</a>&nbsp;keyLocator)</span></div>
+<div class="block">Creates a decrypter object with a key locator interface.
+ <p>
+ Uses the Java crypto provider system.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>keyLocator</code> - Key locator implementation</dd>
 </dl>
 </section>
 </li>
