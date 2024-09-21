@@ -56,7 +56,7 @@ import org.webpki.cbor.CBORAsymKeyEncrypter;
 import org.webpki.cbor.CBORAsymKeySigner;
 import org.webpki.cbor.CBORAsymKeyValidator;
 import org.webpki.cbor.CBORBigInt;
-import org.webpki.cbor.CBORBoolean;
+import org.webpki.cbor.CBORBool;
 import org.webpki.cbor.CBORBytes;
 import org.webpki.cbor.CBORCryptoConstants;
 import org.webpki.cbor.CBORCryptoUtils;
@@ -256,8 +256,8 @@ public class MainActivity extends AppCompatActivity {
                      new CBORBigInt(new BigInteger("-653625362513652165356656")))
                 .set(new CBORInt(++index), new CBORArray()
                         .add(new CBORNull())
-                        .add(new CBORBoolean(true))
-                        .add(new CBORBoolean(false)))
+                        .add(new CBORBool(true))
+                        .add(new CBORBool(false)))
                 .set(new CBORInt(++index), new CBORArray()
                         .add(new CBORFloat(0.0))
                         .add(new CBORFloat(2.0000001e+38))
@@ -550,7 +550,7 @@ public class MainActivity extends AppCompatActivity {
                 if (cefMap.get(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
                         .getMap().containsKey(CBORCryptoConstants.CERT_PATH_LABEL)) {
                     encryptionInfo = "PKI";
-                    decrypter = new CBORX509Decrypter(new CBORX509Decrypter.DecrypterImpl() {
+                    decrypter = new CBORX509Decrypter(new CBORX509Decrypter.KeyLocator() {
                         @Override
                         public PrivateKey locate(X509Certificate[] certificatePath,
                                                  KeyEncryptionAlgorithms keyEncryptionAlgorithm,
@@ -558,23 +558,10 @@ public class MainActivity extends AppCompatActivity {
                             return RawReader.ecKeyPair.getPrivate();
                         }
 
-                        @Override
-                        public byte[] decrypt(PrivateKey privateKey,
-                                              byte[] optionalEncryptedKey,
-                                              PublicKey optionalEphemeralKey,
-                                              KeyEncryptionAlgorithms keyEncryptionAlgorithm,
-                                              ContentEncryptionAlgorithms contentEncryptionAlgorithm) {
-                            return EncryptionCore.decryptKey(true,
-                                                             privateKey,
-                                                             optionalEncryptedKey,
-                                                             optionalEphemeralKey,
-                                                             keyEncryptionAlgorithm,
-                                                             contentEncryptionAlgorithm);
-                        }
                     });
                 } else {
                     encryptionInfo = "ASYMMETRIC";
-                    decrypter = new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.DecrypterImpl() {
+                    decrypter = new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.KeyLocator() {
                         @Override
                         public PrivateKey locate(PublicKey optionalPublicKey,
                                                  CBORObject optionalKeyId,
@@ -584,19 +571,6 @@ public class MainActivity extends AppCompatActivity {
                                     RawReader.rsaKeyPair : RawReader.ecKeyPair).getPrivate();
                         }
 
-                        @Override
-                        public byte[] decrypt(PrivateKey privateKey,
-                                              byte[] optionalEncryptedKey,
-                                              PublicKey optionalEphemeralKey,
-                                              KeyEncryptionAlgorithms keyEncryptionAlgorithm,
-                                              ContentEncryptionAlgorithms contentEncryptionAlgorithm) {
-                            return EncryptionCore.decryptKey(true,
-                                                             privateKey,
-                                                             optionalEncryptedKey,
-                                                             optionalEphemeralKey,
-                                                             keyEncryptionAlgorithm,
-                                                             contentEncryptionAlgorithm);
-                        }
                     });
                 }
             } else {

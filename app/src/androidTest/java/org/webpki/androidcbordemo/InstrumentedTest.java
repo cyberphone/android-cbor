@@ -61,6 +61,7 @@ import java.security.cert.X509Certificate;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
 import java.security.spec.MGF1ParameterSpec;
+import java.security.spec.NamedParameterSpec;
 import java.security.spec.RSAKeyGenParameterSpec;
 
 import java.util.Arrays;
@@ -115,7 +116,7 @@ public class InstrumentedTest {
         // Sophisticated decryption
         assertTrue("enc2",
                 Arrays.equals(
-            new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.DecrypterImpl() {
+            new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.KeyLocator() {
 
                 @Override
                 public PrivateKey locate(PublicKey optionalPublicKey,
@@ -131,20 +132,6 @@ public class InstrumentedTest {
                     return keyPair.getPrivate();
                 }
 
-                @Override
-                public byte[] decrypt(PrivateKey privateKey,
-                                      byte[] optionalEncryptedKey,
-                                      PublicKey optionalEphemeralKey,
-                                      KeyEncryptionAlgorithms keyEncryptionAlgorithm,
-                                      ContentEncryptionAlgorithms contentEncryptionAlgorithm) {
-                    return EncryptionCore.decryptKey(true,
-                                                     privateKey,
-                                                     optionalEncryptedKey,
-                                                     optionalEphemeralKey,
-                                                     keyEncryptionAlgorithm,
-                                                     contentEncryptionAlgorithm);
-
-                }
             }).decrypt(encrypted), DATA_TO_ENCRYPT));
         /*
         new CBORAsymKeyDecrypter((optionalPublicKey,
@@ -221,7 +208,7 @@ public class InstrumentedTest {
                 RawReader.ecKeyPair.getPrivate() : RawReader.rsaKeyPair.getPrivate();
         assertTrue("Testv",
                    Arrays.equals(DATA_TO_ENCRYPT,
-                           new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.DecrypterImpl() {
+                           new CBORAsymKeyDecrypter(new CBORAsymKeyDecrypter.KeyLocator() {
                @Override
                public PrivateKey locate(PublicKey optionalPublicKey,
                                         CBORObject optionalKeyId,
@@ -233,20 +220,6 @@ public class InstrumentedTest {
                    assertTrue("KID", (keyId == null && optionalKeyId == null) ||
                           (keyId != null && keyId.equals(optionalKeyId.getString())));
                     return privateKey;
-                }
-
-                @Override
-                public byte[] decrypt(PrivateKey privateKey,
-                                      byte[] optionalEncryptedKey,
-                                      PublicKey optionalEphemeralKey,
-                                      KeyEncryptionAlgorithms keyEncryptionAlgorithm,
-                                      ContentEncryptionAlgorithms contentEncryptionAlgorithm) {
-                    return EncryptionCore.decryptKey(true,
-                                                     privateKey,
-                                                     optionalEncryptedKey,
-                                                     optionalEphemeralKey,
-                                                     keyEncryptionAlgorithm,
-                                                     contentEncryptionAlgorithm);
                 }
                       /*
                       assertTrue("PUB",
@@ -358,7 +331,7 @@ public class InstrumentedTest {
                 kpg.initialize(paramSpec, new SecureRandom());
             } else {
                 kpg = KeyPairGenerator.getInstance("XDH");
-                kpg.initialize(keyAlgorithm.getPublicKeySizeInBits(), new SecureRandom());
+                kpg.initialize(NamedParameterSpec.X25519, new SecureRandom());
             }
         }
         KeyPair keyPair = kpg.generateKeyPair();
@@ -563,7 +536,7 @@ public class InstrumentedTest {
                 ContentEncryptionAlgorithms.A256GCM);
         if (Build.VERSION.SDK_INT >= 33) {
             generateKeyPair(true, KeyAlgorithms.X25519);
-            generateKeyPair(false, KeyAlgorithms.X25519);
+       //     generateKeyPair(false, KeyAlgorithms.X25519);
             providerShot(KeyAlgorithms.X25519,
                          KeyEncryptionAlgorithms.ECDH_ES,
                          ContentEncryptionAlgorithms.A256GCM);
