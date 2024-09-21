@@ -56,7 +56,7 @@ import org.webpki.cbor.CBORAsymKeyEncrypter;
 import org.webpki.cbor.CBORAsymKeySigner;
 import org.webpki.cbor.CBORAsymKeyValidator;
 import org.webpki.cbor.CBORBigInt;
-import org.webpki.cbor.CBORBool;
+import org.webpki.cbor.CBORBoolean;
 import org.webpki.cbor.CBORBytes;
 import org.webpki.cbor.CBORCryptoConstants;
 import org.webpki.cbor.CBORCryptoUtils;
@@ -256,8 +256,8 @@ public class MainActivity extends AppCompatActivity {
                      new CBORBigInt(new BigInteger("-653625362513652165356656")))
                 .set(new CBORInt(++index), new CBORArray()
                         .add(new CBORNull())
-                        .add(new CBORBool(true))
-                        .add(new CBORBool(false)))
+                        .add(new CBORBoolean(true))
+                        .add(new CBORBoolean(false)))
                 .set(new CBORInt(++index), new CBORArray()
                         .add(new CBORFloat(0.0))
                         .add(new CBORFloat(2.0000001e+38))
