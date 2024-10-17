@@ -436,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
                     csfLabel = new CBORString("signature");
                 }
             }
-            CBORSigner signer;
+            CBORSigner<?> signer;
             switch (sigType) {
                 case EC_KEY:
                 case RSA_KEY:
