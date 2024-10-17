@@ -62,3 +62,6 @@ Android CBOR - Relese Notes
 
 1.1.1
 - Refactored the CBORDecoder option scheme
+
+1.1.2
+- Removed CBORTypes

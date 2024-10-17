@@ -76,7 +76,7 @@ import org.webpki.cbor.CBORSigner;
 import org.webpki.cbor.CBORSymKeyDecrypter;
 import org.webpki.cbor.CBORSymKeyEncrypter;
 import org.webpki.cbor.CBORString;
-import org.webpki.cbor.CBORTypes;
+import org.webpki.cbor.CBORTag;
 import org.webpki.cbor.CBORValidator;
 import org.webpki.cbor.CBORX509Decrypter;
 import org.webpki.cbor.CBORX509Encrypter;
@@ -283,9 +283,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static CBORMap unwrapOptionalTag(CBORObject rawContainer) {
         // It might be tagged
-        if (rawContainer.getType() == CBORTypes.TAG) {
+        if (rawContainer instanceof CBORTag) {
             CBORObject container = rawContainer.getTag().getTaggedObject();
-            if (container.getType() == CBORTypes.ARRAY) {
+            if (container instanceof CBORArray) {
                 container = container.getArray().get(1);
             }
             return container.getMap();
@@ -306,11 +306,11 @@ public class MainActivity extends AppCompatActivity {
             keyId = null;
             for (CBORObject key : coreMap.getKeys()) {
                 CBORObject value = coreMap.get(key);
-                if (value.getType() != CBORTypes.MAP) continue;
+                if (!(value instanceof CBORMap)) continue;
                 CBORMap csfCandidate = value.getMap();
                 if (!csfCandidate.containsKey(CBORCryptoConstants.ALGORITHM_LABEL)) continue;
                 value = csfCandidate.get(CBORCryptoConstants.ALGORITHM_LABEL);
-                if (value.getType() != CBORTypes.INTEGER) continue;
+                if (!(value instanceof CBORInt)) continue;
                 int tempAlgorithm = value.getInt32();
                 CBORObject tempKeyId = null;
                 if (csfCandidate.containsKey(CBORCryptoConstants.KEY_ID_LABEL)) {
@@ -318,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (!csfCandidate.containsKey(CBORCryptoConstants.SIGNATURE_LABEL)) continue;
                 value = csfCandidate.get(CBORCryptoConstants.SIGNATURE_LABEL);
-                if (value.getType() != CBORTypes.BYTES) continue;
+                if (!(value instanceof CBORBytes)) continue;
                 PublicKey tempPublicKey = null;
                 if (csfCandidate.containsKey(CBORCryptoConstants.PUBLIC_KEY_LABEL)) {
                     try {
@@ -427,7 +427,7 @@ public class MainActivity extends AppCompatActivity {
             CBORObject csfLabel = new CBORInt(0);
             if (cborMap.size() > 0) {
                 csfLabel = cborMap.getKeys()[cborMap.size() - 1];
-                if (csfLabel.getType() == CBORTypes.INTEGER) {
+                if (csfLabel instanceof CBORInt) {
                     BigInteger value = csfLabel.getBigInteger();
                     value = value.compareTo(BigInteger.ZERO) >= 0 ?
                         value.add(BigInteger.ONE) : value.subtract(BigInteger.ONE);
