@@ -203,8 +203,8 @@ public class InstrumentedTest {
         CBORObject encryptionObject = CBORDecoder.decode(RawReader.getRawResource(resource));
         CBORMap cefContainer = MainActivity.unwrapOptionalTag(encryptionObject);
         PrivateKey privateKey = cefContainer
-                .get(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
-                     .getMap().containsKey(CBORCryptoConstants.EPHEMERAL_KEY_LABEL) ?
+                .get(CBORCryptoConstants.CEF_KEY_ENCRYPTION_LBL)
+                     .getMap().containsKey(CBORCryptoConstants.CEF_EPHEMERAL_KEY_LBL) ?
                 RawReader.ecKeyPair.getPrivate() : RawReader.rsaKeyPair.getPrivate();
         assertTrue("Testv",
                    Arrays.equals(DATA_TO_ENCRYPT,
@@ -231,15 +231,15 @@ public class InstrumentedTest {
 
                        */
                   }).setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null).decrypt(encryptionObject)));
-        byte[] tag = cefContainer.remove(CBORCryptoConstants.TAG_LABEL).getBytes();
-        cefContainer.set(CBORCryptoConstants.TAG_LABEL, new CBORBytes(tag));
+        byte[] tag = cefContainer.remove(CBORCryptoConstants.CEF_TAG_LBL).getBytes();
+        cefContainer.set(CBORCryptoConstants.CEF_TAG_LBL, new CBORBytes(tag));
         new CBORAsymKeyDecrypter(privateKey)
                 .setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
                 .decrypt(encryptionObject);
 
-        tag = cefContainer.remove(CBORCryptoConstants.TAG_LABEL).getBytes();
+        tag = cefContainer.remove(CBORCryptoConstants.CEF_TAG_LBL).getBytes();
         tag[5]++;
-        cefContainer.set(CBORCryptoConstants.TAG_LABEL, new CBORBytes(tag));
+        cefContainer.set(CBORCryptoConstants.CEF_TAG_LBL, new CBORBytes(tag));
         try {
             new CBORAsymKeyDecrypter(privateKey)
                     .setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
@@ -414,11 +414,11 @@ public class InstrumentedTest {
         new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
         byte[] signature =
         signedData.getMap().get(SIGNATURE_LABEL)
-                .getMap().remove(CBORCryptoConstants.SIGNATURE_LABEL).getBytes();
+                .getMap().remove(CBORCryptoConstants.CSF_SIGNATURE_LBL).getBytes();
         signature[5]++;
         try {
             signedData.getMap().get(SIGNATURE_LABEL)
-                    .getMap().set(CBORCryptoConstants.SIGNATURE_LABEL,
+                    .getMap().set(CBORCryptoConstants.CSF_SIGNATURE_LBL,
                                         new CBORBytes(signature));
             new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
             fail("must not");

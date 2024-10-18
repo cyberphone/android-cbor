@@ -308,31 +308,31 @@ public class MainActivity extends AppCompatActivity {
                 CBORObject value = coreMap.get(key);
                 if (!(value instanceof CBORMap)) continue;
                 CBORMap csfCandidate = value.getMap();
-                if (!csfCandidate.containsKey(CBORCryptoConstants.ALGORITHM_LABEL)) continue;
-                value = csfCandidate.get(CBORCryptoConstants.ALGORITHM_LABEL);
+                if (!csfCandidate.containsKey(CBORCryptoConstants.CXF_ALGORITHM_LBL)) continue;
+                value = csfCandidate.get(CBORCryptoConstants.CXF_ALGORITHM_LBL);
                 if (!(value instanceof CBORInt)) continue;
                 int tempAlgorithm = value.getInt32();
                 CBORObject tempKeyId = null;
-                if (csfCandidate.containsKey(CBORCryptoConstants.KEY_ID_LABEL)) {
-                    tempKeyId = csfCandidate.get(CBORCryptoConstants.KEY_ID_LABEL);
+                if (csfCandidate.containsKey(CBORCryptoConstants.CXF_KEY_ID_LBL)) {
+                    tempKeyId = csfCandidate.get(CBORCryptoConstants.CXF_KEY_ID_LBL);
                 }
-                if (!csfCandidate.containsKey(CBORCryptoConstants.SIGNATURE_LABEL)) continue;
-                value = csfCandidate.get(CBORCryptoConstants.SIGNATURE_LABEL);
+                if (!csfCandidate.containsKey(CBORCryptoConstants.CSF_SIGNATURE_LBL)) continue;
+                value = csfCandidate.get(CBORCryptoConstants.CSF_SIGNATURE_LBL);
                 if (!(value instanceof CBORBytes)) continue;
                 PublicKey tempPublicKey = null;
-                if (csfCandidate.containsKey(CBORCryptoConstants.PUBLIC_KEY_LABEL)) {
+                if (csfCandidate.containsKey(CBORCryptoConstants.CXF_PUBLIC_KEY_LBL)) {
                     try {
                         tempPublicKey = CBORPublicKey.convert(
-                                csfCandidate.get(CBORCryptoConstants.PUBLIC_KEY_LABEL));
+                                csfCandidate.get(CBORCryptoConstants.CXF_PUBLIC_KEY_LBL));
                     } catch (Exception e) {
                         continue;
                     }
                 }
                 X509Certificate[] tempCertificatePath = null;
-                if (csfCandidate.containsKey(CBORCryptoConstants.CERT_PATH_LABEL)) {
+                if (csfCandidate.containsKey(CBORCryptoConstants.CXF_CERT_PATH_LBL)) {
                     try {
                         tempCertificatePath = CBORCryptoUtils.decodeCertificateArray(
-                                csfCandidate.get(CBORCryptoConstants.CERT_PATH_LABEL).getArray());
+                                csfCandidate.get(CBORCryptoConstants.CXF_CERT_PATH_LBL).getArray());
                     } catch (Exception e) {
                         continue;
                     }
@@ -541,9 +541,9 @@ public class MainActivity extends AppCompatActivity {
             CBORMap cefMap = unwrapOptionalTag(cefObject);
             CBORDecrypter<?> decrypter;
             String encryptionInfo;
-            if (cefMap.containsKey(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)) {
-                if (cefMap.get(CBORCryptoConstants.KEY_ENCRYPTION_LABEL)
-                        .getMap().containsKey(CBORCryptoConstants.CERT_PATH_LABEL)) {
+            if (cefMap.containsKey(CBORCryptoConstants.CEF_KEY_ENCRYPTION_LBL)) {
+                if (cefMap.get(CBORCryptoConstants.CEF_KEY_ENCRYPTION_LBL)
+                        .getMap().containsKey(CBORCryptoConstants.CXF_CERT_PATH_LBL)) {
                     encryptionInfo = "PKI";
                     decrypter = new CBORX509Decrypter(new CBORX509Decrypter.KeyLocator() {
                         @Override
