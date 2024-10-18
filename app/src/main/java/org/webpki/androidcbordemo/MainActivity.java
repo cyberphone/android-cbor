@@ -436,24 +436,19 @@ public class MainActivity extends AppCompatActivity {
                     csfLabel = new CBORString("signature");
                 }
             }
-            CBORSigner<?> signer;
-            switch (sigType) {
-                case EC_KEY:
-                case RSA_KEY:
+            CBORSigner<?> signer = switch (sigType) {
+                case EC_KEY, RSA_KEY -> {
                     KeyPair keyPair = sigType == KEY_TYPES.RSA_KEY ?
-                                              RawReader.rsaKeyPair : RawReader.ecKeyPair;
-                    signer = new CBORAsymKeySigner(keyPair.getPrivate())
+                            RawReader.rsaKeyPair : RawReader.ecKeyPair;
+                    yield new CBORAsymKeySigner(keyPair.getPrivate())
                             .setPublicKey(keyPair.getPublic());
-                    break;
-                case PKI:
-                    signer = new CBORX509Signer(RawReader.ecKeyPair.getPrivate(),
-                                                RawReader.ecCertPath);
-                    break;
-                default:
-                    signer = new CBORHmacSigner(RawReader.secretKey,
-                                                HmacAlgorithms.HMAC_SHA256)
-                            .setKeyId(new CBORString(RawReader.secretKeyId));
-            }
+                }
+                case PKI -> new CBORX509Signer(RawReader.ecKeyPair.getPrivate(),
+                        RawReader.ecCertPath);
+                default -> new CBORHmacSigner(RawReader.secretKey,
+                        HmacAlgorithms.HMAC_SHA256)
+                        .setKeyId(new CBORString(RawReader.secretKeyId));
+            };
             signer.setIntercepter(new CBORCryptoUtils.Intercepter() {
                 @Override public CBORObject wrap(CBORMap mapToSign) {
                     return dataToBeSigned;
