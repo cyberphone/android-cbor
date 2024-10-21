@@ -104,7 +104,8 @@ public class OkpSupport {
             throw new CryptoException("Wrong public key length for: " + keyAlgorithm.toString());
         }
         try {
-            return KeyFactory.getInstance(keyAlgorithm.getKeyType() == KeyTypes.XEC ? "XDH" : "EC")
+            return KeyFactory.getInstance(keyAlgorithm.getKeyType() == KeyTypes.EDDSA ? "Ed25519" :
+                    keyAlgorithm.getKeyType() == KeyTypes.XEC ? "XDH" : "EC")
                     .generatePublic(new X509EncodedKeySpec(
                         addByteArrays(pubKeyPrefix.get(keyAlgorithm), x)));
         } catch (GeneralSecurityException e) {
