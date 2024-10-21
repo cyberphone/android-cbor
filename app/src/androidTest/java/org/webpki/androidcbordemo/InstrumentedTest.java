@@ -6,6 +6,7 @@ import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.security.keystore.KeyProtection;
 
+import android.util.Base64;
 import android.util.Log;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -47,6 +48,7 @@ import org.webpki.crypto.OkpSupport;
 
 import org.webpki.util.HexaDecimal;
 
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
@@ -64,6 +66,7 @@ import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.NamedParameterSpec;
 import java.security.spec.RSAKeyGenParameterSpec;
 
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -153,6 +156,30 @@ public class InstrumentedTest {
     void signatureTestVector(int resource, CBORValidator<?> validator) {
         CBORMap signedObject = CBORDecoder.decode(RawReader.getRawResource(resource)).getMap();
         validator.validate(SIGNATURE_LABEL, signedObject);
+    }
+
+    @Test
+    public void certPublicKey() {
+        Log.i("Ed25519", RawReader.ed25519CertPath[0].getPublicKey().toString());
+        Log.i("EC", RawReader.ecCertPath[0].getPublicKey().toString());
+    }
+
+    @Test
+    public void openSSLPublicKey() throws Exception {
+        KeyFactory.getInstance("Ed25519").generatePublic(
+                new X509EncodedKeySpec(new byte[]
+            {(byte)0x30, (byte)0x2a, (byte)0x30, (byte)0x05,
+             (byte)0x06, (byte)0x03, (byte)0x2b, (byte)0x65,
+             (byte)0x70, (byte)0x03, (byte)0x21, (byte)0x00,
+             (byte)0xec, (byte)0x44, (byte)0xfe, (byte)0xf2,
+             (byte)0x44, (byte)0x2a, (byte)0x1a, (byte)0x4c,
+             (byte)0x75, (byte)0xed, (byte)0x1a, (byte)0x07,
+             (byte)0x55, (byte)0x12, (byte)0x27, (byte)0xe0,
+             (byte)0x5f, (byte)0x0b, (byte)0x5e, (byte)0xfc,
+             (byte)0x1e, (byte)0xfd, (byte)0xe8, (byte)0xb0,
+             (byte)0x6f, (byte)0xc2, (byte)0xc4, (byte)0xaf,
+             (byte)0x1f, (byte)0x95, (byte)0xf5, (byte)0xe4}
+        ));
     }
 
     @Test
