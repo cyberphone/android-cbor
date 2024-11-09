@@ -356,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 }
             }
-            CBORValidator validator = null;
+            CBORValidator<?> validator = null;
             if (hmacFlag) {
                 validator = new CBORHmacValidator(RawReader.secretKey);
                 keyInfo = HexaDecimal.encode(RawReader.secretKey);
