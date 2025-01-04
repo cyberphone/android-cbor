@@ -35,12 +35,12 @@ public class CBORMap extends CBORObject {
     // Similar to the Java Map.Entry but optimized for CBOR. 
     static class Entry {
         CBORObject key;
-        CBORObject value;
+        CBORObject object;
         byte[] encodedKey;
          
         Entry(CBORObject key, CBORObject object) {
             this.key = key;
-            this.value = object;
+            this.object = object;
             this.encodedKey = key.encode();
         }
         
@@ -95,15 +95,15 @@ public class CBORMap extends CBORObject {
      * If <code>key</code> is already present, a {@link CBORException} is thrown.
      * </p>
      * 
-     * @param key Key
-     * @param value Value
+     * @param key Key (name)
+     * @param object Object (value)
      * @return <code>this</code>
      * @throws CBORException
      */
-    public CBORMap set(CBORObject key, CBORObject value) {
+    public CBORMap set(CBORObject key, CBORObject object) {
         key = getKey(key);
-        nullCheck(value);
-        Entry newEntry = new Entry(key, value);
+        nullCheck(object);
+        Entry newEntry = new Entry(key, object);
         int insertIndex = entries.size();
         // Keys are always sorted, making the verification process simple.
         // First element? Just insert.
@@ -136,6 +136,23 @@ public class CBORMap extends CBORObject {
         // If insertIndex == entries.size(), the key will be appended.
         // If insertIndex == 0, the key will be first in the list.
         entries.add(insertIndex, newEntry);
+        return this;
+    }
+
+    /**
+     * Merge CBOR map.
+     * <p>
+     * Note that a duplicate key causes a {@link CBORException} to be thrown.
+     * </p>
+     * 
+     * @param map Map to be merged into the current mao
+     * @return <code>this</code>
+     * @throws CBORException
+     */
+    public CBORMap merge(CBORMap map) {
+        for (Entry entry : map.entries.toArray(new Entry[0])) {
+            set(entry.key, entry.object);
+        }
         return this;
     }
 
@@ -190,39 +207,39 @@ public class CBORMap extends CBORObject {
     /**
      * Get mapped CBOR object.
      * <p>
-     * If <code>key</code> is present, the associated <code>value</code> is returned,
+     * If <code>key</code> is present, the associated <code>object</code> is returned,
      * else a {@link CBORException} is thrown.
      * </p>
      * 
-     * @param key Key
-     * @return <code>value</code>
+     * @param key Key (name)
+     * @return <code>object</code>
      * @throws CBORException
      */
     public CBORObject get(CBORObject key) {
-        return lookup(key, true).value;
+        return lookup(key, true).object;
     }
 
     /**
      * Get mapped CBOR object conditionally.
      * <p>
-     * If <code>key</code> is present, the associated <code>value</code> is returned,
-     * else <code>defaultValue</code> is returned.
-     * Note: <code>defaultValue</code> may be <code>null</code>.
+     * If <code>key</code> is present, the associated <code>object</code> is returned,
+     * else <code>defaultObject</code> is returned.
+     * Note: <code>defaultObject</code> may be <code>null</code>.
      * </p>
      * 
-     * @param key Key
-     * @param defaultValue Default value
-     * @return <code>value</code> or <code>defaultValue</code>
+     * @param key Key (name)
+     * @param defaultObject Default object (value)
+     * @return <code>object</code> or <code>defaultObject</code>
      */
-    public CBORObject getConditionally(CBORObject key, CBORObject defaultValue) {
+    public CBORObject getConditionally(CBORObject key, CBORObject defaultObject) {
         Entry entry = lookup(key, false);
-        return entry == null ? defaultValue : entry.value; 
+        return entry == null ? defaultObject : entry.object; 
     }
 
     /**
      * Check CBOR <code>map</code> for key presence.
      * 
-     * @param key Key
+     * @param key Key (name)
      * @return <code>true</code> if the key is present
      */
     public boolean containsKey(CBORObject key) {
@@ -232,16 +249,13 @@ public class CBORMap extends CBORObject {
     /**
      * Remove mapped CBOR object.
      * <p>
-     * If <code>key</code> is present, the associated <code>value</code> is returned,
+     * If <code>key</code> is present, the <code>key</code> and
+     * associated <code>object</code> are removed,
      * else a {@link CBORException} is thrown.
      * </p>
-     * <p>
-     * After saving <code>value</code> for return, the <code>key</code> and its
-     * associated <code>value</code> are removed.
-     * </p>
      * 
-     * @param key Key
-     * @return <code>value</code>
+     * @param key Key (name)
+     * @return Removed object (value)
      * @throws CBORException
      */
     public CBORObject remove(CBORObject key) {
@@ -252,8 +266,38 @@ public class CBORMap extends CBORObject {
                 break;
             }
         }
-        return targetEntry.value;
+        return targetEntry.object;
     }
+
+    /**
+     * Update mapped CBOR object.
+     * <p>
+     * If <code>existing</code> is <code>true</code>, <code>key</code> must already be present,
+     * else a {@link CBORException} is thrown.
+     * </p>
+     * <p>
+     * If <code>existing</code> is <code>false</code>, a <code>map</code> entry for <code>key</code>
+     * will be created if not already present.
+     * </p>
+     * 
+     * @param key Key (name)
+     * @param object New object (value)
+     * @param existing Flag
+     * @return Previous <code>object</code>.  May be <code>null</code>.
+     * @throws CBORException
+     */
+    public CBORObject update(CBORObject key, CBORObject object, boolean existing) {
+        Entry targetEntry = lookup(key, existing);
+        CBORObject previous;
+        if (targetEntry == null) {
+            previous = null;
+            set(key, object);
+        } else {
+            previous = targetEntry.object;
+            targetEntry.object = object;
+        }
+        return previous;
+    }  
 
     /**
      * Enumerate all keys in the CBOR <code>map</code>.
@@ -263,12 +307,12 @@ public class CBORMap extends CBORObject {
      * 
      * @return Array of keys
      */
-    public CBORObject[] getKeys() {
+    public ArrayList<CBORObject> getKeys() {
         ArrayList<CBORObject> keys = new ArrayList<>(entries.size());
         for (Entry entry : entries) {
             keys.add(entry.key);
         }
-        return keys.toArray(new CBORObject[0]);
+        return keys;
     }
 
     @Override
@@ -276,7 +320,7 @@ public class CBORMap extends CBORObject {
         byte[] encoded = encodeTagAndN(MT_MAP, entries.size());
         for (Entry entry : entries) {
             encoded = addByteArrays(encoded,
-                                    addByteArrays(entry.encodedKey, entry.value.encode()));
+                                    addByteArrays(entry.encodedKey, entry.object.encode()));
         }
         return encoded;
     }
@@ -294,7 +338,7 @@ public class CBORMap extends CBORObject {
             entry.key.internalToString(cborPrinter);
             cborPrinter.append(':');
             cborPrinter.space();
-            entry.value.internalToString(cborPrinter);
+            entry.object.internalToString(cborPrinter);
         }
         cborPrinter.endMap(notFirst);
     }

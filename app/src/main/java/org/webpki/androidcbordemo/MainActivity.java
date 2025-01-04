@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
     public static CBORMap unwrapOptionalTag(CBORObject rawContainer) {
         // It might be tagged
         if (rawContainer instanceof CBORTag) {
-            CBORObject container = rawContainer.getTag().getTaggedObject();
+            CBORObject container = rawContainer.getTag().get();
             if (container instanceof CBORArray) {
                 container = container.getArray().get(1);
             }
@@ -426,7 +426,7 @@ public class MainActivity extends AppCompatActivity {
             CBORMap cborMap = unwrapOptionalTag(dataToBeSigned);
             CBORObject csfLabel = new CBORInt(0);
             if (cborMap.size() > 0) {
-                csfLabel = cborMap.getKeys()[cborMap.size() - 1];
+                csfLabel = cborMap.getKeys().get(cborMap.size() - 1);
                 if (csfLabel instanceof CBORInt) {
                     BigInteger value = csfLabel.getBigInteger();
                     value = value.compareTo(BigInteger.ZERO) >= 0 ?

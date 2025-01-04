@@ -65,3 +65,8 @@ Android CBOR - Relese Notes
 
 1.1.2
 - Removed CBORTypes
+- CBORDecoder().setNaNSupport() => setFloatSupport()
+- CBORTag().getTaggedObject() => get()
+- update() method to CBORMap, CBORArray, and CBORTag
+- Added CBORMap().merge()
+- Document update CBOR Signatures and Encryption

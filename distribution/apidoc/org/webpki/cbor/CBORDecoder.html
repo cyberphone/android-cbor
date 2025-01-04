@@ -133,14 +133,14 @@
 <div class="block">Set CBOR decoder deterministic mode.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setInputLength(int)" class="member-name-link">setInputLength</a><wbr>(int&nbsp;maxLength)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFloatSupport(boolean)" class="member-name-link">setFloatSupport</a><wbr>(boolean&nbsp;acceptExceptional)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Set CBOR decoder input max length.</div>
+<div class="block">Set CBOR decoder <code>NaN/Infinity</code> support.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setNaNSupport(boolean)" class="member-name-link">setNaNSupport</a><wbr>(boolean&nbsp;accept)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setInputLength(int)" class="member-name-link">setInputLength</a><wbr>(int&nbsp;maxLength)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Set CBOR decoder <code>NaN/Infinity</code> support.</div>
+<div class="block">Set CBOR decoder input max length.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSequenceMode(boolean)" class="member-name-link">setSequenceMode</a><wbr>(boolean&nbsp;sequence)</code></div>
@@ -172,7 +172,7 @@
  <p>
  See <a href="#setDeterministicMode(boolean)"><code>setDeterministicMode(boolean)</code></a>,
  <a href="#setInputLength(int)"><code>setInputLength(int)</code></a>,
- <a href="#setNaNSupport(boolean)"><code>setNaNSupport(boolean)</code></a>, and
+ <a href="#setFloatSupport(boolean)"><code>setFloatSupport(boolean)</code></a>, and
  <a href="#setSequenceMode(boolean)"><code>setSequenceMode(boolean)</code></a>
  </p>
  <p>
@@ -237,14 +237,14 @@
 <dd><code>maxLength</code> - Maximum length of CBOR input in bytes.
  Exceeding this limit will cause a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> to be thrown.</dd>
 <dt>Returns:</dt>
-<dd><code>this</code> (updated <a href="CBORDecoder.html" title="class in org.webpki.cbor"><code>CBORDecoder</code></a> object)</dd>
+<dd><code>this</code></dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="setNaNSupport(boolean)">
-<h3>setNaNSupport</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></span>&nbsp;<span class="element-name">setNaNSupport</span><wbr><span class="parameters">(boolean&nbsp;accept)</span></div>
+<section class="detail" id="setFloatSupport(boolean)">
+<h3>setFloatSupport</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></span>&nbsp;<span class="element-name">setFloatSupport</span><wbr><span class="parameters">(boolean&nbsp;acceptExceptional)</span></div>
 <div class="block">Set CBOR decoder <code>NaN/Infinity</code> support.
  <p>
  By default the decoder supports 
@@ -255,11 +255,11 @@
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>accept</code> - If the <code>accept</code> flag is set to <code>false</code>,
- the mentioned exceptional floating point values will (if encountered),
+<dd><code>acceptExceptional</code> - If the <code>acceptExceptional</code> flag is set to <code>false</code>,
+ the mentioned exceptional floating point values
  cause a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> to be thrown.</dd>
 <dt>Returns:</dt>
-<dd><code>this</code> (updated <a href="CBORDecoder.html" title="class in org.webpki.cbor"><code>CBORDecoder</code></a> object)</dd>
+<dd><code>this</code></dd>
 </dl>
 </section>
 </li>
@@ -282,7 +282,7 @@
  Note: duplicate keys and other invalid (or not supported) CBOR constructs
  will still cause a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> to be thrown.</dd>
 <dt>Returns:</dt>
-<dd><code>this</code> (updated <a href="CBORDecoder.html" title="class in org.webpki.cbor"><code>CBORDecoder</code></a> object)</dd>
+<dd><code>this</code></dd>
 </dl>
 </section>
 </li>
@@ -313,7 +313,7 @@
  is not verified for correctness.</li>  
  </ul></dd>
 <dt>Returns:</dt>
-<dd><code>this</code> (updated <a href="CBORDecoder.html" title="class in org.webpki.cbor"><code>CBORDecoder</code></a> object)</dd>
+<dd><code>this</code></dd>
 </dl>
 </section>
 </li>

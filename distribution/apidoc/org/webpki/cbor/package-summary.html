@@ -65,36 +65,39 @@ This package contains Java support for CBOR
 [<a href='https://www.rfc-editor.org/rfc/rfc8949.html'>RFC&nbsp;8949</a>].
 <h3 id='supported-objects'>Supported Objects</h3>
 The following table shows the currently supported CBOR objects (data items)
-and their mapping to Java:
+and their mapping to Java, here expressed in
+CDDL&nbsp;[<a href='https://www.rfc-editor.org/rfc/rfc8610.html'>RFC&nbsp;8610</a>]
+notation:
 <div class='webpkifloat'>
 <table class='webpkitable' style='margin-left:2em'>
-<tr><th>CBOR&nbsp;Object</th><th>Notes</th><th>Java&nbsp;Mapping</th>
-<th>Implementation</th></tr>
-<tr><td><code>integer</code></td><td>1</td><td><code>long</code></td><td><a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a></td></tr>
-<tr><td><code>bignum</code></td><td>1</td><td><code>BigInteger</code></td><td><a href="CBORBigInt.html" title="class in org.webpki.cbor"><code>CBORBigInt</code></a></td></tr>
-<tr><td><code>floating&nbsp;point</code></td><td>2</td><td><code>double</code></td><td><a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a></td></tr>
-<tr><td><code>byte&nbsp;string</code></td><td></td><td><code>byte[]</code></td><td><a href="CBORBytes.html" title="class in org.webpki.cbor"><code>CBORBytes</code></a></td></tr>
-<tr><td><code>text&nbsp;string</code></td><td></td><td><code>String</code></td><td><a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a></td></tr>
-<tr><td><code>true</code>/<code>false</code></td><td></td><td><code>boolean</code></td><td><a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a></td></tr>
-<tr><td><code>null</code></td><td></td><td></td><td><a href="CBORNull.html" title="class in org.webpki.cbor"><code>CBORNull</code></a></td></tr>
-<tr><td><code>array</code></td><td></td><td></td><td><a href="CBORArray.html" title="class in org.webpki.cbor"><code>CBORArray</code></a></td></tr>
-<tr><td><code>map</code></td><td></td><td></td><td><a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code></a></td></tr>
-<tr><td><code>tag</code></td><td></td><td></td><td><a href="CBORTag.html" title="class in org.webpki.cbor"><code>CBORTag</code></a></td></tr>
+<tr><th>CBOR</th><th>Implementation</th>
+<th>Java&nbsp;Mapping</th><th>Notes</th></tr>
+<tr style='text-align:center'><td><code>int</code></td><td><a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a></td><td><code>long</code></td><td>1</td></tr>
+<tr style='text-align:center'><td><code>bigint</code></td><td><a href="CBORBigInt.html" title="class in org.webpki.cbor"><code>CBORBigInt</code></a></td><td><code>BigInteger</code></td><td>1</td></tr>
+<tr style='text-align:center'><td><code>float</code></td><td><a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a></td><td><code>double</code></td><td>2</td></tr>
+<tr style='text-align:center'><td><code>bstr</code></td><td><a href="CBORBytes.html" title="class in org.webpki.cbor"><code>CBORBytes</code></a></td><td><code>byte[]</code></td><td></td></tr>
+<tr style='text-align:center'><td><code>tstr</code></td><td><a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a></td><td><code>String</code></td><td></td></tr>
+<tr style='text-align:center'><td><code>bool</code></td><td><a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a></td><td><code>boolean</code></td><td></td></tr>
+<tr style='text-align:center'><td><code>null</code></td><td><a href="CBORNull.html" title="class in org.webpki.cbor"><code>CBORNull</code></a></td><td></td><td></td></tr>
+<tr style='text-align:center'><td><code>array</code></td><td><a href="CBORArray.html" title="class in org.webpki.cbor"><code>CBORArray</code></a></td><td></td><td></td></tr>
+<tr style='text-align:center'><td><code>map</code></td><td><a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code></a></td><td></td><td></td></tr>
+<tr style='text-align:center'><td><code>tag</code></td><td><a href="CBORTag.html" title="class in org.webpki.cbor"><code>CBORTag</code></a></td><td></td><td></td></tr>
 </table>
 </div>
 <ol style='margin:0 0'>
 <li>The distinction between unsigned and negative values is
- dealt with automatically.</li>
-<li style='padding-top:0.5em'>Floating point data covers the 16, 32, and 64-bit IEEE&nbsp;754 variants,
+ dealt with automatically.
+ The encoded representation is determined by the size of the value.</li>
+<li style='padding-top:0.5em'>Floating-point data covers the 16, 32, and 64-bit IEEE&nbsp;754 variants,
 including support for <code style='white-space:nowrap'>-0.0</code>, <code>NaN</code>,
  and <code style='white-space:nowrap'>&pm;Infinity</code>.
-The encoded representation is determined by the size and precision of a value.
-Also see the decoder <a href="CBORDecoder.html#setNaNSupport(boolean)"><code>CBORDecoder.setNaNSupport(boolean)</code></a>.</li>
+The encoded representation is determined by the size and precision of the value.
+Also see <a href="CBORDecoder.html#setFloatSupport(boolean)"><code>CBORDecoder.setFloatSupport(boolean)</code></a>.</li>
 </ol>
 <p>
 This implementation does not support CBOR &quot;simple&quot; values beyond
 <code>true</code>, <code>false</code>, <code>null</code>, and
-the three floating point variants.
+the three floating-point variants.
 </p>
 <h3 id='deterministic-encoding'>Deterministic Encoding</h3>
 For certain security related applications, it has been proven
@@ -135,16 +138,16 @@ The encoding rules are as follows:
 </div>
 <ul>
 <li id='number-encoding' class='webpkilistspacing'>
-  RFC+: Floating point and integer objects <b>must</b> be treated as <i>distinct types</i>
+  RFC+: Floating-point and integer objects <b>must</b> be treated as <i>distinct types</i>
 regardless of their numeric value. This is compliant with
 Rule&nbsp;2 in section 4.2.2 of RFC&nbsp;8949.</li>
 <li id='integer-encoding' class='webpkilistspacing'>
-  RFC: Integers, represented by the <code>integer</code> and 
-<code>bignum</code> types, <b>must</b> use the <code>integer</code>
+  RFC: Integers, represented by the <code>int</code> and 
+<code>bigint</code> types, <b>must</b> use the <code>int</code>
 type if the value is between 
 <span style='white-space:nowrap'><code>-2<sup>64</sup></code></span> 
 and <span style='white-space:nowrap'><code>2<sup>64</sup>-1</code></span>,
-otherwise the <code>bignum</code> type <b>must</b> be used.
+otherwise the <code>bigint</code> type <b>must</b> be used.
 The following table holds a few sample values and their proper CBOR encoding:
 <div class='webpkifloat'>
 <table class='webpkitable' style='margin-left:2em'>
@@ -170,13 +173,13 @@ Note that the integer encoding scheme above does not always return the
 most compact representation; the value 
 <code>1099511627775</code> 
 (<code>0xffffffffff</code>)
-would actually yield two bytes less using the <code>bignum</code> type. 
+would actually yield two bytes less using the <code>bigint</code> type. 
 </div>
 </li>
 <li id='floating-point-encoding' class='webpkilistspacing'>
-  RFC+: Floating point data <b>must</b> use the shortest IEEE&nbsp;754
+  RFC+: Floating-point data <b>must</b> use the shortest IEEE&nbsp;754
   variant and associated CBOR encoding.
-The following table holds floating point values needing special considerations
+The following table holds floating-point values needing special considerations
 as well as a small set of "edge&nbsp;cases":
 <div class='webpkifloat'>
 <table class='webpkitable' style='margin-left:2em'>
@@ -217,7 +220,7 @@ Duplicate keys <b>must</b> be rejected.
   RFC+: Since CBOR encoding according to this specification
 maintains type and data uniqueness, there are no specific restrictions or
 tests needed in order to determine map key equivalence.  
-As an example, the floating point numbers <code>0.0</code> and
+As an example, the floating-point numbers <code>0.0</code> and
 <code>-0.0</code>, and the integer number <code>0</code>
 represent the distinct keys
 <code>f90000</code>, <code>f98000</code>, and <code>00</code> respectively.
@@ -258,10 +261,11 @@ methods, return container objects which in turn facilitate
 access to individual CBOR objects of the structure.
 </p>
 <p>
-If the underlying CBOR data type does not match the access method
-(like performing <a href="CBORObject.html#getInt32()"><code>CBORObject.getInt32()</code></a> on a <a href="CBORBigInt.html" title="class in org.webpki.cbor"><code>CBORBigInt</code></a>),
-an exception is thrown.
-That is, this implementation performs <i>strict type checking</i>. 
+This implementation performs <i>strict type checking</i>.
+That is, if an application expects a CBOR integer and calls
+<a href="CBORObject.html#getInt32()"><code>CBORObject.getInt32()</code></a>, an exception will be thrown
+if the referenced object is not an instance of <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>, or 
+if the CBOR integer cannot be represented as a 32-bit two-complement value. 
 </p>
 <p>
 However, you typically also want to verify
@@ -306,14 +310,14 @@ without getting corrupted.  Note though that text-binary-text "roundtrips"
 do not necessarily return identical text: <code>0x10</code> used
 as diagnostic notation input will return <code>16</code> as
 diagnostic notation output.
-Caveat: for reliable conversions, floating point values <b>must</b>
+Caveat: for reliable conversions, floating-point values <b>must</b>
 be aligned with IEEE&nbsp;754 encoding and rounding rules.
 </p>
 The following table shows how CBOR objects should be represented in 
 diagnostic notation:
  <div class='webpkifloat'>
 <table class='webpkitable' style='margin-left:2em'>
-<tr style='text-align:center'><th>CBOR&nbsp;Object</th><th>Syntax</th><th>Notes</th><th style='min-width:30em'>Description</th></tr>
+<tr style='text-align:center'><th>CBOR</th><th>Syntax</th><th>Notes</th><th style='min-width:30em'>Description</th></tr>
 <tr style='text-align:center'><td rowspan='2'></td><td><code>/</code>&nbsp;<i>comment&nbsp;text</i>&nbsp;<code>/</code></td>
 <td>7</td><td style='text-align:left'>Multi-line comment.
 Multi-line comments are treated as whitespace and may thus also be used 
@@ -322,7 +326,7 @@ Multi-line comments are treated as whitespace and may thus also be used
 <td>7</td><td style='text-align:left'>Single-line comment.
 Single-line comments are terminated by a newline character (<code>'\n'</code>) or <code>EOF</code>.
 Single-line comments may also terminate lines holding regular CBOR items.</td></tr>
-<tr style='text-align:center' id='integer-diag'><td><code>integer</code></td>
+<tr style='text-align:center' id='integer-diag'><td><code>int</code></td>
 <td rowspan='2'><span style='white-space:nowrap'>{<i>sign</i>}{<code>0b</code>|<code>0o</code>|<code>0x</code>}<i>n</i></span></td>
 <td rowspan='2'>1, 2</td><td style='text-align:left' rowspan='2'>
 Arbitrary sized integers without fractional components or exponents.
@@ -332,21 +336,21 @@ with <code>0b</code>, <code>0o</code>, and <code>0x</code> respectively.
 The latter also permit arbitrary insertions of <code>'_'</code> characters between digits to
 enable grouping of data like <code>0b100_000000001</code>.
 </td></tr>
-<tr style='text-align:center'><td><code>bignum</code></tr>
-<tr style='text-align:center' id='float-diag'><td rowspan='3'><code>floating&nbsp;point</code></td>
+<tr style='text-align:center'><td><code>bigint</code></tr>
+<tr style='text-align:center' id='float-diag'><td rowspan='3'><code>float</code></td>
 <td>{<i>sign</i>}<i>n</i><code>.</code><i>n</i>{<code>e&pm;</code><i>n</i>}</td>
-<td>1, 2</td><td style='text-align:left'>Floating point values
+<td>1, 2</td><td style='text-align:left'>Floating-point values
 must include a decimal point and an <i>optional</i> exponent.
-See <a href='#floating-point-encoding'>CBOR floating point encoding</a>.
+See <a href='#floating-point-encoding'>CBOR floating-point encoding</a>.
 </td></tr>
 <tr style='text-align:center'><td><code>NaN</code></td><td></td><td style='text-align:left'>Not a number.
-See <a href='#floating-point-encoding'>CBOR floating point encoding</a>.
+See <a href='#floating-point-encoding'>CBOR floating-point encoding</a>.
 </td></tr>
 <tr style='text-align:center'><td>{<i>sign</i>}<code>Infinity</code></td><td>2</td>
 <td style='text-align:left'>Infinity.
-See <a href='#floating-point-encoding'>CBOR floating point encoding</a>.
+See <a href='#floating-point-encoding'>CBOR floating-point encoding</a>.
 </td></tr>
-<tr style='text-align:center'><td rowspan='4'><code>byte&nbsp;string</code></td>
+<tr style='text-align:center'><td rowspan='4'><code>bstr</code></td>
 <td><code>h'</code><i>hex&nbsp;data</i><code>'</code></td><td>3, 6</td>
 <td style='text-align:left'>Byte data provided in hexadecimal notation.
 Each byte must be represented by two hexadecimal digits.</td></tr>
@@ -356,29 +360,29 @@ Padding with <code>'='</code> characters is <i>optional</i>.</td></tr>
 <tr style='text-align:center'><td><code>'</code><i>text</i><code>'</code></td><td>4, 5, 7</td>
 <td style='text-align:left'>Byte data provided as UTF-8 encoded text.</td></tr>
 <tr style='text-align:center'><td><code>&lt;&lt;</code>&nbsp;<i>object</i>&nbsp;<code>&gt;&gt;</code></td><td>7</td>
-<td style='text-align:left'>Construct holding a CBOR object which is subsequently embedded in a byte string.</td></tr>
-<tr style='text-align:center'><td><code>text&nbsp;string</code></td>
-<td><code>&quot;</code><i>text</i><code>&quot;</code><td>4, 5</td><td style='text-align:left'>UTF-8 encoded text string.</td></tr>
-<tr style='text-align:center'><td><code>true</code></td><td><code>true</code></td><td rowspan='2'></td>
+<td style='text-align:left'>Construct holding a CBOR object which is subsequently embedded in a byte-string.</td></tr>
+<tr style='text-align:center'><td><code>tstr</code></td>
+<td><code>&quot;</code><i>text</i><code>&quot;</code><td>4, 5</td><td style='text-align:left'>UTF-8 encoded text-string.</td></tr>
+<tr style='text-align:center'><td rowspan='2'><code>bool</code></td><td><code>true</code></td><td rowspan='2'></td>
 <td style='text-align:left' rowspan='2'>Boolean value.</td></tr>
-<tr style='text-align:center'><td><code>false</code></td><td><code>false</code></td></tr>
+<tr style='text-align:center'><td><code>false</code></td></tr>
 <tr style='text-align:center'><td><code>null</code></td><td><code>null</code></td><td></td><td style='text-align:left'>Null value.</td></tr>
-<tr style='text-align:center'><td><code>array</code></td><td><code>[</code>&nbsp;<i>objects</i>&nbsp;<code>]</code></td>
-<td></td><td style='text-align:left'>Array with zero or more comma separated CBOR objects.</td></tr>
-<tr style='text-align:center'><td><code>map</code></td><td><code>{</code>&nbsp;<i>key</i><code>:</code><i>value</i>&nbsp;<code>}</code></td>
-<td></td><td style='text-align:left'>Map with zero or more comma separated key/value pairs.
-Keys and values are expressed as CBOR objects.</td></tr>
+<tr style='text-align:center'><td><code>array</code></td><td><code>[</code>&nbsp;<i>object</i>&nbsp;<code>]</code></td>
+<td></td><td style='text-align:left'>Array with zero or more comma-separated CBOR objects.</td></tr>
+<tr style='text-align:center'><td><code>map</code></td><td><code>{</code>&nbsp;<i>key</i><code>:</code><i>object</i>&nbsp;<code>}</code></td>
+<td></td><td style='text-align:left'>Map with zero or more comma-separated key/object pairs.
+Keys and objects are expressed as CBOR objects.</td></tr>
 <tr style='text-align:center'><td><code>tag</code></td><td><i>n</i><code>(</code>&nbsp;<i>object</i>&nbsp;<code>)</code></td>
 <td>1</td><td style='text-align:left'>Tag holding a CBOR object.</td></tr>
-<tr style='text-align:center'><td></td><td><code>,</code></td><td>7</td><td style='text-align:left'>Separator character for CBOR sequences.</td></tr>
+<tr style='text-align:center'><td></td><td><code>,</code></td><td></td><td style='text-align:left'>Separator character for CBOR sequences.</td></tr>
 </table>
 </div>
 <ol style='margin:0 0'>
 <li>The letter <i>n</i> in the Syntax column denotes one or more digits.</li>
 <li>The optional {<i>sign</i>} must be a single hyphen (<code>'-'</code>) character.</li>
-<li><i>Input only</i>: the whitespace characters
+<li><i>Input only</i>: between the quotes, the whitespace characters
 (<code>' '</code>, <code>'\t'</code>, <code>'\r'</code>, <code>'\n'</code>)
-inside of string quotes are <i>ignored</i>.</li> 
+are <i>ignored</i>.</li> 
 <li><i>Input only</i>: the control characters
 (<code>'\t'</code> and <code>'\n'</code>)
 inside of string quotes <i>become a part of the text</i>.
@@ -494,7 +498,7 @@ the <a href="CBORObject.html#toString()"><code>CBORObject.toString()</code></a> 
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORFloat.html" title="class in org.webpki.cbor">CBORFloat</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR <code>floating&nbsp;point</code> objects.</div>
+<div class="block">Class for holding CBOR floating-point objects.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORFromJSON.html" title="class in org.webpki.cbor">CBORFromJSON</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
