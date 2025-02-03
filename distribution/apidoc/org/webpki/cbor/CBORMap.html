@@ -234,6 +234,13 @@
 <div class="block">Set mapped CBOR object.
  <p>
  If <code>key</code> is already present, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p>
+ <p>
+ Note that this implementation does not support <i>mutable</i>
+ <code>key</code> objects.  To create <code>key</code> objects
+ of arbitrary complexity,  <code>key</code> objects <b>must</b>
+ either be created <i>inline</i> (using chaining), or be supplied as
+ <i>preset variables</i>.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
