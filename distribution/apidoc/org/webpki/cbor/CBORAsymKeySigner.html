@@ -160,7 +160,10 @@
 <section class="detail" id="&lt;init&gt;(org.webpki.crypto.AsymKeySignerInterface)">
 <h3>CBORAsymKeySigner</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORAsymKeySigner</span><wbr><span class="parameters">(<a href="../crypto/AsymKeySignerInterface.html" title="interface in org.webpki.crypto">AsymKeySignerInterface</a>&nbsp;signer)</span></div>
-<div class="block">Creates a signer object with an external interface.</div>
+<div class="block">Creates a signer object with an external interface.
+ <p>
+ Note that <i>external</i> signers <b>must</b> verify algorithm/key compatibility.
+ </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>signer</code> - Custom signer</dd>

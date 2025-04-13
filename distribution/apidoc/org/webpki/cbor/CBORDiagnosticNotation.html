@@ -104,12 +104,12 @@
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#convert(java.lang.String)" class="member-name-link">convert</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cborText)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Convert diagnostic notation CBOR to CBOR.</div>
+<div class="block">Convert CBOR object in diagnostic notation, to CBOR.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a><wbr>&lt;<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#convertSequence(java.lang.String)" class="member-name-link">convertSequence</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cborText)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Convert diagnostic notation CBOR sequence to CBOR.</div>
+<div class="block">Convert CBOR sequence in diagnostic notation to CBOR.</div>
 </div>
 </div>
 </div>
@@ -132,10 +132,10 @@
 <section class="detail" id="convert(java.lang.String)">
 <h3>convert</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">convert</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cborText)</span></div>
-<div class="block">Convert diagnostic notation CBOR to CBOR.</div>
+<div class="block">Convert CBOR object in diagnostic notation, to CBOR.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>cborText</code> - String holding diagnostic (textual) CBOR</dd>
+<dd><code>cborText</code> - String holding a CBOR object in diagnostic (textual) format.</dd>
 <dt>Returns:</dt>
 <dd>CBOR object</dd>
 <dt>Throws:</dt>
@@ -147,12 +147,12 @@
 <section class="detail" id="convertSequence(java.lang.String)">
 <h3>convertSequence</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&gt;</span>&nbsp;<span class="element-name">convertSequence</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;cborText)</span></div>
-<div class="block">Convert diagnostic notation CBOR sequence to CBOR.</div>
+<div class="block">Convert CBOR sequence in diagnostic notation to CBOR.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>cborText</code> - String holding diagnostic (textual) CBOR</dd>
+<dd><code>cborText</code> - String holding zero or more comma-separated CBOR objects in diagnostic (textual) format.</dd>
 <dt>Returns:</dt>
-<dd>Non-empty array of CBOR objects</dd>
+<dd>Array holding zero or more CBOR objects</dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
 </dl>

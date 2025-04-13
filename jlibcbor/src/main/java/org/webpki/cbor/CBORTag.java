@@ -16,19 +16,20 @@
  */
 package org.webpki.cbor;
 
-import org.webpki.util.ISODateTime;
-
 import static org.webpki.cbor.CBORInternal.*;
 
+import java.util.GregorianCalendar;
+
 /**
- * Class for holding CBOR <code>tag</code> objects.
+ * Class for holding CBOR <code>#6.n</code> (tag) objects.
  * <p>
  * Tagged objects are based on CBOR major type 6.
- * This implementation accepts three variants of tags:
+ * This implementation accepts multiple variants of tags:
  * </p>
  * <div style='margin-left:4em'>
  * <code>nnn(</code><i>CBOR&nbsp;object&nbsp;</i><code>)</code><br>
- * <code>{@value #RESERVED_TAG_DATE}(</code><i>ISO&nbsp;date&nbsp;string</i><code>)</code><br>
+ * <code>{@value #RESERVED_TAG_DATE_TIME}(</code><i>ISO&nbsp;date&nbsp;string</i><code>)</code><br>
+  <code>{@value #RESERVED_TAG_EPOCH_TIME}(</code><i>seconds[.mmm]</i><code>)</code><br>
  * <code>{@value #RESERVED_TAG_COTX}([</code><i>CBOR&nbsp;text&nbsp;string</i><code>,
  * </code><i>CBOR&nbsp;object&nbsp;</i><code>])</code>
  * </div>
@@ -53,20 +54,42 @@ import static org.webpki.cbor.CBORInternal.*;
 public class CBORTag extends CBORObject {
 
     /**
-     * CBOR representation.
+     * Return object for COTX tags.
      */
+    public static class COTXObject {
+        private COTXObject() {}
+        public String objectId;
+        public CBORObject object;
+    }
+
+    // General tag data.
     long tagNumber;
     CBORObject object;
-    
+
+    // Specialized tag data,
+    GregorianCalendar dateTime;
+    GregorianCalendar epochTime;
+    COTXObject cotxObject;
+
+    /**
+     * DATE_TIME tag: {@value #RESERVED_TAG_DATE_TIME}
+     */
+    public static final int RESERVED_TAG_DATE_TIME  = 0;
+
+    /**
+     * EPOCH_TIME tag: {@value #RESERVED_TAG_EPOCH_TIME}
+     */
+    public static final int RESERVED_TAG_EPOCH_TIME  = 1;
+
     /**
      * COTX tag: {@value #RESERVED_TAG_COTX}
      */
     public static final int RESERVED_TAG_COTX  = 1010;
 
-    /**
-     * DATE tag: {@value #RESERVED_TAG_DATE}
-     */
-    public static final int RESERVED_TAG_DATE  = 0;
+    private static final int RESERVED_BIG_INT_UNSIGNED = 2;
+    private static final int RESERVED_BIG_INT_NEGATIVE = 3;
+
+
     
     /**
      * Creates a COTX-tagged object.
@@ -81,32 +104,43 @@ public class CBORTag extends CBORObject {
                                     .add(object));
     }
 
+    private void tagSyntaxError(String tagError) {
+        cborError(tagError + toDiagnosticNotation(false));
+    }
+
     /**
      * Creates a CBOR tagged object.
      * 
      * @param tagNumber Tag number
      * @param object Object
+     * @throws CBORException
+     * @throws IllegalArgumentException
      */
+    @SuppressWarnings("this-escape")
     public CBORTag(long tagNumber, CBORObject object) {
         this.tagNumber = tagNumber;
         this.object = object;
         nullCheck(object);
-        if (tagNumber == RESERVED_TAG_COTX) {
+        if (tagNumber == RESERVED_BIG_INT_UNSIGNED || tagNumber == RESERVED_BIG_INT_NEGATIVE) {
+            cborError(STDERR_RESERVED_BIG_INT);
+        }
+        if (tagNumber == RESERVED_TAG_DATE_TIME) {
+            // Note: clone() because we have mot read it really.
+            dateTime = object.clone().getDateTime();
+        } else if (tagNumber == RESERVED_TAG_EPOCH_TIME) {
+            // Note: clone() because we have mot read it really.
+            epochTime = object.clone().getEpochTime();
+        } else if (tagNumber == RESERVED_TAG_COTX) {
             if (object instanceof CBORArray) {
                 CBORArray holder = object.getArray();
                 if (holder.size() == 2 && holder.get(0) instanceof CBORString) {
+                    cotxObject = new COTXObject();
+                    cotxObject.objectId = holder.get(0).getString();
+                    cotxObject.object = holder.get(1);
                     return;
                 }
             }
-            cborError(STDERR_INVALID_COTX_OBJECT + object.toDiagnosticNotation(false));
-        } else if (tagNumber == RESERVED_TAG_DATE) {
-            if (object instanceof CBORString) {
-                try {
-                    ISODateTime.decode(object.getString(), ISODateTime.COMPLETE);
-                    return;
-                } catch (Exception e) {}
-            }
-            cborError(STDERR_ISO_DATE_ERROR + object.toDiagnosticNotation(false));
+            tagSyntaxError(STDERR_INVALID_COTX_OBJECT);
         }
     }
 
@@ -120,10 +154,67 @@ public class CBORTag extends CBORObject {
     }
 
     /**
+     * Get ISO <code>date/time</code> object.
+     * <p>
+     * This method assumes that a valid CBOR tag 0 has been found, 
+     * otherwise a {@link CBORException} is thrown.
+     * </p>
+     * @return <code>GregorianCalendar</code>
+     * @see CBORObject#getDateTime()
+     * @throws CBORException
+     */
+    @Override
+    public GregorianCalendar getDateTime() {
+        if (dateTime == null) {
+            tagSyntaxError(STDERR_ISO_DATE_TIME);
+        }
+        // We have read it.
+        scan();
+        return dateTime;
+    }
+
+    /**
+     * Get UNIX <code>Epoch</code> time object.
+     * <p>
+     * This method assumes that a valid CBOR tag 1 has been found, 
+     * otherwise a {@link CBORException} is thrown.
+     * </p>
+     * @return <code>GregorianCalendar</code>
+     * @see CBORObject#getEpochTime()
+     * @throws CBORException
+     */
+    @Override
+    public GregorianCalendar getEpochTime() {
+        if (epochTime == null) {
+            tagSyntaxError(STDERR_EPOCH_TIME);
+        }
+        // We have read it.
+        scan();
+        return epochTime;
+    }
+
+    /**
+     * Get <code>COTX</code> object.
+     * <p>
+     * This method assumes that a valid COTX tag has been found, 
+     * otherwise a {@link CBORException} is thrown.
+     * </p>
+     * @return <code>COTXObject</code>
+     * @throws CBORException
+     */
+    public COTXObject getCOTXObject() {
+        if (cotxObject == null) {
+            tagSyntaxError(STDERR_INVALID_COTX_OBJECT);
+        }
+        return cotxObject;
+    }
+    
+    /**
      * Update tagged CBOR object.
      * 
      * @param object New object
      * @return Previous object
+     * @throws CBORException
      */
     public CBORObject update(CBORObject object) {
         immutableTest();
@@ -157,6 +248,12 @@ public class CBORTag extends CBORObject {
     static final String STDERR_INVALID_COTX_OBJECT =
             "Invalid COTX object: ";
 
-    static final String STDERR_ISO_DATE_ERROR =
-            "Invalid ISO date string: ";
+    static final String STDERR_ISO_DATE_TIME =
+            "Invalid ISO date/time object: ";
+
+    static final String STDERR_EPOCH_TIME =
+            "Invalid Epoch time object: ";
+
+    static final String STDERR_RESERVED_BIG_INT =
+            "Reserved for 'bigint'";
 }

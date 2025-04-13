@@ -16,34 +16,43 @@
  */
 package org.webpki.cbor;
 
-import org.webpki.util.HexaDecimal;
-
 import static org.webpki.cbor.CBORInternal.*;
 
 /**
- * Class for holding CBOR <code>bstr</code> objects.
+ * Class for holding CBOR <code>#7.n</code> (simple) objects.
  */
-public class CBORBytes extends CBORObject {
+public class CBORSimple extends CBORObject {
 
-    byte[] byteString;
-
+    int value;
+    
     /**
-     * Creates a CBOR <code>bstr</code> object.
-     * 
-     * @param byteString The bytes constituting the string
+     * Creates a CBOR <code>#7.n</code> (simple) object.
+     * <p>
+     * Simple values are limited to:
+     * <code>0-23</code> and <code>32-255</code>.
+     * </p>
+     * @param value int value
+     * @throws CBORException
      */
-    public CBORBytes(byte[] byteString) {
-        this.byteString = byteString;
-        nullCheck(byteString);
+    public CBORSimple(int value) {
+        this.value = value;
+        if (value < 0 || value > 255 || (value > 23 && value < 32)) {
+            cborError(STDERR_SIMPLE_VALUE_OUT_OF_RANGE + value);
+        }
     }
 
     @Override
     byte[] internalEncode() {
-        return addByteArrays(encodeTagAndN(MT_BYTES, byteString.length), byteString);
+        return encodeTagAndN(MT_SIMPLE, value);
     }
 
     @Override
     void internalToString(CborPrinter cborPrinter) {
-        cborPrinter.append("h'").append(HexaDecimal.encode(byteString)).append('\'');
+        cborPrinter.append("simple(")
+                   .append(String.valueOf(value))
+                   .append(')');
     }
+
+    static final String STDERR_SIMPLE_VALUE_OUT_OF_RANGE = "Simple value out of range: " ;
+
 }

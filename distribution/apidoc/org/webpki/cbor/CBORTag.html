@@ -32,7 +32,7 @@
 <li>
 <p>Summary:</p>
 <ul>
-<li>Nested</li>
+<li><a href="#nested-class-summary">Nested</a></li>
 <li><a href="#field-summary">Field</a></li>
 <li><a href="#constructor-summary">Constr</a></li>
 <li><a href="#method-summary">Method</a></li>
@@ -52,7 +52,7 @@
 <div id="navbar-sub-list">
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -88,14 +88,15 @@
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CBORTag</span>
 <span class="extends-implements">extends <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span></div>
-<div class="block">Class for holding CBOR <code>tag</code> objects.
+<div class="block">Class for holding CBOR <code>#6.n</code> (tag) objects.
  <p>
  Tagged objects are based on CBOR major type 6.
- This implementation accepts three variants of tags:
+ This implementation accepts multiple variants of tags:
  </p>
  <div style='margin-left:4em'>
  <code>nnn(</code><i>CBOR&nbsp;object&nbsp;</i><code>)</code><br>
- <code><a href="#RESERVED_TAG_DATE">0</a>(</code><i>ISO&nbsp;date&nbsp;string</i><code>)</code><br>
+ <code><a href="#RESERVED_TAG_DATE_TIME">0</a>(</code><i>ISO&nbsp;date&nbsp;string</i><code>)</code><br>
+  <code><a href="#RESERVED_TAG_EPOCH_TIME">1</a>(</code><i>seconds[.mmm]</i><code>)</code><br>
  <code><a href="#RESERVED_TAG_COTX">1010</a>([</code><i>CBOR&nbsp;text&nbsp;string</i><code>,
  </code><i>CBOR&nbsp;object&nbsp;</i><code>])</code>
  </div>
@@ -119,6 +120,23 @@
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="CBORTag.COTXObject.html" class="type-name-link" title="class in org.webpki.cbor">CBORTag.COTXObject</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Return object for COTX tags.</div>
+</div>
+</div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -134,9 +152,14 @@
 <div class="block">COTX tag: 1010</div>
 </div>
 <div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#RESERVED_TAG_DATE" class="member-name-link">RESERVED_TAG_DATE</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#RESERVED_TAG_DATE_TIME" class="member-name-link">RESERVED_TAG_DATE_TIME</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">DATE tag: 0</div>
+<div class="block">DATE_TIME tag: 0</div>
+</div>
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#RESERVED_TAG_EPOCH_TIME" class="member-name-link">RESERVED_TAG_EPOCH_TIME</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">EPOCH_TIME tag: 1</div>
 </div>
 </div>
 </section>
@@ -178,14 +201,29 @@
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get tagged CBOR object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTagNumber()" class="member-name-link">getTagNumber</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORTag.COTXObject.html" title="class in org.webpki.cbor">CBORTag.COTXObject</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCOTXObject()" class="member-name-link">getCOTXObject</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get <code>COTX</code> object.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/GregorianCalendar.html" title="class or interface in java.util" class="external-link">GregorianCalendar</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDateTime()" class="member-name-link">getDateTime</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get ISO <code>date/time</code> object.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/GregorianCalendar.html" title="class or interface in java.util" class="external-link">GregorianCalendar</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEpochTime()" class="member-name-link">getEpochTime</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get UNIX <code>Epoch</code> time object.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTagNumber()" class="member-name-link">getTagNumber</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get tag number.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(org.webpki.cbor.CBORObject)" class="member-name-link">update</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;object)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(org.webpki.cbor.CBORObject)" class="member-name-link">update</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;object)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Update tagged CBOR object.</div>
 </div>
 </div>
@@ -193,7 +231,7 @@
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-org.webpki.cbor.CBORObject">Methods inherited from class&nbsp;org.webpki.cbor.<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></h3>
-<code><a href="CBORObject.html#checkForUnread()">checkForUnread</a>, <a href="CBORObject.html#clone()">clone</a>, <a href="CBORObject.html#compareTo(org.webpki.cbor.CBORObject)">compareTo</a>, <a href="CBORObject.html#encode()">encode</a>, <a href="CBORObject.html#equals(java.lang.Object)">equals</a>, <a href="CBORObject.html#getArray()">getArray</a>, <a href="CBORObject.html#getBigInteger()">getBigInteger</a>, <a href="CBORObject.html#getBoolean()">getBoolean</a>, <a href="CBORObject.html#getBytes()">getBytes</a>, <a href="CBORObject.html#getFloat16()">getFloat16</a>, <a href="CBORObject.html#getFloat32()">getFloat32</a>, <a href="CBORObject.html#getFloat64()">getFloat64</a>, <a href="CBORObject.html#getInt16()">getInt16</a>, <a href="CBORObject.html#getInt32()">getInt32</a>, <a href="CBORObject.html#getInt64()">getInt64</a>, <a href="CBORObject.html#getInt8()">getInt8</a>, <a href="CBORObject.html#getMap()">getMap</a>, <a href="CBORObject.html#getString()">getString</a>, <a href="CBORObject.html#getTag()">getTag</a>, <a href="CBORObject.html#getUint16()">getUint16</a>, <a href="CBORObject.html#getUint32()">getUint32</a>, <a href="CBORObject.html#getUint64()">getUint64</a>, <a href="CBORObject.html#getUint8()">getUint8</a>, <a href="CBORObject.html#hashCode()">hashCode</a>, <a href="CBORObject.html#isNull()">isNull</a>, <a href="CBORObject.html#scan()">scan</a>, <a href="CBORObject.html#toDiagnosticNotation(boolean)">toDiagnosticNotation</a>, <a href="CBORObject.html#toString()">toString</a></code></div>
+<code><a href="CBORObject.html#checkForUnread()">checkForUnread</a>, <a href="CBORObject.html#clone()">clone</a>, <a href="CBORObject.html#compareTo(org.webpki.cbor.CBORObject)">compareTo</a>, <a href="CBORObject.html#encode()">encode</a>, <a href="CBORObject.html#equals(java.lang.Object)">equals</a>, <a href="CBORObject.html#getArray()">getArray</a>, <a href="CBORObject.html#getBigInteger()">getBigInteger</a>, <a href="CBORObject.html#getBoolean()">getBoolean</a>, <a href="CBORObject.html#getBytes()">getBytes</a>, <a href="CBORObject.html#getFloat16()">getFloat16</a>, <a href="CBORObject.html#getFloat32()">getFloat32</a>, <a href="CBORObject.html#getFloat64()">getFloat64</a>, <a href="CBORObject.html#getInt16()">getInt16</a>, <a href="CBORObject.html#getInt32()">getInt32</a>, <a href="CBORObject.html#getInt64()">getInt64</a>, <a href="CBORObject.html#getInt8()">getInt8</a>, <a href="CBORObject.html#getMap()">getMap</a>, <a href="CBORObject.html#getSimple()">getSimple</a>, <a href="CBORObject.html#getString()">getString</a>, <a href="CBORObject.html#getTag()">getTag</a>, <a href="CBORObject.html#getUint16()">getUint16</a>, <a href="CBORObject.html#getUint32()">getUint32</a>, <a href="CBORObject.html#getUint64()">getUint64</a>, <a href="CBORObject.html#getUint8()">getUint8</a>, <a href="CBORObject.html#hashCode()">hashCode</a>, <a href="CBORObject.html#isNull()">isNull</a>, <a href="CBORObject.html#scan()">scan</a>, <a href="CBORObject.html#toDiagnosticNotation(boolean)">toDiagnosticNotation</a>, <a href="CBORObject.html#toString()">toString</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -209,6 +247,36 @@
 <h2>Field Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="RESERVED_TAG_DATE_TIME">
+<h3>RESERVED_TAG_DATE_TIME</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">RESERVED_TAG_DATE_TIME</span></div>
+<div class="block">DATE_TIME tag: 0</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../constant-values.html#org.webpki.cbor.CBORTag.RESERVED_TAG_DATE_TIME">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="RESERVED_TAG_EPOCH_TIME">
+<h3>RESERVED_TAG_EPOCH_TIME</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">RESERVED_TAG_EPOCH_TIME</span></div>
+<div class="block">EPOCH_TIME tag: 1</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../constant-values.html#org.webpki.cbor.CBORTag.RESERVED_TAG_EPOCH_TIME">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="RESERVED_TAG_COTX">
 <h3>RESERVED_TAG_COTX</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">RESERVED_TAG_COTX</span></div>
@@ -218,21 +286,6 @@
 <dd>
 <ul class="tag-list">
 <li><a href="../../../constant-values.html#org.webpki.cbor.CBORTag.RESERVED_TAG_COTX">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="RESERVED_TAG_DATE">
-<h3>RESERVED_TAG_DATE</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">RESERVED_TAG_DATE</span></div>
-<div class="block">DATE tag: 0</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../constant-values.html#org.webpki.cbor.CBORTag.RESERVED_TAG_DATE">Constant Field Values</a></li>
 </ul>
 </dd>
 </dl>
@@ -269,6 +322,9 @@
 <dt>Parameters:</dt>
 <dd><code>tagNumber</code> - Tag number</dd>
 <dd><code>object</code> - Object</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code></dd>
 </dl>
 </section>
 </li>
@@ -292,6 +348,73 @@
 </section>
 </li>
 <li>
+<section class="detail" id="getDateTime()">
+<h3>getDateTime</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/GregorianCalendar.html" title="class or interface in java.util" class="external-link">GregorianCalendar</a></span>&nbsp;<span class="element-name">getDateTime</span>()</div>
+<div class="block">Get ISO <code>date/time</code> object.
+ <p>
+ This method assumes that a valid CBOR tag 0 has been found, 
+ otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="CBORObject.html#getDateTime()">getDateTime</a></code>&nbsp;in class&nbsp;<code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></dd>
+<dt>Returns:</dt>
+<dd><code>GregorianCalendar</code></dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getDateTime()"><code>CBORObject.getDateTime()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getEpochTime()">
+<h3>getEpochTime</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/GregorianCalendar.html" title="class or interface in java.util" class="external-link">GregorianCalendar</a></span>&nbsp;<span class="element-name">getEpochTime</span>()</div>
+<div class="block">Get UNIX <code>Epoch</code> time object.
+ <p>
+ This method assumes that a valid CBOR tag 1 has been found, 
+ otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="CBORObject.html#getEpochTime()">getEpochTime</a></code>&nbsp;in class&nbsp;<code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></dd>
+<dt>Returns:</dt>
+<dd><code>GregorianCalendar</code></dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getEpochTime()"><code>CBORObject.getEpochTime()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getCOTXObject()">
+<h3>getCOTXObject</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORTag.COTXObject.html" title="class in org.webpki.cbor">CBORTag.COTXObject</a></span>&nbsp;<span class="element-name">getCOTXObject</span>()</div>
+<div class="block">Get <code>COTX</code> object.
+ <p>
+ This method assumes that a valid COTX tag has been found, 
+ otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd><code>COTXObject</code></dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="update(org.webpki.cbor.CBORObject)">
 <h3>update</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">update</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;object)</span></div>
@@ -301,6 +424,8 @@
 <dd><code>object</code> - New object</dd>
 <dt>Returns:</dt>
 <dd>Previous object</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
 </dl>
 </section>
 </li>

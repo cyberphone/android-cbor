@@ -61,10 +61,10 @@
 <div class="package-signature">package <span class="element-name">org.webpki.cbor</span></div>
 <section class="package-description" id="package-description">
 <div class="block"><h2 id="cbor---encoder-decoder-signatures-and-encryption-heading">CBOR - Encoder, Decoder, Signatures, and Encryption</h2>
-This package contains Java support for CBOR 
-[<a href='https://www.rfc-editor.org/rfc/rfc8949.html'>RFC&nbsp;8949</a>].
+This package contains Java support for CBOR using the 
+[<a href='https://www.ietf.org/archive/id/draft-rundgren-cbor-core-04.html'>CBOR&nbsp;Core</a>] profile.
 <h3 id='supported-objects'>Supported Objects</h3>
-The following table shows the currently supported CBOR objects (data items)
+The following table shows the supported CBOR objects (data items)
 and their mapping to Java, here expressed in
 CDDL&nbsp;[<a href='https://www.rfc-editor.org/rfc/rfc8610.html'>RFC&nbsp;8610</a>]
 notation:
@@ -79,9 +79,10 @@ notation:
 <tr style='text-align:center'><td><code>tstr</code></td><td><a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a></td><td><code>String</code></td><td></td></tr>
 <tr style='text-align:center'><td><code>bool</code></td><td><a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a></td><td><code>boolean</code></td><td></td></tr>
 <tr style='text-align:center'><td><code>null</code></td><td><a href="CBORNull.html" title="class in org.webpki.cbor"><code>CBORNull</code></a></td><td></td><td></td></tr>
-<tr style='text-align:center'><td><code>array</code></td><td><a href="CBORArray.html" title="class in org.webpki.cbor"><code>CBORArray</code></a></td><td></td><td></td></tr>
-<tr style='text-align:center'><td><code>map</code></td><td><a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code></a></td><td></td><td></td></tr>
-<tr style='text-align:center'><td><code>tag</code></td><td><a href="CBORTag.html" title="class in org.webpki.cbor"><code>CBORTag</code></a></td><td></td><td></td></tr>
+<tr style='text-align:center'><td><code>[]</code></td><td><a href="CBORArray.html" title="class in org.webpki.cbor"><code>CBORArray</code></a></td><td></td><td></td></tr>
+<tr style='text-align:center'><td><code>{}</code></td><td><a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code></a></td><td></td><td></td></tr>
+<tr style='text-align:center'><td><code>#6.n</code></td><td><a href="CBORTag.html" title="class in org.webpki.cbor"><code>CBORTag</code></a></td><td></td><td></td></tr>
+<tr style='text-align:center'><td><code>#7.n</code></td><td><a href="CBORSimple.html" title="class in org.webpki.cbor"><code>CBORSimple</code></a></td><td><code>int</code></td><td></td></tr>
 </table>
 </div>
 <ol style='margin:0 0'>
@@ -92,149 +93,30 @@ notation:
 including support for <code style='white-space:nowrap'>-0.0</code>, <code>NaN</code>,
  and <code style='white-space:nowrap'>&pm;Infinity</code>.
 The encoded representation is determined by the size and precision of the value.
-Also see <a href="CBORDecoder.html#setFloatSupport(boolean)"><code>CBORDecoder.setFloatSupport(boolean)</code></a>.</li>
+See also <a href="CBORDecoder.html#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBOR&nbsp;decoding&nbsp;options</code></a>.</li>
 </ol>
-<p>
-This implementation does not support CBOR &quot;simple&quot; values beyond
-<code>true</code>, <code>false</code>, <code>null</code>, and
-the three floating-point variants.
-</p>
+<h3 id='time-data'>Time Data</h3>
+Since CBOR lacks a native time primitive, RFC&nbsp;8949 introduces
+such a feature through tag 0 and 1.  This implementation supports these tags
+as well as making the same methods available without the tag constructs.
+For details turn to <a href="CBORTag.html#getDateTime()"><code>CBORTag.getDateTime()</code></a>,
+<a href="CBORTag.html#getEpochTime()"><code>CBORTag.getEpochTime()</code></a>, <a href="CBORObject.html#getDateTime()"><code>CBORObject.getDateTime()</code></a>,
+<a href="CBORObject.html#getEpochTime()"><code>CBORObject.getEpochTime()</code></a>.
 <h3 id='deterministic-encoding'>Deterministic Encoding</h3>
 For certain security related applications, it has been proven
 useful performing cryptographic operations like
-hashing and signatures, on "raw" CBOR data.
-To make this possible without additional processing,
-data must be in a stable form "on&nbsp;the&nbsp;wire".
-This can either be achieved by using the binary "as&nbsp;is", or through
-deterministic encoding.
-This section describes a variant of latter, making compliant CBOR systems
-less dependent on specific encoder and decoder designs.
-<div style='margin-top:0.7em'>
-It is in this context worth noting that XML and JSON do not support
-deterministic encoding.
-</div>
-<div id='standards-proposal' class='webpkicomment' style='margin:1.5em 0'>
-Although APIs may be quite different compared to the API of this package,
-the deterministic encoding scheme described here
-is intended as a <i>standard</i>, not limited to specific platforms.
-</div>
-<div id='adoption-criterion'>
-To facilitate mainstream adoption, the encoding scheme is aligned with
-current best practices for encoding CBOR object and should
-with moderate efforts work with most existing CBOR encoders and decoders.
-In fact, having a <i>single</i> way of encoding CBOR data
-should simplify both implementations and associated testing.
-The encoding scheme has been verified to also be usable in highly
-constrained systems, albeit requiring detailed knowledge of how
-a specific tool addresses encoding of CBOR objects.
-Note that a compliant implementation does not have to support all CBOR objects,
-it is sufficient that the ones that actually are used by the associated applications,
-conform to this specification.
-</div>
-<div style='margin-top:0.8em'>
-The encoding scheme adheres to section 4.2 of RFC&nbsp;8949, but adds
-a few constraints (denoted by RFC+), where the RFC offers choices.
-The encoding rules are as follows:
-</div>
-<ul>
-<li id='number-encoding' class='webpkilistspacing'>
-  RFC+: Floating-point and integer objects <b>must</b> be treated as <i>distinct types</i>
-regardless of their numeric value. This is compliant with
-Rule&nbsp;2 in section 4.2.2 of RFC&nbsp;8949.</li>
-<li id='integer-encoding' class='webpkilistspacing'>
-  RFC: Integers, represented by the <code>int</code> and 
-<code>bigint</code> types, <b>must</b> use the <code>int</code>
-type if the value is between 
-<span style='white-space:nowrap'><code>-2<sup>64</sup></code></span> 
-and <span style='white-space:nowrap'><code>2<sup>64</sup>-1</code></span>,
-otherwise the <code>bigint</code> type <b>must</b> be used.
-The following table holds a few sample values and their proper CBOR encoding:
-<div class='webpkifloat'>
-<table class='webpkitable' style='margin-left:2em'>
-<tr><th>Value</th><th>Encoding</th></tr>
-<tr style='text-align:right'><td><code>0</code></td><td><code>00</code></td></tr>
-<tr style='text-align:right'><td><code>-1</code></td><td><code>20</code></td></tr>
-<tr style='text-align:right'><td><code>255</code></td><td><code>18ff</code></td></tr>
-<tr style='text-align:right'><td><code>256</code></td><td><code>190100</code></td></tr>
-<tr style='text-align:right'><td><code>-256</code></td><td><code>38ff</code></td></tr>
-<tr style='text-align:right'><td><code>-257</code></td><td><code>390100</code></td></tr>
-<tr style='text-align:right'><td><code>1099511627775</code></td><td><code>1b000000ffffffffff</code></td></tr>
-<tr style='text-align:right'><td><code>18446744073709551615</code></td><td><code>1bffffffffffffffff</code></td></tr>
-<tr style='text-align:right'><td><code>18446744073709551616</code></td><td><code>c249010000000000000000</code></td></tr>
-<tr style='text-align:right'><td><code>-18446744073709551616</code></td><td><code>3bffffffffffffffff</code></td></tr>
-<tr style='text-align:right'><td><code>-18446744073709551617</code></td><td><code>c349010000000000000000</code></td></tr>
-</table>
-</div>
-Note that integers <b>must not</b> be supplied with 
-<i>leading zero bytes</i> (like <code>1900ff</code>) unless the
-CBOR representation offers no alternative (like <code>1b000000ffffffffff</code>).
-<div style='margin:0.7em 0 0.3em 0'>
-Note that the integer encoding scheme above does not always return the
-most compact representation; the value 
-<code>1099511627775</code> 
-(<code>0xffffffffff</code>)
-would actually yield two bytes less using the <code>bigint</code> type. 
-</div>
-</li>
-<li id='floating-point-encoding' class='webpkilistspacing'>
-  RFC+: Floating-point data <b>must</b> use the shortest IEEE&nbsp;754
-  variant and associated CBOR encoding.
-The following table holds floating-point values needing special considerations
-as well as a small set of "edge&nbsp;cases":
-<div class='webpkifloat'>
-<table class='webpkitable' style='margin-left:2em'>
-<tr><th>Value</th><th>Encoding</th></tr>
-<tr style='text-align:right'><td><code>0.0</code></td><td><code>f90000</code></td></tr>
-<tr style='text-align:right'><td><code>-0.0</code></td><td><code>f98000</code></td></tr>
-<tr style='text-align:right'><td><code>Infinity</code></td><td><code>f97c00</code></td></tr>
-<tr style='text-align:right'><td><code>-Infinity</code></td><td><code>f9fc00</code></td></tr>
-<tr style='text-align:right'><td><code>NaN</code></td><td><code>f97e00</code></td></tr>
-<tr><th colspan='2'>Assorted Edge Cases</th></tr>
-<tr style='text-align:right'><td><code>-5.960464477539063e-8</code></td><td><code>f98001</code></td></tr>
-<tr style='text-align:right'><td><code>-5.960465188081798e-8</code></td><td><code>fab3800001</code></td></tr>
-<tr style='text-align:right'><td><code>65504.0</code></td><td><code>f97bff</code></td></tr>
-<tr style='text-align:right'><td><code>65504.00390625</code></td><td><code>fa477fe001</code></td></tr>
-<tr style='text-align:right'><td><code>65536.0</code></td><td><code>fa47800000</code></td></tr>
-<tr style='text-align:right'><td><code>10.559998512268066</code></td><td><code>fa4128f5c1</code></td></tr>
-<tr style='text-align:right'><td><code>10.559998512268068</code></td><td><code>fb40251eb820000001</code></td></tr>
-<tr style='text-align:right'><td><code>3.4028234663852886e+38</code></td><td><code>fa7f7fffff</code></td></tr>
-<tr style='text-align:right'><td><code>3.402823466385289e+38</code></td><td><code>fb47efffffe0000001</code></td></tr>
-<tr style='text-align:right'><td><code>1.401298464324817e-45</code></td><td><code>fa00000001</code></td></tr>
-<tr style='text-align:right'><td><code>5.0e-324</code></td><td><code>fb0000000000000001</code></td></tr>
-<tr style='text-align:right'><td><code>-1.7976931348623157e+308</code></td><td><code>fbffefffffffffffff</code></td></tr>
-</table>
-</div>
-Note that <code>NaN</code> "signaling" (like <code>f97e01</code>),
-<b>must</b> be flagged as an <i>error</i>.
-<div style='margin:0.7em 0 0.3em 0'>
-Note that the shortest encoding may result in <i>subnormal</i>
-numbers like <code>f98001</code>.
-</div>
-</li>
-<li class='webpkilistspacing'>
-  RFC: Map keys <b>must</b> be sorted in the bytewise lexicographic 
-order of their deterministic encoding.
-Duplicate keys <b>must</b> be rejected.
-</li>
-<li id='map-key-equivalence' class='webpkilistspacing'>
-  RFC+: Since CBOR encoding according to this specification
-maintains type and data uniqueness, there are no specific restrictions or
-tests needed in order to determine map key equivalence.  
-As an example, the floating-point numbers <code>0.0</code> and
-<code>-0.0</code>, and the integer number <code>0</code>
-represent the distinct keys
-<code>f90000</code>, <code>f98000</code>, and <code>00</code> respectively.
-</li>
-<li>
-  RFC+: Deterministic CBOR according to this specification
-may also be provided in 
-<a href='#diagnostic-notation'>Diagnostic Notation</a>.
-</li>
-</ul>
-Any deviation from the rules above will throw exceptions using the standard decoder
-(<a href="CBORDecoder.html#decode(byte%5B%5D)"><code>CBORDecoder.decode(byte[])</code></a>).
-For more control of the decoding process including dealing with CBOR sequences, see:
-<a href="CBORDecoder.html#%3Cinit%3E(java.io.InputStream)"><code>CBOR&nbsp;decoding&nbsp;options</code></a>.
+hashing and signatures, over "raw" CBOR data.
+This API supports such operations through deterministic encoding
+which also is the default mode.
+The used deterministic encoding scheme is described in
+[<a href='https://www.ietf.org/archive/id/draft-rundgren-cbor-core-04.html'>CBOR&nbsp;Core</a>].
+If input data does not conform to the deterministic encoding scheme,
+a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+<p id='decoder-options'>
+For more control of the decoding process, including dealing with "legacy" CBOR
+data as well as with CBOR sequences, see
+<a href="CBORDecoder.html#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(inputStream, int, int)</code></a>.
+</p>
 <p>
 On output (<a href="CBORObject.html#encode()"><code>CBORObject.encode()</code></a>)
 deterministic encoding is always performed
@@ -295,7 +177,7 @@ To aid the use of cryptography, support for
 <a href='doc-files/signatures.html'>Signatures</a> and 
 <a href='doc-files/encryption.html'>Encryption</a> is integrated in the package.
 <h3 id='diagnostic-notation'>Diagnostic Notation</h3>
-Creating CBOR data in diagnostic notation (as described in section 8 of RFC&nbsp;8949),
+Creating CBOR data in diagnostic notation
 is provided by the <a href="CBORObject.html#toString()"><code>CBORObject.toString()</code></a> method.
 <p>
 However, through the <a href="CBORDiagnosticNotation.html" title="class in org.webpki.cbor"><code>CBORDiagnosticNotation</code></a> class, CBOR data may also be provided
@@ -315,93 +197,177 @@ be aligned with IEEE&nbsp;754 encoding and rounding rules.
 </p>
 The following table shows how CBOR objects should be represented in 
 diagnostic notation:
- <div class='webpkifloat'>
-<table class='webpkitable' style='margin-left:2em'>
-<tr style='text-align:center'><th>CBOR</th><th>Syntax</th><th>Notes</th><th style='min-width:30em'>Description</th></tr>
-<tr style='text-align:center'><td rowspan='2'></td><td><code>/</code>&nbsp;<i>comment&nbsp;text</i>&nbsp;<code>/</code></td>
-<td>7</td><td style='text-align:left'>Multi-line comment.
-Multi-line comments are treated as whitespace and may thus also be used 
-<i>between</i> CBOR objects.</td></tr>
-<tr style='text-align:center'><td><code>#</code>&nbsp;<i>comment&nbsp;text</i></td>
-<td>7</td><td style='text-align:left'>Single-line comment.
-Single-line comments are terminated by a newline character (<code>'\n'</code>) or <code>EOF</code>.
-Single-line comments may also terminate lines holding regular CBOR items.</td></tr>
-<tr style='text-align:center' id='integer-diag'><td><code>int</code></td>
-<td rowspan='2'><span style='white-space:nowrap'>{<i>sign</i>}{<code>0b</code>|<code>0o</code>|<code>0x</code>}<i>n</i></span></td>
-<td rowspan='2'>1, 2</td><td style='text-align:left' rowspan='2'>
-Arbitrary sized integers without fractional components or exponents.
-See <a href='#integer-encoding'>CBOR integer encoding</a>.
-Binary, octal, and hexadecimal notation is supported by prepending numbers
-with <code>0b</code>, <code>0o</code>, and <code>0x</code> respectively.
-The latter also permit arbitrary insertions of <code>'_'</code> characters between digits to
-enable grouping of data like <code>0b100_000000001</code>.
-</td></tr>
-<tr style='text-align:center'><td><code>bigint</code></tr>
-<tr style='text-align:center' id='float-diag'><td rowspan='3'><code>float</code></td>
-<td>{<i>sign</i>}<i>n</i><code>.</code><i>n</i>{<code>e&pm;</code><i>n</i>}</td>
-<td>1, 2</td><td style='text-align:left'>Floating-point values
-must include a decimal point and an <i>optional</i> exponent.
-See <a href='#floating-point-encoding'>CBOR floating-point encoding</a>.
-</td></tr>
-<tr style='text-align:center'><td><code>NaN</code></td><td></td><td style='text-align:left'>Not a number.
-See <a href='#floating-point-encoding'>CBOR floating-point encoding</a>.
-</td></tr>
-<tr style='text-align:center'><td>{<i>sign</i>}<code>Infinity</code></td><td>2</td>
-<td style='text-align:left'>Infinity.
-See <a href='#floating-point-encoding'>CBOR floating-point encoding</a>.
-</td></tr>
-<tr style='text-align:center'><td rowspan='4'><code>bstr</code></td>
-<td><code>h'</code><i>hex&nbsp;data</i><code>'</code></td><td>3, 6</td>
-<td style='text-align:left'>Byte data provided in hexadecimal notation.
-Each byte must be represented by two hexadecimal digits.</td></tr>
-<tr style='text-align:center'><td><code>b64'</code><i>base64&nbsp;data</i><code>'</code></td><td>3,&nbsp;6,&nbsp;7</td>
-<td style='text-align:left'>Byte data provided in base64 or base64URL notation.
-Padding with <code>'='</code> characters is <i>optional</i>.</td></tr>
-<tr style='text-align:center'><td><code>'</code><i>text</i><code>'</code></td><td>4, 5, 7</td>
-<td style='text-align:left'>Byte data provided as UTF-8 encoded text.</td></tr>
-<tr style='text-align:center'><td><code>&lt;&lt;</code>&nbsp;<i>object</i>&nbsp;<code>&gt;&gt;</code></td><td>7</td>
-<td style='text-align:left'>Construct holding a CBOR object which is subsequently embedded in a byte-string.</td></tr>
-<tr style='text-align:center'><td><code>tstr</code></td>
-<td><code>&quot;</code><i>text</i><code>&quot;</code><td>4, 5</td><td style='text-align:left'>UTF-8 encoded text-string.</td></tr>
-<tr style='text-align:center'><td rowspan='2'><code>bool</code></td><td><code>true</code></td><td rowspan='2'></td>
-<td style='text-align:left' rowspan='2'>Boolean value.</td></tr>
-<tr style='text-align:center'><td><code>false</code></td></tr>
-<tr style='text-align:center'><td><code>null</code></td><td><code>null</code></td><td></td><td style='text-align:left'>Null value.</td></tr>
-<tr style='text-align:center'><td><code>array</code></td><td><code>[</code>&nbsp;<i>object</i>&nbsp;<code>]</code></td>
-<td></td><td style='text-align:left'>Array with zero or more comma-separated CBOR objects.</td></tr>
-<tr style='text-align:center'><td><code>map</code></td><td><code>{</code>&nbsp;<i>key</i><code>:</code><i>object</i>&nbsp;<code>}</code></td>
-<td></td><td style='text-align:left'>Map with zero or more comma-separated key/object pairs.
-Keys and objects are expressed as CBOR objects.</td></tr>
-<tr style='text-align:center'><td><code>tag</code></td><td><i>n</i><code>(</code>&nbsp;<i>object</i>&nbsp;<code>)</code></td>
-<td>1</td><td style='text-align:left'>Tag holding a CBOR object.</td></tr>
-<tr style='text-align:center'><td></td><td><code>,</code></td><td></td><td style='text-align:left'>Separator character for CBOR sequences.</td></tr>
-</table>
-</div>
-<ol style='margin:0 0'>
-<li>The letter <i>n</i> in the Syntax column denotes one or more digits.</li>
-<li>The optional {<i>sign</i>} must be a single hyphen (<code>'-'</code>) character.</li>
-<li><i>Input only</i>: between the quotes, the whitespace characters
-(<code>' '</code>, <code>'\t'</code>, <code>'\r'</code>, <code>'\n'</code>)
-are <i>ignored</i>.</li> 
-<li><i>Input only</i>: the control characters
-(<code>'\t'</code> and <code>'\n'</code>)
-inside of string quotes <i>become a part of the text</i>.
-For nomalizing line terminators,
-a single <code>'\r'</code> or the combination <code>'\r\n'</code>
-are rewritten as <code>'\n'</code>.
-To <i>avoid</i> getting newline characters (<code>'\n'</code>)
-included in multi-line text strings,
-a <i>line continuation marker</i> consisting of a backslash&nbsp;(<code>'\'</code>)
-immediately preceding the newline may be used.</li>
-<li>Text strings may also include JavaScript compatible escape sequences
-(<code>'\''</code>, <code>'\"'</code>, <code>'\\'</code>, 
-<code>'\b'</code>, <code>'\f'</code>, <code>'\n'</code>, 
-<code>'\r'</code>, <code>'\t'</code>, <code>'\u</code><i>hhhh</i><code>'</code>).</li>
-<li>Zero-length strings (<code>''</code>) return byte strings of length zero.</li>
-<li><i>Input only</i>:
-the <a href="CBORObject.html#toString()"><code>CBORObject.toString()</code></a> method does not produce this item.</li>
 
-</ol></div>
+  <div class='webpkifloat'>
+    <table class='webpkitable' style='margin-left:2em'>
+      <tr><th>CBOR</th><th>Syntax</th><th style='min-width:30em'>Comment</th><th>Notes</th></tr>
+      <tr style='text-align:center'>
+        <td rowspan='2'></td>
+        <td><kbd><b>/</b></kbd>&nbsp;<i>comment&nbsp;text</i>&nbsp;<kbd><b>/</b></kbd></td>
+        <td style='text-align:left'>
+          Multi-line comment.
+          Multi-line comments are treated as whitespace and may thus also be used
+          <i>between</i> CBOR objects.
+        </td>
+        <td>6</td>
+      </tr>
+      <tr style='text-align:center'>
+        <td><kbd><b>#</b></kbd>&nbsp;<i>comment&nbsp;text</i></td>
+        <td style='text-align:left'>
+          Single-line comment.
+          Single-line comments are terminated by a newline character (<kbd><b>'\n'</b></kbd>) or <kbd><b>EOF</b></kbd>.
+          Single-line comments may also terminate lines holding regular CBOR items.
+        </td>
+        <td>6</td>
+      </tr>
+      <tr style='text-align:center' id='int-diag'>
+        <td><code>integer</code></td>
+        <td><span style='white-space:nowrap'><i>{sign}</i><i>{</i>&#x200a;<kbd><b>0b</b></kbd>&#x200a;|&#x200a;<kbd><b>0o</b></kbd>&#x200a;|&#x200a;<kbd><b>0x</b></kbd><i>}&#x200a;n</i></span></td>
+        <td style='text-align:left'>
+          Arbitrary sized integers without fractional components or exponents.
+          <div style='margin-top:0.5em'>
+            For <i>input</i> data in diagnostic notation, binary, octal, and hexadecimal notation
+            is also supported by prepending numbers with <kbd><b>0b</b></kbd>, <kbd><b>0o</b></kbd>, and <kbd><b>0x</b></kbd> respectively.
+            The latter also permit arbitrary insertions of <kbd><b>'_'</b></kbd> characters between digits to
+            enable grouping of data like <code>0b100_000000001</code>.
+          </div>
+        </td>
+        <td>1, 2</td>
+      </tr>
+      <tr style='text-align:center' id='float-diag'>
+        <td rowspan='3'><code>float</code></td>
+        <td><i>{sign}</i><i>n</i><kbd><b>.</b></kbd><i>n</i><i>{</i><kbd><b>e</b></kbd>&#x2009;<kbd><b>&pm;</b></kbd>&#x2009;<i>n}</i></td>
+        <td style='text-align:left'>
+          Floating point values
+          must include a decimal point and an <i>optional</i> exponent.
+        </td>
+        <td>1, 2</td>
+      </tr>
+      <tr style='text-align:center'>
+        <td><kbd><b>NaN</b></kbd></td>
+        <td style='text-align:left'>
+          Not a number.
+        </td>
+        <td></td>
+      </tr>
+      <tr style='text-align:center'>
+        <td><i>{sign}</i><kbd><b>Infinity</b></kbd></td>
+        <td style='text-align:left'>
+          Infinity.
+        </td>
+        <td>2</td>
+      </tr>
+      <tr style='text-align:center'>
+        <td rowspan='4'><code>bstr</code></td>
+        <td><kbd><b>h'</b></kbd><i>hex&nbsp;data</i><kbd><b>'</b></kbd></td>
+        <td style='text-align:left'>
+          Byte data provided in hexadecimal notation.
+          Each byte must be represented by two hexadecimal digits.
+        </td>
+        <td>3</td>
+      </tr>
+      <tr style='text-align:center'>
+        <td><kbd><b>b64'</b></kbd><i>base64&nbsp;data</i><kbd><b>'</b></kbd></td>
+        <td style='text-align:left'>
+          Byte data provided in base64 or base64URL notation.
+          Padding with <kbd><b>'='</b></kbd> characters is <i>optional</i>.
+        </td>
+        <td>3, 6</td>
+      </tr>
+      <tr style='text-align:center'>
+        <td><kbd><b>'</b></kbd><i>text</i><kbd><b>'</b></kbd></td>
+        <td style='text-align:left'>Byte data provided as UTF-8 encoded text.</td>
+        <td>4,&nbsp;5,&nbsp;6</td>
+      </tr>
+      <tr style='text-align:center'>
+        <td><kbd><b>&lt;&lt;</b></kbd>&nbsp;<i>object...</i>&nbsp;<kbd><b>&gt;&gt;</b></kbd></td>
+        <td style='text-align:left'>Construct holding zero or more comma-separated CBOR objects
+          that are subsequently wrapped in a byte string.</td>
+        <td>6</td>
+      </tr>
+      <tr style='text-align:center'>
+        <td><code>tstr</code></td>
+        <td><kbd><b>&quot;</b></kbd><i>text</i><kbd><b>&quot;</b></kbd>
+        <td style='text-align:left'>UTF-8 encoded text string.</td>
+        <td>4, 5</td>
+      </tr>
+      <tr style='text-align:center'>
+        <td><code>bool</code></td>
+        <td><kbd><b>true</b></kbd>&#x200a;|&#x200a;<kbd><b>false</b></kbd></td>
+        <td style='text-align:left'>Boolean value.</td>
+        <td></td>
+      </tr>
+      <tr style='text-align:center'>
+        <td><code>null</code></td>
+        <td><kbd><b>null</b></kbd></td>
+        <td style='text-align:left'>Null value.</td>
+        <td></td>
+      </tr>
+      <tr style='text-align:center'>
+        <td><code>[]</code></td>
+        <td><kbd><b>[</b></kbd>&nbsp;<i>object...</i>&nbsp;<kbd><b>]</b></kbd></td>
+        <td style='text-align:left'>Array with zero or more comma-separated CBOR objects.</td>
+        <td></td>
+      </tr>
+      <tr style='text-align:center'>
+        <td><code>{}</code></td>
+        <td><kbd><b>{</b></kbd>&nbsp;<i>key</i><kbd><b>:</b></kbd><i>value...</i>&nbsp;<kbd><b>}</b></kbd></td>
+        <td style='text-align:left'>
+          Map with zero or more comma-separated key/value pairs.
+          Key and value pairs are expressed as CBOR objects, separated by a <kbd><b>':'</b></kbd> character.
+        </td>
+        <td></td>
+      </tr>
+      <tr style='text-align:center'>
+        <td><code>#6.nnn</code></td>
+        <td><i>n</i><kbd><b>(</b></kbd>&nbsp;<i>object</i>&nbsp;<kbd><b>)</b></kbd></td>
+        <td style='text-align:left'>Tag holding a CBOR object.</td>
+        <td>1</td>
+      </tr>
+      <tr style='text-align:center'>
+        <td><code>#7.nnn</code></td>
+        <td><kbd><b>simple(</b></kbd><i>n</i><kbd><b>)</b></kbd></td>
+        <td style='text-align:left'>Simple value.</td>
+        <td>1</td>
+      </tr>
+      <tr style='text-align:center'>
+        <td></td>
+        <td><kbd><b>,</b></kbd></td>
+        <td style='text-align:left'>Separator character for CBOR sequences.</td>
+        <td>6</td>
+      </tr>
+    </table>
+  </div>
+  <ol style='margin:0 0'>
+    <li>The letter <i>n</i> in the Syntax column denotes one or more digits.</li>
+    <li style='padding-top:0.5em'>The optional <i>{sign}</i> must be a single hyphen (<kbd><b>'-'</b></kbd>) character.</li>
+    <li style='padding-top:0.5em'>
+      <i>Input only</i>: between the quotes, the whitespace characters
+      (<kbd><b>' '</b></kbd>, <kbd><b>'\t'</b></kbd>, <kbd><b>'\r'</b></kbd>, <kbd><b>'\n'</b></kbd>)
+      are <i>ignored</i>.
+    </li>
+    <li style='padding-top:0.5em'>
+      <i>Input only</i>: the control characters
+      <kbd><b>'\t'</b></kbd> and <kbd><b>'\n'</b></kbd>
+      inside of string quotes <i>become a part of the text</i>.
+      For nomalizing line terminators,
+      a single <kbd><b>'\r'</b></kbd> or the combination <kbd><b>'\r\n'</b></kbd>
+      are rewritten as <kbd><b>'\n'</b></kbd>.
+      To <i>avoid</i> getting newline characters (<kbd><b>'\n'</b></kbd>)
+      included in multi-line text strings,
+      a <i>line continuation marker</i> consisting of a backslash&nbsp;(<kbd><b>'\'</b></kbd>)
+      immediately preceding the newline may be used.
+    </li>
+    <li style='padding-top:0.5em'>
+      Text strings may also include JavaScript compatible escape sequences
+      (<kbd><b>'\''</b></kbd>, <kbd><b>'\"'</b></kbd>, <kbd><b>'\\'</b></kbd>,
+      <kbd><b>'\b'</b></kbd>, <kbd><b>'\f'</b></kbd>, <kbd><b>'\n'</b></kbd>,
+      <kbd><b>'\r'</b></kbd>, <kbd><b>'\t'</b></kbd>, <kbd><b>'\u</b></kbd><i>hhhh</i><kbd><b>'</b></kbd>).
+    </li>
+    <li style='padding-top:0.5em'>
+      <i>Input only</i>.
+    </li>
+  </ol></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -414,7 +380,7 @@ the <a href="CBORObject.html#toString()"><code>CBORObject.toString()</code></a> 
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR <code>array</code> objects.</div>
+<div class="block">Class for holding CBOR <code>[]</code> (array) objects.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORAsymKeyDecrypter.html" title="class in org.webpki.cbor">CBORAsymKeyDecrypter</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -446,15 +412,15 @@ the <a href="CBORObject.html#toString()"><code>CBORObject.toString()</code></a> 
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORBigInt.html" title="class in org.webpki.cbor">CBORBigInt</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR <code>bignum</code> and <code>integer</code> objects.</div>
+<div class="block">Class for holding CBOR integer objects.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORBoolean.html" title="class in org.webpki.cbor">CBORBoolean</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR <code>boolean</code> objects.</div>
+<div class="block">Class for holding CBOR <code>bool</code> objects.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORBytes.html" title="class in org.webpki.cbor">CBORBytes</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR <code>byte&nbsp;string</code> objects.</div>
+<div class="block">Class for holding CBOR <code>bstr</code> objects.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab1"><a href="CBORCryptoConstants.html" title="interface in org.webpki.cbor">CBORCryptoConstants</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab1">
@@ -498,7 +464,7 @@ the <a href="CBORObject.html#toString()"><code>CBORObject.toString()</code></a> 
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORFloat.html" title="class in org.webpki.cbor">CBORFloat</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR floating-point objects.</div>
+<div class="block">Class for holding CBOR <code>float</code> objects.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORFromJSON.html" title="class in org.webpki.cbor">CBORFromJSON</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
@@ -514,7 +480,7 @@ the <a href="CBORObject.html#toString()"><code>CBORObject.toString()</code></a> 
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR <code>integer</code> objects.</div>
+<div class="block">Class for holding CBOR <code>int</code> objects.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORKeyPair.html" title="class in org.webpki.cbor">CBORKeyPair</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
@@ -522,31 +488,39 @@ the <a href="CBORObject.html#toString()"><code>CBORObject.toString()</code></a> 
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR <code>map</code> objects.</div>
+<div class="block">Class for holding CBOR <code>{}</code> (map) objects.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORNull.html" title="class in org.webpki.cbor">CBORNull</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="CBORMap.Dynamic.html" title="interface in org.webpki.cbor">CBORMap.Dynamic</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="block">Support interface for dynamic CBOR generation.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORNull.html" title="class in org.webpki.cbor">CBORNull</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for holding CBOR <code>null</code> objects.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Base class for all CBOR objects.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORPublicKey.html" title="class in org.webpki.cbor">CBORPublicKey</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORPublicKey.html" title="class in org.webpki.cbor">CBORPublicKey</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class handling Java/COSE public key conversions.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORSequenceBuilder.html" title="class in org.webpki.cbor">CBORSequenceBuilder</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORSequenceBuilder.html" title="class in org.webpki.cbor">CBORSequenceBuilder</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class for creating CBOR sequences.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a>&lt;T extends <a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a>&lt;?&gt;&gt;</div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a>&lt;T extends <a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a>&lt;?&gt;&gt;</div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Base class for signing data.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORSimple.html" title="class in org.webpki.cbor">CBORSimple</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Class for holding CBOR <code>#7.n</code> (simple) objects.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORString.html" title="class in org.webpki.cbor">CBORString</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR <code>text&nbsp;string</code> objects.</div>
+<div class="block">Class for holding CBOR <code>tstr</code> objects.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORSymKeyDecrypter.html" title="class in org.webpki.cbor">CBORSymKeyDecrypter</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
@@ -562,46 +536,50 @@ the <a href="CBORObject.html#toString()"><code>CBORObject.toString()</code></a> 
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Class for holding CBOR <code>tag</code> objects.</div>
+<div class="block">Class for holding CBOR <code>#6.n</code> (tag) objects.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORTypedObjectDecoder.html" title="class in org.webpki.cbor">CBORTypedObjectDecoder</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORTag.COTXObject.html" title="class in org.webpki.cbor">CBORTag.COTXObject</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Return object for COTX tags.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORTypedObjectDecoder.html" title="class in org.webpki.cbor">CBORTypedObjectDecoder</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Base class for typed objects decoders.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORTypedObjectDecoderCache.html" title="class in org.webpki.cbor">CBORTypedObjectDecoderCache</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORTypedObjectDecoderCache.html" title="class in org.webpki.cbor">CBORTypedObjectDecoderCache</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Cache for typed object decoders.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORValidator.html" title="class in org.webpki.cbor">CBORValidator</a>&lt;T extends <a href="CBORValidator.html" title="class in org.webpki.cbor">CBORValidator</a>&lt;T&gt;&gt;</div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORValidator.html" title="class in org.webpki.cbor">CBORValidator</a>&lt;T extends <a href="CBORValidator.html" title="class in org.webpki.cbor">CBORValidator</a>&lt;T&gt;&gt;</div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Base class for validating signatures.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORX509Decrypter.html" title="class in org.webpki.cbor">CBORX509Decrypter</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORX509Decrypter.html" title="class in org.webpki.cbor">CBORX509Decrypter</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class for X.509 decryption.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="CBORX509Decrypter.DecrypterImpl.html" title="interface in org.webpki.cbor">CBORX509Decrypter.DecrypterImpl</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="CBORX509Decrypter.DecrypterImpl.html" title="interface in org.webpki.cbor">CBORX509Decrypter.DecrypterImpl</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">Decrypter engine implementation interface.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="CBORX509Decrypter.KeyLocator.html" title="interface in org.webpki.cbor">CBORX509Decrypter.KeyLocator</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="CBORX509Decrypter.KeyLocator.html" title="interface in org.webpki.cbor">CBORX509Decrypter.KeyLocator</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">Decrypter private key locator.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORX509Encrypter.html" title="class in org.webpki.cbor">CBORX509Encrypter</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORX509Encrypter.html" title="class in org.webpki.cbor">CBORX509Encrypter</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for X.509 encryption.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORX509Signer.html" title="class in org.webpki.cbor">CBORX509Signer</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORX509Signer.html" title="class in org.webpki.cbor">CBORX509Signer</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class for creating X.509 signatures.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORX509Validator.html" title="class in org.webpki.cbor">CBORX509Validator</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORX509Validator.html" title="class in org.webpki.cbor">CBORX509Validator</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for validating X.509 signatures.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="CBORX509Validator.Parameters.html" title="interface in org.webpki.cbor">CBORX509Validator.Parameters</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="CBORX509Validator.Parameters.html" title="interface in org.webpki.cbor">CBORX509Validator.Parameters</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">Interface for verifying signature meta data.</div>
 </div>
 </div>

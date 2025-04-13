@@ -16,19 +16,30 @@
  */
 package org.webpki.cbor;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import static org.webpki.cbor.CBORInternal.*;
 
 /**
- * Class for holding CBOR <code>map</code> objects.
+ * Class for holding CBOR <code>{}</code> (map) objects.
  * <p>
  * Note: to maintain
  * <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>
- * <code>map</code> keys are <i>automatically sorted during insertion</i>.
+ * map keys are <i>automatically sorted during insertion</i>.
  * </p>
  */
 public class CBORMap extends CBORObject {
+
+    /**
+     * Support interface for dynamic CBOR generation.
+    * @see #setDynamic(Dynamic)
+     */
+    public interface Dynamic {
+
+        public CBORMap set(CBORMap wr);
+
+    }
 
     boolean preSortedKeys;
 
@@ -68,7 +79,7 @@ public class CBORMap extends CBORObject {
     ArrayList<Entry> entries = new ArrayList<>();
 
     /**
-     * Creates an empty CBOR <code>map</code>.
+     * Creates an empty CBOR <code>{}</code> (map).
      * <p>
      * Equivalent to <code>CBORMap().setSortingMode(false)</code>.
      * </p>
@@ -81,7 +92,7 @@ public class CBORMap extends CBORObject {
     }
     
     /**
-     * Get size of the CBOR <code>map</code>.
+     * Get size of the CBOR map.
      * 
      * @return The number of entries (keys) in the map
      */
@@ -95,8 +106,8 @@ public class CBORMap extends CBORObject {
      * If <code>key</code> is already present, a {@link CBORException} is thrown.
      * </p>
      * <p>
-     * Note that this implementation does not support <i>mutable</i>
-     * <code>key</code> objects.  To create <code>key</code> objects
+     * Note that this implementation presumes that <code>key</code> objects
+     * are <i>immutable</i>.  To create <code>key</code> objects
      * of arbitrary complexity,  <code>key</code> objects <b>must</b>
      * either be created <i>inline</i> (using chaining), or be supplied as
      * <i>preset variables</i>.
@@ -152,6 +163,22 @@ public class CBORMap extends CBORObject {
     }
 
     /**
+     * Set CBOR data using an external (dynamic) interface.
+     * <p>
+     * Sample using a construct suitable for chained writing:
+     * <pre>
+     *    setDynamic((wr) -&gt; optionalString == null ? wr : wr.set(KEY, new CBORString(optionalString))); 
+     * </pre>
+     * </p>
+     * @param dynamic Interface (usually Lambda)
+     * @return <code>this</code>
+     * @throws CBORException
+     */
+    public CBORMap setDynamic(Dynamic dynamic) {
+        return dynamic.set(this);
+    }
+
+    /**
      * Merge CBOR map.
      * <p>
      * Note that a duplicate key causes a {@link CBORException} to be thrown.
@@ -170,7 +197,7 @@ public class CBORMap extends CBORObject {
     }
 
     /**
-     * Set sorting mode for the CBOR <code>map</code>.
+     * Set sorting mode for the CBOR map.
      * <p>
      * This method provides an opportunity using keys that are <i>presorted</i> 
      * (in lexicographic order), which in maps with many keys can 
@@ -181,7 +208,7 @@ public class CBORMap extends CBORObject {
      * The <code>setSortingMode</code> method may be called multiple times,
      * permitting certain keys to be automatically sorted and others
      * to be provided in a presorted fashion.
-     * See also {@link CBORDecoder#setDeterministicMode(boolean)}.
+     * See also {@link CBORDecoder#CBORDecoder(InputStream, int, int)}.
      * </p>
      *  
      * @param preSortedKeys If <code>true</code>, keys <b>must</b> be
@@ -250,7 +277,7 @@ public class CBORMap extends CBORObject {
     }
 
     /**
-     * Check CBOR <code>map</code> for key presence.
+     * Check CBOR map for key presence.
      * 
      * @param key Key (name)
      * @return <code>true</code> if the key is present
@@ -274,12 +301,7 @@ public class CBORMap extends CBORObject {
     public CBORObject remove(CBORObject key) {
         immutableTest();
         Entry targetEntry = lookup(key, true);
-        for (int i = 0; i < entries.size(); i++) {
-            if (entries.get(i) == targetEntry) {
-                entries.remove(i);
-                break;
-            }
-        }
+        entries.remove(targetEntry);
         return targetEntry.object;
     }
 
@@ -290,7 +312,7 @@ public class CBORMap extends CBORObject {
      * else a {@link CBORException} is thrown.
      * </p>
      * <p>
-     * If <code>existing</code> is <code>false</code>, a <code>map</code> entry for <code>key</code>
+     * If <code>existing</code> is <code>false</code>, a map entry for <code>key</code>
      * will be created if not already present.
      * </p>
      * 
@@ -308,6 +330,7 @@ public class CBORMap extends CBORObject {
             previous = null;
             set(key, object);
         } else {
+            nullCheck(object);
             previous = targetEntry.object;
             targetEntry.object = object;
         }
@@ -315,7 +338,7 @@ public class CBORMap extends CBORObject {
     }  
 
     /**
-     * Enumerate all keys in the CBOR <code>map</code>.
+     * Enumerate all keys in the CBOR map.
      * <p>
      * Note: the keys are returned in proper sort order.
      * </p>
@@ -351,8 +374,7 @@ public class CBORMap extends CBORObject {
             notFirst = true;
             cborPrinter.newlineAndIndent();
             entry.key.internalToString(cborPrinter);
-            cborPrinter.append(':');
-            cborPrinter.space();
+            cborPrinter.append(':').space();
             entry.object.internalToString(cborPrinter);
         }
         cborPrinter.endMap(notFirst);

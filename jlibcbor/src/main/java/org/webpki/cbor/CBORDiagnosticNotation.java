@@ -42,9 +42,9 @@ public class CBORDiagnosticNotation {
     }
     
     /**
-     * Convert diagnostic notation CBOR to CBOR.
+     * Convert CBOR object in diagnostic notation, to CBOR.
      * 
-     * @param cborText String holding diagnostic (textual) CBOR
+     * @param cborText String holding a CBOR object in diagnostic (textual) format.
      * @return CBOR object
      * @throws CBORException
      */
@@ -53,10 +53,10 @@ public class CBORDiagnosticNotation {
     }
 
     /**
-     * Convert diagnostic notation CBOR sequence to CBOR.
+     * Convert CBOR sequence in diagnostic notation to CBOR.
      * 
-     * @param cborText String holding diagnostic (textual) CBOR
-     * @return Non-empty array of CBOR objects
+     * @param cborText String holding zero or more comma-separated CBOR objects in diagnostic (textual) format.
+     * @return Array holding zero or more CBOR objects
      * @throws CBORException
      */
     public static ArrayList<CBORObject> convertSequence(String cborText) {
@@ -112,19 +112,22 @@ public class CBORDiagnosticNotation {
     private ArrayList<CBORObject> readSequenceToEOF() {
         try {
             ArrayList<CBORObject> sequence = new ArrayList<>();
-            while (true) {
-                sequence.add(getObject());
-                if (index < cborText.length) {
+            scanNonSignficantData();
+            while (index < cborText.length) {
+                if (!sequence.isEmpty()) {
                     if (sequenceFlag) {
                         scanFor(",");
                     } else {
                         readChar();
                         parserError(CBORDecoder.STDERR_UNEXPECTED_DATA);
                     }
-                } else {
-                    return sequence;
                 }
+                sequence.add(getObject());
             }
+            if (sequence.isEmpty() && !sequenceFlag) {
+                readChar();
+            }
+            return sequence;
         } catch (Exception e) {
             // Build message and convert to CBORException.
             throw new CBORException(buildError(e.getMessage()));
@@ -153,9 +156,16 @@ public class CBORDiagnosticNotation {
         
             case '<':
                 scanFor("<");
-                CBORObject embedded = getObject();
-                scanFor(">>");
-                return new CBORBytes(embedded.encode());
+                CBORSequenceBuilder sequence = new CBORSequenceBuilder();
+                scanNonSignficantData();
+                while (readChar() != '>') {
+                    index--;
+                    do {
+                        sequence.add(getObject());
+                    } while (continueList('>'));
+                }
+                scanFor(">");
+                return new CBORBytes(sequence.encode());
     
             case '[':
                 CBORArray array = new CBORArray();
@@ -210,6 +220,10 @@ public class CBORDiagnosticNotation {
                 scanFor("ull");
                 return new CBORNull();
 
+            case 's':
+                scanFor("imple(");
+                return simpleType();
+                
             case '-':
                 if (readChar() == 'I') {
                     scanFor("nfinity");
@@ -242,6 +256,31 @@ public class CBORDiagnosticNotation {
                 parserError(String.format("Unexpected character: %s", toChar(readChar())));
                 return null;  // For the compiler...
         }
+    }
+
+    @SuppressWarnings("fallthrough")
+    private CBORObject simpleType() {
+        StringBuilder token = new StringBuilder();
+        while (true)  {
+            switch (nextChar()) {
+                case ')':
+                    break;
+
+                case '+':
+                case '-':
+                case 'e':
+                case '.':
+                    parserError("Syntax error");
+
+                default:
+                    token.append(readChar());
+                    continue;
+            }
+            break;
+        }
+        readChar();
+        // Clone gives bool and null precendence over simple.
+        return new CBORSimple(Integer.valueOf(token.toString().trim())).clone();
     }
 
     @SuppressWarnings("fallthrough")

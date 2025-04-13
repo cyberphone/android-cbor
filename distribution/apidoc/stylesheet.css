@@ -1344,3 +1344,7 @@ pre.snippet .highlighted {
   background: black;
   color: white;
 }
+
+kbd {
+  color:maroon;
+}
