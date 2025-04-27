@@ -135,14 +135,18 @@
 <div class="block">Set signature <code>keyId</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORSigner.html" title="type parameter in CBORSigner">T</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProvider(java.lang.String)" class="member-name-link">setProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;provider)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMultiSignatureMode(boolean)" class="member-name-link">setMultiSignatureMode</a><wbr>(boolean&nbsp;flag)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set multiple signature mode.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORSigner.html" title="type parameter in CBORSigner">T</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProvider(java.lang.String)" class="member-name-link">setProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;provider)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Set cryptographic provider.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sign(org.webpki.cbor.CBORObject,org.webpki.cbor.CBORMap)" class="member-name-link">sign</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;csfContainerLabel,
- <a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a>&nbsp;mapToSign)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sign(org.webpki.cbor.CBORObject)" class="member-name-link">sign</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;objectToSign)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sign CBOR object.</div>
 </div>
 </div>
@@ -224,7 +228,7 @@
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORSigner.html" title="type parameter in CBORSigner">T</a></span>&nbsp;<span class="element-name">setCloneMode</span><wbr><span class="parameters">(boolean&nbsp;flag)</span></div>
 <div class="block">Set clone mode.
  <p>
- By default the <a href="#sign(org.webpki.cbor.CBORObject,org.webpki.cbor.CBORMap)"><code>sign(CBORObject, CBORMap)</code></a> method
+ By default the <a href="#sign(org.webpki.cbor.CBORObject)"><code>sign(CBORObject)</code></a> method
  <i>overwrites</i> the input <code>map</code> object.
  </p></div>
 <dl class="notes">
@@ -236,22 +240,40 @@
 </section>
 </li>
 <li>
-<section class="detail" id="sign(org.webpki.cbor.CBORObject,org.webpki.cbor.CBORMap)">
+<section class="detail" id="setMultiSignatureMode(boolean)">
+<h3>setMultiSignatureMode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORSigner.html" title="type parameter in CBORSigner">T</a></span>&nbsp;<span class="element-name">setMultiSignatureMode</span><wbr><span class="parameters">(boolean&nbsp;flag)</span></div>
+<div class="block">Set multiple signature mode.
+ <p>
+ By default the <a href="#sign(org.webpki.cbor.CBORObject)"><code>sign(CBORObject)</code></a> method
+ assumes single signature mode.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>flag</code> - If <code>true</code> multiple signature mode is assumed</dd>
+<dt>Returns:</dt>
+<dd><code>this</code> of subclass</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="sign(org.webpki.cbor.CBORObject)">
 <h3>sign</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">sign</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;csfContainerLabel,
- <a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a>&nbsp;mapToSign)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">sign</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;objectToSign)</span></div>
 <div class="block">Sign CBOR object.
  
  <p>
  Adds an embedded CSF object (signature) to a CBOR map.
+ </p>
+ Note that the map to be signed may be wrapped in a tag.
+ <p>
  </p>
  <p>
  Also see <a href="#setCloneMode(boolean)"><code>setCloneMode(boolean)</code></a>.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>csfContainerLabel</code> - Label (key) holding the signature in the CBOR map to sign</dd>
-<dd><code>mapToSign</code> - CBOR map to be signed</dd>
+<dd><code>objectToSign</code> - CBOR map or tag(map) to be signed</dd>
 <dt>Returns:</dt>
 <dd>Signed object</dd>
 </dl>

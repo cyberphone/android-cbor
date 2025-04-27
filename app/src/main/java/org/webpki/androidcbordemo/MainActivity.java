@@ -83,7 +83,6 @@ import org.webpki.cbor.CBORX509Encrypter;
 import org.webpki.cbor.CBORX509Signer;
 import org.webpki.cbor.CBORX509Validator;
 
-import org.webpki.crypto.EncryptionCore;
 import org.webpki.crypto.HmacAlgorithms;
 import org.webpki.crypto.ContentEncryptionAlgorithms;
 import org.webpki.crypto.KeyEncryptionAlgorithms;
@@ -270,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
         CBORMap dataToSign = getStandardMessage();
         verifySignature(new CBORAsymKeySigner(RawReader.ecKeyPair.getPrivate())
                 .setPublicKey(RawReader.ecKeyPair.getPublic())
-                .sign(new CBORInt(dataToSign.size() + 1), dataToSign).toString());
+                .sign(dataToSign).toString());
     }
 
     PublicKey publicKey;
@@ -383,7 +382,7 @@ public class MainActivity extends AppCompatActivity {
             // Clone the data to make sure the not-read check can do its work
             validator.setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
                      .setCustomDataPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
-                     .validate(csfLabel, CBORDecoder.decode(signedData.encode()));
+                     .validate(CBORDecoder.decode(signedData.encode()));
 
             loadHtml("",
                     "Valid Signature!",
@@ -424,18 +423,6 @@ public class MainActivity extends AppCompatActivity {
             KEY_TYPES sigType = KEY_TYPES.valueOf(keyType);
             final CBORObject dataToBeSigned = CBORDiagnosticNotation.convert(cborData);
             CBORMap cborMap = unwrapOptionalTag(dataToBeSigned);
-            CBORObject csfLabel = new CBORInt(0);
-            if (cborMap.size() > 0) {
-                csfLabel = cborMap.getKeys().get(cborMap.size() - 1);
-                if (csfLabel instanceof CBORInt) {
-                    BigInteger value = csfLabel.getBigInteger();
-                    value = value.compareTo(BigInteger.ZERO) >= 0 ?
-                        value.add(BigInteger.ONE) : value.subtract(BigInteger.ONE);
-                    csfLabel = new CBORBigInt(value);
-                } else {
-                    csfLabel = new CBORString("signature");
-                }
-            }
             CBORSigner<?> signer = switch (sigType) {
                 case EC_KEY, RSA_KEY -> {
                     KeyPair keyPair = sigType == KEY_TYPES.RSA_KEY ?
@@ -449,12 +436,7 @@ public class MainActivity extends AppCompatActivity {
                         HmacAlgorithms.HMAC_SHA256)
                         .setKeyId(new CBORString(RawReader.secretKeyId));
             };
-            signer.setIntercepter(new CBORCryptoUtils.Intercepter() {
-                @Override public CBORObject wrap(CBORMap mapToSign) {
-                    return dataToBeSigned;
-                }
-            });
-            verifySignature(signer.sign(csfLabel, cborMap).toString());
+            verifySignature(signer.sign(cborMap).toString());
         } catch (Exception e) {
             errorView(e);
         }

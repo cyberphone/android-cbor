@@ -116,15 +116,19 @@
 <div class="block">Sets custom data policy.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORValidator.html" title="type parameter in CBORValidator">T</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTagPolicy(org.webpki.cbor.CBORCryptoUtils.POLICY,org.webpki.cbor.CBORCryptoUtils.Collector)" class="member-name-link">setTagPolicy</a><wbr>(<a href="CBORCryptoUtils.POLICY.html" title="enum class in org.webpki.cbor">CBORCryptoUtils.POLICY</a>&nbsp;tagPolicy,
- <a href="CBORCryptoUtils.Collector.html" title="interface in org.webpki.cbor">CBORCryptoUtils.Collector</a>&nbsp;tagCollector)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMultiSignatureMode(boolean)" class="member-name-link">setMultiSignatureMode</a><wbr>(boolean&nbsp;flag)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set multiple signature mode.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORValidator.html" title="type parameter in CBORValidator">T</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTagPolicy(org.webpki.cbor.CBORCryptoUtils.POLICY,org.webpki.cbor.CBORCryptoUtils.Collector)" class="member-name-link">setTagPolicy</a><wbr>(<a href="CBORCryptoUtils.POLICY.html" title="enum class in org.webpki.cbor">CBORCryptoUtils.POLICY</a>&nbsp;tagPolicy,
+ <a href="CBORCryptoUtils.Collector.html" title="interface in org.webpki.cbor">CBORCryptoUtils.Collector</a>&nbsp;tagCollector)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets tag wrapping policy.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validate(org.webpki.cbor.CBORObject,org.webpki.cbor.CBORObject)" class="member-name-link">validate</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;csfContainerLabel,
- <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;signedObject)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#validate(org.webpki.cbor.CBORObject)" class="member-name-link">validate</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;signedObject)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Validates signed CBOR object.</div>
 </div>
 </div>
@@ -144,6 +148,23 @@
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="setMultiSignatureMode(boolean)">
+<h3>setMultiSignatureMode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORValidator.html" title="type parameter in CBORValidator">T</a></span>&nbsp;<span class="element-name">setMultiSignatureMode</span><wbr><span class="parameters">(boolean&nbsp;flag)</span></div>
+<div class="block">Set multiple signature mode.
+ <p>
+ By default the <a href="#validate(org.webpki.cbor.CBORObject)"><code>validate(CBORObject)</code></a> method
+ assumes single signature mode.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>flag</code> - If <code>true</code> multiple signature mode is assumed</dd>
+<dt>Returns:</dt>
+<dd><code>this</code> of subclass</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="setCustomDataPolicy(org.webpki.cbor.CBORCryptoUtils.POLICY,org.webpki.cbor.CBORCryptoUtils.Collector)">
 <h3>setCustomDataPolicy</h3>
@@ -188,10 +209,9 @@
 </section>
 </li>
 <li>
-<section class="detail" id="validate(org.webpki.cbor.CBORObject,org.webpki.cbor.CBORObject)">
+<section class="detail" id="validate(org.webpki.cbor.CBORObject)">
 <h3>validate</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">validate</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;csfContainerLabel,
- <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;signedObject)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">validate</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;signedObject)</span></div>
 <div class="block">Validates signed CBOR object.
  <p>
  This method presumes that <code>signedObject</code> holds
@@ -199,7 +219,6 @@
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>csfContainerLabel</code> - Label (key) in the map holding the signature</dd>
 <dd><code>signedObject</code> - Signed CBOR object</dd>
 <dt>Returns:</dt>
 <dd>The original <code>signedObject</code></dd>

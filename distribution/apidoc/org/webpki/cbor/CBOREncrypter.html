@@ -122,16 +122,22 @@
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#encrypt(byte%5B%5D)" class="member-name-link">encrypt</a><wbr>(byte[]&nbsp;dataToEncrypt)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Encrypt data.</div>
+<div class="block">Encrypt data, return CEF object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBOREncrypter.html" title="type parameter in CBOREncrypter">T</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIntercepter(org.webpki.cbor.CBORCryptoUtils.Intercepter)" class="member-name-link">setIntercepter</a><wbr>(<a href="CBORCryptoUtils.Intercepter.html" title="interface in org.webpki.cbor">CBORCryptoUtils.Intercepter</a>&nbsp;intercepter)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#encrypt(byte%5B%5D,org.webpki.cbor.CBORTag)" class="member-name-link">encrypt</a><wbr>(byte[]&nbsp;dataToEncrypt,
+ <a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a>&nbsp;wrappedMap)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Set optional Intercepter.</div>
+<div class="block">Encrypt data, return tagged CEF object.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBOREncrypter.html" title="type parameter in CBOREncrypter">T</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setKeyId(org.webpki.cbor.CBORObject)" class="member-name-link">setKeyId</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;keyId)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIntercepter(org.webpki.cbor.CBORCryptoUtils.Intercepter)" class="member-name-link">setIntercepter</a><wbr>(<a href="CBORCryptoUtils.Intercepter.html" title="interface in org.webpki.cbor">CBORCryptoUtils.Intercepter</a>&nbsp;intercepter)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set optional Intercepter.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBOREncrypter.html" title="type parameter in CBOREncrypter">T</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setKeyId(org.webpki.cbor.CBORObject)" class="member-name-link">setKeyId</a><wbr>(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;keyId)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Set optional key Id.</div>
 </div>
 </div>
@@ -194,10 +200,25 @@
 </section>
 </li>
 <li>
+<section class="detail" id="encrypt(byte[],org.webpki.cbor.CBORTag)">
+<h3>encrypt</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">encrypt</span><wbr><span class="parameters">(byte[]&nbsp;dataToEncrypt,
+ <a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a>&nbsp;wrappedMap)</span></div>
+<div class="block">Encrypt data, return tagged CEF object.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>dataToEncrypt</code> - The data to encrypt</dd>
+<dd><code>wrappedMap</code> - Empty map wrapped in a tag or <code>null</code></dd>
+<dt>Returns:</dt>
+<dd>CBOR encryption object</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="encrypt(byte[])">
 <h3>encrypt</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">encrypt</span><wbr><span class="parameters">(byte[]&nbsp;dataToEncrypt)</span></div>
-<div class="block">Encrypt data.</div>
+<div class="block">Encrypt data, return CEF object.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>dataToEncrypt</code> - The data to encrypt</dd>

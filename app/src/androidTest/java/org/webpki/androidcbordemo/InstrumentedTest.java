@@ -76,6 +76,7 @@ import javax.crypto.spec.PSource;
 import javax.security.auth.x500.X500Principal;
 
 import static org.junit.Assert.*;
+import static org.webpki.cbor.CBORCryptoConstants.CSF_CONTAINER_LBL;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -96,8 +97,6 @@ public class InstrumentedTest {
 
     static String KEY_1 = "key-1";
     static String KEY_2 = "key-2";
-
-    static CBORString SIGNATURE_LABEL = new CBORString("signature");
 
     boolean useKeyId;
     int noPublicKey;
@@ -155,7 +154,7 @@ public class InstrumentedTest {
 
     void signatureTestVector(int resource, CBORValidator<?> validator) {
         CBORMap signedObject = CBORDecoder.decode(RawReader.getRawResource(resource)).getMap();
-        validator.validate(SIGNATURE_LABEL, signedObject);
+        validator.validate(signedObject);
     }
 
     @Test
@@ -429,25 +428,23 @@ public class InstrumentedTest {
         CBORObject signedData =
                 new CBORAsymKeySigner(keyPair.getPrivate())
                         .setPublicKey(keyPair.getPublic())
-                        .sign(SIGNATURE_LABEL,
-                                RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
+                        .sign(RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
         Log.i("SIGN", signedData.toString());
-        new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
+        new CBORAsymKeyValidator(keyPair.getPublic()).validate(signedData);
         signedData =
                 new CBORAsymKeySigner(keyPair.getPrivate(), AsymSignatureAlgorithms.RSAPSS_SHA512)
-                        .sign(SIGNATURE_LABEL,
-                                RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
+                        .sign(RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
         Log.i("SIGN", signedData.toString());
-        new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
+        new CBORAsymKeyValidator(keyPair.getPublic()).validate(signedData);
         byte[] signature =
-        signedData.getMap().get(SIGNATURE_LABEL)
+        signedData.getMap().get(CSF_CONTAINER_LBL)
                 .getMap().remove(CBORCryptoConstants.CSF_SIGNATURE_LBL).getBytes();
         signature[5]++;
         try {
-            signedData.getMap().get(SIGNATURE_LABEL)
+            signedData.getMap().get(CSF_CONTAINER_LBL)
                     .getMap().set(CBORCryptoConstants.CSF_SIGNATURE_LBL,
                                         new CBORBytes(signature));
-            new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
+            new CBORAsymKeyValidator(keyPair.getPublic()).validate(signedData);
             fail("must not");
         } catch (Exception e) { }
 
@@ -475,17 +472,15 @@ public class InstrumentedTest {
         signedData =
                 new CBORAsymKeySigner(keyPair.getPrivate())
                         .setPublicKey(keyPair.getPublic())
-                        .sign(SIGNATURE_LABEL,
-                                RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
+                        .sign(RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
 //        Log.i("SIGN", signedData.toString());
 
-        new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
+        new CBORAsymKeyValidator(keyPair.getPublic()).validate(signedData);
         signedData =
                 new CBORAsymKeySigner(keyPair.getPrivate())
-                        .sign(SIGNATURE_LABEL,
-                                RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
+                        .sign(RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
 //        Log.i("SIGN", signedData.toString());
-        new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
+        new CBORAsymKeyValidator(keyPair.getPublic()).validate(signedData);
 
         keyStore.setEntry(
                 KEY_2,
@@ -497,8 +492,7 @@ public class InstrumentedTest {
 
         signedData =
                 new CBORX509Signer(((KeyStore.PrivateKeyEntry) keyStore.getEntry(KEY_2, null)).getPrivateKey(), RawReader.ecCertPath)
-                        .sign(SIGNATURE_LABEL,
-                                RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
+                        .sign(RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
 //        Log.i("CERTSIGN", signedData.toString());
 
         new CBORX509Validator((certificatePath, algorithm) -> {
@@ -511,7 +505,7 @@ public class InstrumentedTest {
                     throw new CryptoException("cert");
                 }
             }
-        }).validate(SIGNATURE_LABEL, signedData);
+        }).validate(signedData);
 
         if (Build.VERSION.SDK_INT >= 33) {
             kpg = KeyPairGenerator.getInstance("EC", ANDROID_KEYSTORE);
@@ -525,8 +519,7 @@ public class InstrumentedTest {
             signedData =
                 new CBORAsymKeySigner(keyPair.getPrivate())
                         .setPublicKey(keyPair.getPublic())
-                        .sign(SIGNATURE_LABEL,
-                                RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
+                        .sign(RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
             Log.i("ED25", signedData.toString());
             Log.i("ED25", KeyAlgorithms.getKeyAlgorithm(keyPair.getPublic()).toString());
             Log.i("ED25", "L=" +OkpSupport.public2RawKey(keyPair.getPublic(),
