@@ -209,7 +209,10 @@
 <section class="detail" id="add(org.webpki.cbor.CBORObject)">
 <h3>add</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></span>&nbsp;<span class="element-name">add</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;object)</span></div>
-<div class="block">Add object to the CBOR array.</div>
+<div class="block">Add object to the CBOR array.
+ <p>
+ Also see <a href="#update(int,org.webpki.cbor.CBORObject)"><code>update(int, CBORObject)</code></a>
+ </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>object</code> - Object to be appended to the array.</dd>
@@ -226,7 +229,7 @@
 <div class="block">Update object at a specific position in the CBOR array.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>index</code> - The position (0..size()-1)</dd>
+<dd><code>index</code> - The position (<code>0..size()-1</code>)</dd>
 <dd><code>object</code> - Object to set</dd>
 <dt>Returns:</dt>
 <dd>Previous <code>object</code></dd>
