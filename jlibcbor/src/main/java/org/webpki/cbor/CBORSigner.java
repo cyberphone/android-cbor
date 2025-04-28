@@ -191,11 +191,13 @@ public abstract class CBORSigner <T extends CBORSigner<?>> {
         additionalItems(csfContainer);
         
         // Add the prepared signature object to the map object we want to sign.
-        CBORObject previousSignatures = null;
-        CBORArray currentSignature = new CBORArray().add(csfContainer);
+        CBORObject previousSignatures;
         if (multiSignFlag) {
-            previousSignatures = mapToSign.update(CSF_CONTAINER_LBL, currentSignature, false);
+            previousSignatures = mapToSign.update(CSF_CONTAINER_LBL,
+                                                  new CBORArray().add(csfContainer), 
+                                                  false);
         } else {
+            previousSignatures = null;
             mapToSign.set(CSF_CONTAINER_LBL, csfContainer);
         }
 
@@ -204,10 +206,9 @@ public abstract class CBORSigner <T extends CBORSigner<?>> {
 
         // Multi signatures needs restoring possible previous signatures.
         if (previousSignatures != null) {
-            CBORArray multiSignature;
-            multiSignature = previousSignatures.getArray();
-            multiSignature.add(currentSignature.get(0));
-            mapToSign.update(CSF_CONTAINER_LBL, multiSignature, true);
+            mapToSign.update(CSF_CONTAINER_LBL, 
+                             previousSignatures.getArray().add(csfContainer),
+                             true);
         }
 
         // Return the now signed object.
