@@ -97,16 +97,24 @@
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static final int</code></div>
 <div class="col-second even-row-color"><code><a href="#LENIENT_MAP_DECODING" class="member-name-link">LENIENT_MAP_DECODING</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
+</div>
 <div class="col-first odd-row-color"><code>static final int</code></div>
 <div class="col-second odd-row-color"><code><a href="#LENIENT_NUMBER_DECODING" class="member-name-link">LENIENT_NUMBER_DECODING</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
+</div>
 <div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#REJECT_INVALID_FLOATS" class="member-name-link">REJECT_INVALID_FLOATS</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-second even-row-color"><code><a href="#REJECT_NON_FINITE_FLOATS" class="member-name-link">REJECT_NON_FINITE_FLOATS</a></code></div>
+<div class="col-last even-row-color">
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
+</div>
 <div class="col-first odd-row-color"><code>static final int</code></div>
 <div class="col-second odd-row-color"><code><a href="#SEQUENCE_MODE" class="member-name-link">SEQUENCE_MODE</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
+</div>
 </div>
 </section>
 </li>
@@ -174,6 +182,7 @@
 <section class="detail" id="SEQUENCE_MODE">
 <h3>SEQUENCE_MODE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">SEQUENCE_MODE</span></div>
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -188,6 +197,7 @@
 <section class="detail" id="LENIENT_MAP_DECODING">
 <h3>LENIENT_MAP_DECODING</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">LENIENT_MAP_DECODING</span></div>
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -202,6 +212,7 @@
 <section class="detail" id="LENIENT_NUMBER_DECODING">
 <h3>LENIENT_NUMBER_DECODING</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">LENIENT_NUMBER_DECODING</span></div>
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -213,14 +224,15 @@
 </section>
 </li>
 <li>
-<section class="detail" id="REJECT_INVALID_FLOATS">
-<h3>REJECT_INVALID_FLOATS</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">REJECT_INVALID_FLOATS</span></div>
+<section class="detail" id="REJECT_NON_FINITE_FLOATS">
+<h3>REJECT_NON_FINITE_FLOATS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">REJECT_NON_FINITE_FLOATS</span></div>
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
 <ul class="tag-list">
-<li><a href="../../../constant-values.html#org.webpki.cbor.CBORDecoder.REJECT_INVALID_FLOATS">Constant Field Values</a></li>
+<li><a href="../../../constant-values.html#org.webpki.cbor.CBORDecoder.REJECT_NON_FINITE_FLOATS">Constant Field Values</a></li>
 </ul>
 </dd>
 </dl>
@@ -281,11 +293,11 @@
  The&nbsp;<a href="#LENIENT_NUMBER_DECODING"><code>LENIENT_NUMBER_DECODING</code></a> option forces the decoder to
  accept different representations of CBOR <code>int</code>, <code>bigint</code>,
  and <code>float</code> items, only limited by RFC&nbsp;8949.</div>
- <div style='margin-top:0.8em'><a href="#REJECT_INVALID_FLOATS"><code>REJECT_INVALID_FLOATS</code></a>:</div>
+ <div style='margin-top:0.8em'><a href="#REJECT_NON_FINITE_FLOATS"><code>REJECT_NON_FINITE_FLOATS</code></a>:</div>
  <div style='padding:0.2em 0 0 1.2em'>By default, the decoder supports 
  <code>NaN</code> and <code>Infinity</code> values. 
  In case these variants are not applicable for the application in question,
- the <a href="#REJECT_INVALID_FLOATS"><code>REJECT_INVALID_FLOATS</code></a> option
+ the <a href="#REJECT_NON_FINITE_FLOATS"><code>REJECT_NON_FINITE_FLOATS</code></a> option
  causes such numbers to throw a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a>.</div>
  </p>
  <p>

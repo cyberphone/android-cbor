@@ -41,7 +41,7 @@ public class CBORMap extends CBORObject {
 
     }
 
-    boolean preSortedKeys;
+    private boolean preSortedKeys;
 
     // Similar to the Java Map.Entry but optimized for CBOR. 
     static class Entry {
@@ -223,7 +223,9 @@ public class CBORMap extends CBORObject {
         this.preSortedKeys = preSortedKeys;
         return this;
     }
-    
+
+    private int lastLookup;
+
     private Entry lookup(CBORObject key, boolean mustExist) {
         byte[] encodedKey = getKey(key).encode();
         int startIndex = 0;
@@ -233,6 +235,7 @@ public class CBORMap extends CBORObject {
             Entry entry = entries.get(midIndex);
             int diff = entry.compare(encodedKey);
             if (diff == 0) {
+                lastLookup = midIndex;
                 return entry;
             }
             if (diff < 0) {
@@ -304,7 +307,7 @@ public class CBORMap extends CBORObject {
     public CBORObject remove(CBORObject key) {
         immutableTest();
         Entry targetEntry = lookup(key, true);
-        entries.remove(targetEntry);
+        entries.remove(lastLookup);
         return targetEntry.object;
     }
 
@@ -361,7 +364,8 @@ public class CBORMap extends CBORObject {
         byte[] encoded = encodeTagAndN(MT_MAP, entries.size());
         for (Entry entry : entries) {
             encoded = addByteArrays(encoded,
-                                    addByteArrays(entry.encodedKey, entry.object.encode()));
+                                    addByteArrays(entry.encodedKey, 
+                                                  entry.object.internalEncode()));
         }
         return encoded;
     }

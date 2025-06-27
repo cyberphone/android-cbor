@@ -750,7 +750,11 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="equals(java.lang.Object)">
 <h3>equals</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">equals</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;object)</span></div>
-<div class="block">Compare CBOR objects for equality.</div>
+<div class="block">Compare CBOR objects for equality.
+ <p>
+ Equality in CBOR depends on the actual binary encoding which in turn depends on
+ <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>.
+ </p></div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
@@ -785,13 +789,16 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toDiagnosticNotation</span><wbr><span class="parameters">(boolean&nbsp;prettyPrint)</span></div>
 <div class="block">Render CBOR object in
  <a href='package-summary.html#diagnostic-notation'>Diagnostic Notation</a>.
- <p></div>
+ <p>
+ If the object (as well as possible
+ child objects), conforms to the subset of data types supported by JSON,
+ this method can also be used to generate JSON data.
+ </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>prettyPrint</code> - If <code>true</code> white space is added to make the 
  result easier to read.  If <code>false</code> elements are output
- without additional white space (=single line).
- </p></dd>
+ without additional white space (=single line).</dd>
 </dl>
 </section>
 </li>

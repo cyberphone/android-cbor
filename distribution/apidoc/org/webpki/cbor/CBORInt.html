@@ -146,7 +146,8 @@
  <span style='white-space:nowrap'><code>-2<sup>63</sup></code></span>.
  </p>
  <p>
- See also <a href="CBORBigInt.html#%3Cinit%3E(java.math.BigInteger)"><code>CBORBigInt(BigInteger)</code></a>.
+ See also <a href="CBORBigInt.html#%3Cinit%3E(java.math.BigInteger)"><code>CBORBigInt(BigInteger)</code></a> and
+ <a href="CBORObject.html#getBigInteger()"><code>CBORObject.getBigInteger()</code></a>.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -163,8 +164,8 @@
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORInt</span><wbr><span class="parameters">(long&nbsp;value)</span></div>
 <div class="block">Creates a CBOR signed <code>int</code> object.
  <p>
- See also <a href="#%3Cinit%3E(long,boolean)"><code>CBORInt(long,boolean)</code></a> and 
- <a href="CBORBigInt.html#%3Cinit%3E(java.math.BigInteger)"><code>CBORBigInt(BigInteger)</code></a>.
+ This constructor is equivalent to 
+ <a href="#%3Cinit%3E(long,boolean)"><code><code>CBORInt(value, value &gt;= 0)</code></code></a>.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
