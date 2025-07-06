@@ -57,7 +57,7 @@ public class CBORDecoder {
     private boolean sequenceMode;
     private boolean strictMaps;
     private boolean strictNumbers;
-    private boolean rejectNanFiniteFloats;
+    private boolean rejectNonFiniteFloats;
     private boolean atFirstByte;
     private int maxInputLength;
     private int byteCount;
@@ -67,7 +67,7 @@ public class CBORDecoder {
     * <p>
     * Note that irrespective of options, the decoder maintains parsed data
     * in the form required for  
-    * <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>.
+    * <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a>.
     * </p>
     * <p>
     * This constructor presumes that the actual decoding is performed
@@ -87,11 +87,12 @@ public class CBORDecoder {
     * <li>If no data is found (EOF), <code>null</code> is returned
     * (<i>empty</i> sequences are permitted).</li>
     * </ul>
-    * Note that data that has not yet been decoded, is not verified for correctness.</div>
+    * Note that data that has not yet been decoded, is not verified for correctness.
+    <div style='margin-top:0.5em'>See also {@link CBORArray#encodeAsSequence}.</div></div>
     * <div style='margin-top:0.8em'>{@link CBORDecoder#LENIENT_MAP_DECODING}:</div>
     * <div style='padding:0.2em 0 0 1.2em'>By default, the decoder requires
     * that CBOR maps conform to the
-    * <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a> 
+    * <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a> 
     * rules.
     * The&nbsp;{@link CBORDecoder#LENIENT_MAP_DECODING} option forces the decoder
     * to accept CBOR maps with arbitrary key ordering.
@@ -100,7 +101,7 @@ public class CBORDecoder {
     * <div style='margin-top:0.8em'>{@link CBORDecoder#LENIENT_NUMBER_DECODING}:</div>
     * <div style='padding:0.2em 0 0 1.2em'>By default, the decoder requires
     * that CBOR numbers conform to the
-    * <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a> rules.
+    * <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a> rules.
     * The&nbsp;{@link CBORDecoder#LENIENT_NUMBER_DECODING} option forces the decoder to
     * accept different representations of CBOR <code>int</code>, <code>bigint</code>,
     * and <code>float</code> items, only limited by RFC&nbsp;8949.</div>
@@ -126,7 +127,7 @@ public class CBORDecoder {
         this.sequenceMode = (options & SEQUENCE_MODE) == SEQUENCE_MODE;
         this.strictMaps = (options & LENIENT_MAP_DECODING) != LENIENT_MAP_DECODING;
         this.strictNumbers = (options & LENIENT_NUMBER_DECODING) != LENIENT_NUMBER_DECODING;
-        this.rejectNanFiniteFloats = (options & REJECT_NON_FINITE_FLOATS) == REJECT_NON_FINITE_FLOATS;
+        this.rejectNonFiniteFloats = (options & REJECT_NON_FINITE_FLOATS) == REJECT_NON_FINITE_FLOATS;
         this.maxInputLength = maxInputLength;
     }
     
@@ -194,7 +195,7 @@ public class CBORDecoder {
             (cborFloat.tag != tag || cborFloat.bitFormat != bitFormat)) {
             cborError(String.format(STDERR_NON_DETERMINISTIC_FLOAT + "%2x", tag));
         }
-        if (rejectNanFiniteFloats && cborFloat.tag == MT_FLOAT16 &&
+        if (rejectNonFiniteFloats && cborFloat.tag == MT_FLOAT16 &&
             (cborFloat.bitFormat & FLOAT16_POS_INFINITY) == FLOAT16_POS_INFINITY) {
             cborError(STDERR_NON_FINITE_FLOATS_DISABLED);
         }

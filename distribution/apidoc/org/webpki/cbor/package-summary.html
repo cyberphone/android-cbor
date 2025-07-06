@@ -62,11 +62,12 @@
 <section class="package-description" id="package-description">
 <div class="block"><h2 id="cbor---encoder-decoder-signatures-and-encryption-heading">CBOR - Encoder, Decoder, Signatures, and Encryption</h2>
 This package contains Java support for CBOR using the 
-[<a href='https://www.ietf.org/archive/id/draft-rundgren-cbor-core-10.html'>CBOR::Core</a>] profile.
+[<a href='https://www.ietf.org/archive/id/draft-rundgren-cbor-core-11.html' class='webpkilink'>CBOR::Core</a>]
+cross platform profile.
 <h3 id='supported-objects'>Supported Objects</h3>
 The following table shows the supported CBOR objects (data items)
 and their mapping to Java, here expressed in
-CDDL&nbsp;[<a href='https://www.rfc-editor.org/rfc/rfc8610.html'>RFC&nbsp;8610</a>]
+CDDL&nbsp;[<a href='https://www.rfc-editor.org/rfc/rfc8610.html' class='webpkilink'>RFC&nbsp;8610</a>]
 notation:
 <div class='webpkifloat'>
 <table class='webpkitable' style='margin-left:2em'>
@@ -108,12 +109,12 @@ hashing and signatures, over "raw" CBOR data.
 This API supports such operations through deterministic encoding
 which also is the default mode.
 The deterministic encoding scheme is described in
-[<a href='https://www.ietf.org/archive/id/draft-rundgren-cbor-core-10.html'>CBOR::Core</a>].
+[<a href='https://www.ietf.org/archive/id/draft-rundgren-cbor-core-11.html' class='webpkilink'>CBOR::Core</a>].
 If input data does not conform to the deterministic encoding scheme,
 a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
 <p id='decoder-options'>
 For more control of the decoding process, including dealing with "legacy" CBOR
-data as well as with CBOR sequences, see
+data as well as with <a href='#examples.seq-encoding' class='webpkilink'>CBOR&nbsp;sequences</a>, see
 <a href="CBORDecoder.html#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(inputStream, int, int)</code></a>.
 </p>
 <p>
@@ -166,15 +167,15 @@ inside of their respective containers.
 </p>
 <h3 id='cbor-schema-support'>"Schema" Support</h3>
 Although this package does not support a CBOR counterpart
-to <a href='https://www.w3.org/XML/Schema'>XML&nbsp;Schema</a>,
+to <a href='https://www.w3.org/XML/Schema' class='webpkilink'>XML&nbsp;Schema</a>,
 similar functionality can be achieved using the <i>programmatic
 constructs</i> described in the previous section.
 For an example, turn to 
-<a href='doc-files/typed-objects.html'>Typed Objects</a>.
+<a href='doc-files/typed-objects.html' class='webpkilink'>Typed Objects</a>.
 <h3 id='cryptographic-support'>Cryptographic Support</h3>
 To aid the use of cryptography, support for
-<a href='doc-files/signatures.html'>Signatures</a> and 
-<a href='doc-files/encryption.html'>Encryption</a> is integrated in the package.
+<a href='doc-files/signatures.html' class='webpkilink'>Signatures</a> and 
+<a href='doc-files/encryption.html' class='webpkilink'>Encryption</a> is integrated in the package.
 <h3 id='diagnostic-notation'>Diagnostic Notation</h3>
 Creating CBOR data in diagnostic notation
 is provided by the <a href="CBORObject.html#toString()"><code>CBORObject.toString()</code></a> method.
@@ -184,7 +185,7 @@ in diagnostic (textual) notation, making CBOR useful for "config" and test data 
 </p>
 <p>
 By adhering to the
-<a href='#deterministic-encoding'>Deterministic Encoding</a> 
+<a href='#deterministic-encoding' class='webpkilink'>Deterministic Encoding</a> 
 specification above, CBOR data can be <i>bidirectionally</i>
 converted between its native (binary) format and diagnostic notation
 without getting corrupted.  Note though that text-binary-text "roundtrips"
@@ -382,8 +383,15 @@ The following code shows how you can decode variant CBOR-encoded data:
 <div class='webpkifloat'><div class='webpkibox' style='margin:0.5em 0 0.5em 2em;width:50em'>CBORObject&nbsp;intOrString&nbsp;=&nbsp;CBORDecoder.decode(cbor);<br>if&nbsp;(intOrString&nbsp;instanceof&nbsp;CBORInt)&nbsp;{<br>&nbsp;&nbsp;int&nbsp;i&nbsp;=&nbsp;intOrString.getInt32();<br>&nbsp;&nbsp;//&nbsp;Do&nbsp;something&nbsp;with&nbsp;i...<br>}&nbsp;else&nbsp;{<br>&nbsp;&nbsp;//&nbsp;This&nbsp;line&nbsp;will&nbsp;throw&nbsp;an&nbsp;exception&nbsp;if&nbsp;the&nbsp;object&nbsp;is&nbsp;not&nbsp;a&nbsp;CBORString<br>&nbsp;&nbsp;String&nbsp;s&nbsp;=&nbsp;intOrString.getString();<br>&nbsp;&nbsp;//&nbsp;Do&nbsp;something&nbsp;with&nbsp;s...<br>}<br></div></div>
   <h5 id='examples.dn-decoding' style='margin:1em 0 0.5em 0'>Decode CBOR Diagnostic Notation</h5>
 The following code shows how you can decode CBOR provided in
-<a href='#diagnostic-notation'>Diagnostic&nbsp;Notation</a>:
-<div class='webpkifloat'><div class='webpkibox' style='margin:0.5em 0 0.5em 2em;width:50em'>byte[]&nbsp;cbor&nbsp;=&nbsp;CBORDiagnosticNotation.convert("""<br>{<br>#&nbsp;Comments&nbsp;are&nbsp;also&nbsp;permitted<br>&nbsp;&nbsp;1:&nbsp;45.7,<br>&nbsp;&nbsp;2:&nbsp;&quot;Hi&nbsp;there!&quot;<br>}""").encode();<br><br>System.out.println(HexaDecimal.encode(cbor));<br><span style='color:#007fdd'>a201fb4046d9999999999a0269486920746865726521</span><br></div></div></div>
+<a href='#diagnostic-notation' class='webpkilink'>Diagnostic&nbsp;Notation</a>:
+<div class='webpkifloat'><div class='webpkibox' style='margin:0.5em 0 0.5em 2em;width:50em'>byte[]&nbsp;cbor&nbsp;=&nbsp;CBORDiagnosticNotation.convert("""<br>{<br>#&nbsp;Comments&nbsp;are&nbsp;also&nbsp;permitted<br>&nbsp;&nbsp;1:&nbsp;45.7,<br>&nbsp;&nbsp;2:&nbsp;&quot;Hi&nbsp;there!&quot;<br>}""").encode();<br><br>System.out.println(HexaDecimal.encode(cbor));<br><span style='color:#007fdd'>a201fb4046d9999999999a0269486920746865726521</span><br></div></div>
+  <h5 id='examples.seq-encoding' style='margin:1em 0 0.5em 0'>Encode CBOR Sequence</h5>
+The following code shows how you can create CBOR sequences:
+<div class='webpkifloat'><div class='webpkibox' style='margin:0.5em 0 0.5em 2em;width:50em'>byte[]&nbsp;cbor&nbsp;=&nbsp;new CBORArray()<br>&nbsp;&nbsp;.add(new CBORMap().set(new CBORInt(7),&nbsp;new CBORString(&quot;Hi!&quot;)))<br>&nbsp;&nbsp;.add(new CBORFloat(4.5))<br>&nbsp;&nbsp;.encodeAsSequence();<br><br>System.out.println(HexaDecimal.encode(cbor));<br><span style='color:#007fdd'>a10763486921f94480</span><br></div></div>
+  <h5 id='examples.seq-decoding' style='margin:1em 0 0.5em 0'>Decode CBOR Sequence</h5>
+The following code shows how you can decode CBOR sequences,
+here using the result of the previous encoding example:
+<div class='webpkifloat'><div class='webpkibox' style='margin:0.5em 0 0.5em 2em;width:50em'>CBORDecoder&nbsp;decoder&nbsp;=&nbsp;new&nbsp;CBORDecoder(new ByteArrayInputStream(cbor),<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CBORDecoder.SEQUENCE_MODE,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cbor.length);<br>CBORObject&nbsp;object;<br>while&nbsp;((object&nbsp;=&nbsp;decoder.decodeWithOptions())&nbsp;!=&nbsp;null)&nbsp;{<br>&nbsp;&nbsp;System.out.println(&quot;\n&quot;&nbsp;+&nbsp;object.toString());<br>}<br><br><span style='color:#007fdd'>{<br>&nbsp;&nbsp;7:&nbsp;&quot;Hi!&quot;<br>}</span><br><br><span style='color:#007fdd'>4.5</span><br></div></div></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -518,80 +526,76 @@ The following code shows how you can decode CBOR provided in
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class handling Java/COSE public key conversions.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORSequenceBuilder.html" title="class in org.webpki.cbor">CBORSequenceBuilder</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a>&lt;T extends <a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a>&lt;?&gt;&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Class for creating CBOR sequences.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a>&lt;T extends <a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a>&lt;?&gt;&gt;</div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Base class for signing data.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORSimple.html" title="class in org.webpki.cbor">CBORSimple</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORSimple.html" title="class in org.webpki.cbor">CBORSimple</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class for holding CBOR <code>#7.n</code> (simple) objects.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORString.html" title="class in org.webpki.cbor">CBORString</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORString.html" title="class in org.webpki.cbor">CBORString</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for holding CBOR <code>tstr</code> objects.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORSymKeyDecrypter.html" title="class in org.webpki.cbor">CBORSymKeyDecrypter</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORSymKeyDecrypter.html" title="class in org.webpki.cbor">CBORSymKeyDecrypter</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class for symmetric key decryption.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="CBORSymKeyDecrypter.KeyLocator.html" title="interface in org.webpki.cbor">CBORSymKeyDecrypter.KeyLocator</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="CBORSymKeyDecrypter.KeyLocator.html" title="interface in org.webpki.cbor">CBORSymKeyDecrypter.KeyLocator</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">Interface for dynamic key retrieval.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORSymKeyEncrypter.html" title="class in org.webpki.cbor">CBORSymKeyEncrypter</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORSymKeyEncrypter.html" title="class in org.webpki.cbor">CBORSymKeyEncrypter</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class for symmetric key encryption.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for holding CBOR <code>#6.n</code> (tag) objects.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORTag.COTXObject.html" title="class in org.webpki.cbor">CBORTag.COTXObject</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORTag.COTXObject.html" title="class in org.webpki.cbor">CBORTag.COTXObject</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Return object for COTX tags.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORTypedObjectDecoder.html" title="class in org.webpki.cbor">CBORTypedObjectDecoder</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORTypedObjectDecoder.html" title="class in org.webpki.cbor">CBORTypedObjectDecoder</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Base class for typed objects decoders.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORTypedObjectDecoderCache.html" title="class in org.webpki.cbor">CBORTypedObjectDecoderCache</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORTypedObjectDecoderCache.html" title="class in org.webpki.cbor">CBORTypedObjectDecoderCache</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Cache for typed object decoders.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORValidator.html" title="class in org.webpki.cbor">CBORValidator</a>&lt;T extends <a href="CBORValidator.html" title="class in org.webpki.cbor">CBORValidator</a>&lt;T&gt;&gt;</div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORValidator.html" title="class in org.webpki.cbor">CBORValidator</a>&lt;T extends <a href="CBORValidator.html" title="class in org.webpki.cbor">CBORValidator</a>&lt;T&gt;&gt;</div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Base class for validating signatures.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORX509Decrypter.html" title="class in org.webpki.cbor">CBORX509Decrypter</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORX509Decrypter.html" title="class in org.webpki.cbor">CBORX509Decrypter</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class for X.509 decryption.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="CBORX509Decrypter.DecrypterImpl.html" title="interface in org.webpki.cbor">CBORX509Decrypter.DecrypterImpl</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="CBORX509Decrypter.DecrypterImpl.html" title="interface in org.webpki.cbor">CBORX509Decrypter.DecrypterImpl</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">Decrypter engine implementation interface.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="CBORX509Decrypter.KeyLocator.html" title="interface in org.webpki.cbor">CBORX509Decrypter.KeyLocator</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="CBORX509Decrypter.KeyLocator.html" title="interface in org.webpki.cbor">CBORX509Decrypter.KeyLocator</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">Decrypter private key locator.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORX509Encrypter.html" title="class in org.webpki.cbor">CBORX509Encrypter</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORX509Encrypter.html" title="class in org.webpki.cbor">CBORX509Encrypter</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for X.509 encryption.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORX509Signer.html" title="class in org.webpki.cbor">CBORX509Signer</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORX509Signer.html" title="class in org.webpki.cbor">CBORX509Signer</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class for creating X.509 signatures.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORX509Validator.html" title="class in org.webpki.cbor">CBORX509Validator</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORX509Validator.html" title="class in org.webpki.cbor">CBORX509Validator</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for validating X.509 signatures.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="CBORX509Validator.Parameters.html" title="interface in org.webpki.cbor">CBORX509Validator.Parameters</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="CBORX509Validator.Parameters.html" title="interface in org.webpki.cbor">CBORX509Validator.Parameters</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">Interface for verifying signature meta data.</div>
 </div>
 </div>
@@ -603,7 +607,7 @@ The following code shows how you can decode CBOR provided in
 </main>
 <footer role="contentinfo">
 <hr>
-<p class="legal-copy"><small><i>2005-2024 WebPKI.org.</i></small></p>
+<p class="legal-copy"><small><i>2005-2025 WebPKI.org.</i></small></p>
 </footer>
 </div>
 </div>

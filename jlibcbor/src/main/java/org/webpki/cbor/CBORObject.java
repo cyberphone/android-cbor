@@ -30,7 +30,7 @@ import static org.webpki.cbor.CBORInternal.*;
  * <p>
  * In this implementation "object" should be regarded as 
  * equivalent to the  
- * CBOR [<a href='https://www.rfc-editor.org/rfc/rfc8949.html'>RFC&nbsp;8949</a>]
+ * CBOR [<a href='https://www.rfc-editor.org/rfc/rfc8949.html' class='webpkilink'>RFC&nbsp;8949</a>]
  * term, "data item".
  * </p>
  */
@@ -52,9 +52,11 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * Encode CBOR object.
      * <p>
      * Note: this method always return CBOR data using 
-     * <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>.
+     * <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a>.
      * </p>
-     * 
+     * <p>
+     * See also {@link CBORArray#encodeAsSequence()}.
+     * </p>
      * @return CBOR encoded <code>byteArray</code>
      */
     public byte[] encode() {
@@ -109,18 +111,18 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
         return encodeTagAndValue(majorType | modifier, length >> 2, n);
     }
 
-    void checkTypeAndMarkAsRead(Class<? extends CBORObject> requestedCborType) {
+    CBORObject getTypeAndMarkAsRead(Class<? extends CBORObject> requestedCborType) {
         if (requestedCborType.isInstance(this)) {
             readFlag = true;
         } else {
             cborError("Is type: " + this.getClass().getSimpleName() +
                      ", requested: " + requestedCborType.getSimpleName());
         }
+        return this;
     }
 
     private CBORInt getCBORInt() {
-        checkTypeAndMarkAsRead(CBORInt.class);
-        return (CBORInt) this;
+        return (CBORInt) getTypeAndMarkAsRead(CBORInt.class);
     }
 
     /**
@@ -138,8 +140,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
         if (this instanceof CBORInt) {
             return getCBORInt().toBigInteger();
         }
-        checkTypeAndMarkAsRead(CBORBigInt.class);
-        return ((CBORBigInt) this).value;
+        return ((CBORBigInt) getTypeAndMarkAsRead(CBORBigInt.class)).value;
     }
 
     /**
@@ -314,8 +315,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * @throws CBORException
      */
     public double getFloat64() {
-        checkTypeAndMarkAsRead(CBORFloat.class);
-        return ((CBORFloat) this).value;
+        return ((CBORFloat) getTypeAndMarkAsRead(CBORFloat.class)).value;
     }
  
     /**
@@ -330,8 +330,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * @throws CBORException
      */
     public float getFloat32() {
-        checkTypeAndMarkAsRead(CBORFloat.class);
-        CBORFloat floatingPoint = (CBORFloat) this;
+        CBORFloat floatingPoint = (CBORFloat) getTypeAndMarkAsRead(CBORFloat.class);
         if (floatingPoint.tag == MT_FLOAT64) {
             cborError(STDERR_FLOAT_RANGE);
         }
@@ -350,8 +349,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * @throws CBORException
      */
     public float getFloat16() {
-        checkTypeAndMarkAsRead(CBORFloat.class);
-        CBORFloat floatingPoint = (CBORFloat) this;
+        CBORFloat floatingPoint = (CBORFloat) getTypeAndMarkAsRead(CBORFloat.class);
         if (floatingPoint.tag != MT_FLOAT16) {
             cborError(STDERR_FLOAT_RANGE);
         }
@@ -368,8 +366,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * @throws CBORException
      */
     public int getSimple() {
-        checkTypeAndMarkAsRead(CBORSimple.class);
-        return ((CBORSimple) this).value;
+        return ((CBORSimple) getTypeAndMarkAsRead(CBORSimple.class)).value;
     }
 
     /**
@@ -383,8 +380,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * @throws CBORException
      */
     public boolean getBoolean() {
-        checkTypeAndMarkAsRead(CBORBoolean.class);
-        return ((CBORBoolean) this).value;
+        return ((CBORBoolean) getTypeAndMarkAsRead(CBORBoolean.class)).value;
     }
 
     /**
@@ -419,8 +415,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * @throws CBORException
      */
     public String getString() {
-        checkTypeAndMarkAsRead(CBORString.class);
-        return ((CBORString) this).textString;
+        return ((CBORString) getTypeAndMarkAsRead(CBORString.class)).textString;
     }
 
     /**
@@ -448,7 +443,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * <p>
      * This method requires that the underlying object is a 
      * {@link CBORString} that is compatible with ISO date/time
-     * [<a href='https://www.rfc-editor.org/rfc/rfc3339.html'>RFC&nbsp;3339</a>], 
+     * [<a href='https://www.rfc-editor.org/rfc/rfc3339.html' class='webpkilink'>RFC&nbsp;3339</a>], 
      * otherwise a {@link CBORException} is thrown.
      * </p>
       * 
@@ -472,8 +467,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * @throws CBORException
      */
     public byte[] getBytes() {
-        checkTypeAndMarkAsRead(CBORBytes.class);
-        return ((CBORBytes) this).byteString;
+        return ((CBORBytes) getTypeAndMarkAsRead(CBORBytes.class)).byteString;
     }
 
     /**
@@ -487,8 +481,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * @throws CBORException
      */
     public CBORMap getMap() {
-        checkTypeAndMarkAsRead(CBORMap.class);
-        return (CBORMap) this;
+        return (CBORMap) getTypeAndMarkAsRead(CBORMap.class);
     }
 
     /**
@@ -502,8 +495,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * @throws CBORException
      */
     public CBORArray getArray() {
-        checkTypeAndMarkAsRead(CBORArray.class);
-        return (CBORArray) this;
+        return (CBORArray) getTypeAndMarkAsRead(CBORArray.class);
     }
     
     /**
@@ -517,11 +509,10 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * @throws CBORException
      */
     public CBORTag getTag() {
-        checkTypeAndMarkAsRead(CBORTag.class);
-        return (CBORTag) this;
+        return (CBORTag) getTypeAndMarkAsRead(CBORTag.class);
     }
 
-    void makeImmutable(CBORObject object) {
+    static void makeImmutable(CBORObject object) {
         object.immutableFlag = true;
         if (object instanceof CBORMap cborMap) {
             for (CBORMap.Entry entry : cborMap.entries) {
@@ -658,9 +649,11 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     /**
      * Compare CBOR objects for equality.
      * <p>
-     * Equality in CBOR depends on the actual binary encoding which in turn depends on
-     * <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>.
+     * The result is <code>true</code> if and only if the argument is
+     * not <code>null</code> and is a {@link CBORObject}, and the associated
+     * binary encodings (as provided by {@link #encode()}) are equivalent.
      * </p>
+     * @param object Argument to compare with
      */
     @Override
     public boolean equals(Object object) {
@@ -670,6 +663,10 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
 
     /**
      * Compare CBOR objects for magnitude.
+     * <p>
+     * The comparison is based on the associated binary encodings as provided by {@link #encode()}.
+     * </p>
+     * @param object Argument to compare with
      */
     @Override
     public int compareTo(CBORObject object) {
@@ -688,22 +685,24 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
 
     /**
      * Calculate hash code of CBOR object.
+     * <p>
+     * The hash is calculated in the same way as for {@link String#hashCode()},
+     * using the output from {@link #encode()} as <code>"s"</code>.
+     * </p>
      */
     @Override
     public int hashCode() {
         byte[] encoded = encode();
         int hash = 0;
-        int q = Math.min(encoded.length, 4);
-        while (--q >= 0) {
-            hash <<= 8;
-            hash += encoded[q];
+        for (byte b : encoded) {
+            hash = 31 * hash + (b & 0xff);
         }
         return hash;
     }
 
     /**
      * Render CBOR object in
-     * <a href='package-summary.html#diagnostic-notation'>Diagnostic Notation</a>.
+     * <a href='package-summary.html#diagnostic-notation' class='webpkilink'>Diagnostic Notation</a>.
      * <p>
      * If the object (as well as possible
      * child objects), conforms to the subset of data types supported by JSON,

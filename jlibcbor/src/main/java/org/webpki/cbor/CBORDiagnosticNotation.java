@@ -27,7 +27,7 @@ import org.webpki.util.UTF8;
  * Class for converting diagnostic notation CBOR to CBOR.
  * <p>
  * Note: generated CBOR always conform to 
- * <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>.
+ * <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a>.
  * </p>
  */
 public class CBORDiagnosticNotation {
@@ -159,7 +159,7 @@ public class CBORDiagnosticNotation {
         
             case '<':
                 scanFor("<");
-                CBORSequenceBuilder sequence = new CBORSequenceBuilder();
+                CBORArray sequence = new CBORArray();
                 scanNonSignficantData();
                 while (readChar() != '>') {
                     index--;
@@ -168,7 +168,7 @@ public class CBORDiagnosticNotation {
                     } while (continueList('>'));
                 }
                 scanFor(">");
-                return new CBORBytes(sequence.encode());
+                return new CBORBytes(sequence.encodeAsSequence());
     
             case '[':
                 CBORArray array = new CBORArray();

@@ -25,7 +25,7 @@ import static org.webpki.cbor.CBORInternal.*;
  * Class for holding CBOR <code>{}</code> (map) objects.
  * <p>
  * Note: to maintain
- * <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>
+ * <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a>
  * map keys are <i>automatically sorted during insertion</i>.
  * </p>
  */
@@ -33,7 +33,9 @@ public class CBORMap extends CBORObject {
 
     /**
      * Support interface for dynamic CBOR generation.
-    * @see #setDynamic(Dynamic)
+     * <p>
+     * Also see {@link #setDynamic(Dynamic)}.
+     * </p>
      */
     public interface Dynamic {
 
@@ -118,10 +120,10 @@ public class CBORMap extends CBORObject {
      */
     public CBORMap set(CBORObject key, CBORObject object) {
         immutableTest();
-        // Keys are immutable.
-        makeImmutable(checkObject(key));
         // Create a map entry object.
-        Entry newEntry = new Entry(key, checkObject(object));
+        Entry newEntry = new Entry(checkObject(key), checkObject(object));
+        // Keys are immutable.
+        makeImmutable(key);
         // Insert the entry object in the proper position in the map.
         int insertIndex = entries.size();
         // Keys are always sorted, making the verification process simple.

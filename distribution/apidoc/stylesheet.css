@@ -1348,3 +1348,7 @@ pre.snippet .highlighted {
 kbd {
   color:maroon;
 }
+
+.webpkilink {
+  font-family: "DejaVu Sans", Arial, Helvetica, sans-serif;
+}

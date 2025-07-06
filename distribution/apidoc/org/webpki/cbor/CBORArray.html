@@ -123,25 +123,30 @@
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Add object to the CBOR array.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#get(int)" class="member-name-link">get</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>byte[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#encodeAsSequence()" class="member-name-link">encodeAsSequence</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get object at a specific position in the CBOR array.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#size()" class="member-name-link">size</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get size of the CBOR array.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a><wbr>&lt;<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toArray()" class="member-name-link">toArray</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Create shallow copy of the CBOR array.</div>
+<div class="block">Encode CBOR sequence.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(int,org.webpki.cbor.CBORObject)" class="member-name-link">update</a><wbr>(int&nbsp;index,
- <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;object)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#get(int)" class="member-name-link">get</a><wbr>(int&nbsp;index)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get object at a specific position in the CBOR array.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#size()" class="member-name-link">size</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get size of the CBOR array.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a><wbr>&lt;<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toArray()" class="member-name-link">toArray</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Create shallow copy of the CBOR array.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(int,org.webpki.cbor.CBORObject)" class="member-name-link">update</a><wbr>(int&nbsp;index,
+ <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;object)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Update object at a specific position in the CBOR array.</div>
 </div>
 </div>
@@ -239,6 +244,21 @@
 </section>
 </li>
 <li>
+<section class="detail" id="encodeAsSequence()">
+<h3>encodeAsSequence</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">encodeAsSequence</span>()</div>
+<div class="block">Encode CBOR sequence.
+ <p>
+ Return the objects in the array as a CBOR sequence using
+ <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a>.
+ </p></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>CBOR sequence</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="toArray()">
 <h3>toArray</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&gt;</span>&nbsp;<span class="element-name">toArray</span>()</div>
@@ -258,7 +278,7 @@
 </main>
 <footer role="contentinfo">
 <hr>
-<p class="legal-copy"><small><i>2005-2024 WebPKI.org.</i></small></p>
+<p class="legal-copy"><small><i>2005-2025 WebPKI.org.</i></small></p>
 </footer>
 </div>
 </div>

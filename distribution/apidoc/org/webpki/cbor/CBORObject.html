@@ -95,7 +95,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
  <p>
  In this implementation "object" should be regarded as 
  equivalent to the  
- CBOR [<a href='https://www.rfc-editor.org/rfc/rfc8949.html'>RFC&nbsp;8949</a>]
+ CBOR [<a href='https://www.rfc-editor.org/rfc/rfc8949.html' class='webpkilink'>RFC&nbsp;8949</a>]
  term, "data item".
  </p></div>
 </section>
@@ -261,7 +261,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toDiagnosticNotation(boolean)" class="member-name-link">toDiagnosticNotation</a><wbr>(boolean&nbsp;prettyPrint)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Render CBOR object in
- <a href='package-summary.html#diagnostic-notation'>Diagnostic Notation</a>.</div>
+ <a href='package-summary.html#diagnostic-notation' class='webpkilink'>Diagnostic Notation</a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
@@ -292,7 +292,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="block">Encode CBOR object.
  <p>
  Note: this method always return CBOR data using 
- <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>.
+ <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a>.
+ </p>
+ <p>
+ See also <a href="CBORArray.html#encodeAsSequence()"><code>CBORArray.encodeAsSequence()</code></a>.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -626,7 +629,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
  <p>
  This method requires that the underlying object is a 
  <a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a> that is compatible with ISO date/time
- [<a href='https://www.rfc-editor.org/rfc/rfc3339.html'>RFC&nbsp;3339</a>], 
+ [<a href='https://www.rfc-editor.org/rfc/rfc3339.html' class='webpkilink'>RFC&nbsp;3339</a>], 
  otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
@@ -752,12 +755,15 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">equals</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;object)</span></div>
 <div class="block">Compare CBOR objects for equality.
  <p>
- Equality in CBOR depends on the actual binary encoding which in turn depends on
- <a href='package-summary.html#deterministic-encoding'>Deterministic&nbsp;Encoding</a>.
+ The result is <code>true</code> if and only if the argument is
+ not <code>null</code> and is a <a href="CBORObject.html" title="class in org.webpki.cbor"><code>CBORObject</code></a>, and the associated
+ binary encodings (as provided by <a href="#encode()"><code>encode()</code></a>) are equivalent.
  </p></div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>object</code> - Argument to compare with</dd>
 </dl>
 </section>
 </li>
@@ -765,10 +771,15 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="compareTo(org.webpki.cbor.CBORObject)">
 <h3>compareTo</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">compareTo</span><wbr><span class="parameters">(<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&nbsp;object)</span></div>
-<div class="block">Compare CBOR objects for magnitude.</div>
+<div class="block">Compare CBOR objects for magnitude.
+ <p>
+ The comparison is based on the associated binary encodings as provided by <a href="#encode()"><code>encode()</code></a>.
+ </p></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Comparable.html#compareTo(T)" title="class or interface in java.lang" class="external-link">compareTo</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Comparable.html" title="class or interface in java.lang" class="external-link">Comparable</a>&lt;<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a>&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>object</code> - Argument to compare with</dd>
 </dl>
 </section>
 </li>
@@ -776,7 +787,11 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="hashCode()">
 <h3>hashCode</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">hashCode</span>()</div>
-<div class="block">Calculate hash code of CBOR object.</div>
+<div class="block">Calculate hash code of CBOR object.
+ <p>
+ The hash is calculated in the same way as for <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>String.hashCode()</code></a>,
+ using the output from <a href="#encode()"><code>encode()</code></a> as <code>"s"</code>.
+ </p></div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
@@ -788,7 +803,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <h3>toDiagnosticNotation</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toDiagnosticNotation</span><wbr><span class="parameters">(boolean&nbsp;prettyPrint)</span></div>
 <div class="block">Render CBOR object in
- <a href='package-summary.html#diagnostic-notation'>Diagnostic Notation</a>.
+ <a href='package-summary.html#diagnostic-notation' class='webpkilink'>Diagnostic Notation</a>.
  <p>
  If the object (as well as possible
  child objects), conforms to the subset of data types supported by JSON,
@@ -841,7 +856,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 </main>
 <footer role="contentinfo">
 <hr>
-<p class="legal-copy"><small><i>2005-2024 WebPKI.org.</i></small></p>
+<p class="legal-copy"><small><i>2005-2025 WebPKI.org.</i></small></p>
 </footer>
 </div>
 </div>
