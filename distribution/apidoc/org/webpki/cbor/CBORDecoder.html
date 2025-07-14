@@ -98,22 +98,22 @@
 <div class="col-first even-row-color"><code>static final int</code></div>
 <div class="col-second even-row-color"><code><a href="#LENIENT_MAP_DECODING" class="member-name-link">LENIENT_MAP_DECODING</a></code></div>
 <div class="col-last even-row-color">
-<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> <code>options</code> flag.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final int</code></div>
 <div class="col-second odd-row-color"><code><a href="#LENIENT_NUMBER_DECODING" class="member-name-link">LENIENT_NUMBER_DECODING</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> <code>options</code> flag.</div>
 </div>
 <div class="col-first even-row-color"><code>static final int</code></div>
 <div class="col-second even-row-color"><code><a href="#REJECT_NON_FINITE_FLOATS" class="member-name-link">REJECT_NON_FINITE_FLOATS</a></code></div>
 <div class="col-last even-row-color">
-<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> <code>options</code> flag.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final int</code></div>
 <div class="col-second odd-row-color"><code><a href="#SEQUENCE_MODE" class="member-name-link">SEQUENCE_MODE</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> <code>options</code> flag.</div>
 </div>
 </div>
 </section>
@@ -182,7 +182,7 @@
 <section class="detail" id="SEQUENCE_MODE">
 <h3>SEQUENCE_MODE</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">SEQUENCE_MODE</span></div>
-<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> <code>options</code> flag.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -197,7 +197,7 @@
 <section class="detail" id="LENIENT_MAP_DECODING">
 <h3>LENIENT_MAP_DECODING</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">LENIENT_MAP_DECODING</span></div>
-<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> <code>options</code> flag.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -212,7 +212,7 @@
 <section class="detail" id="LENIENT_NUMBER_DECODING">
 <h3>LENIENT_NUMBER_DECODING</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">LENIENT_NUMBER_DECODING</span></div>
-<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> <code>options</code> flag.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -227,7 +227,7 @@
 <section class="detail" id="REJECT_NON_FINITE_FLOATS">
 <h3>REJECT_NON_FINITE_FLOATS</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">REJECT_NON_FINITE_FLOATS</span></div>
-<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> flag.</div>
+<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> <code>options</code> flag.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -302,7 +302,7 @@
  causes such numbers to throw a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a>.</div>
  </p>
  <p>
- Exceeding <code>maxInputLength</code> throws a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a>.  It is
+ Exceeding <code>maxInputLength</code> during decoding throws a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a>.  It is
  <i>recommendable</i> setting this as low as possible, since malformed
  CBOR objects may request any amount of memory.
  </p></div>
