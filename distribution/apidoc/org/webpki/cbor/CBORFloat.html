@@ -134,6 +134,11 @@
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get length of the optimized IEEE 754 type.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setNonFiniteFloatsMode(boolean)" class="member-name-link">setNonFiniteFloatsMode</a><wbr>(boolean&nbsp;reject)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Globally disable <code>NaN</code> and <code>Infinity</code>.</div>
+</div>
 </div>
 </div>
 </div>
@@ -166,10 +171,17 @@
  </p>
  <p>
  See also <a href="CBORObject.html#getFloat64()"><code>CBORObject.getFloat64()</code></a> and <a href="CBORObject.html#getFloat32()"><code>CBORObject.getFloat32()</code></a>
+ </p>
+ <p>
+ For <code>NaN</code> and <code>Infinity</code> support see
+ <a href="CBORDecoder.html#REJECT_NON_FINITE_FLOATS"><code>CBORDecoder.REJECT_NON_FINITE_FLOATS</code></a> and
+ <a href="#setNonFiniteFloatsMode(boolean)"><code>setNonFiniteFloatsMode(boolean)</code></a>.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>value</code> - Java double</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
 </dl>
 </section>
 </li>
@@ -181,6 +193,23 @@
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="setNonFiniteFloatsMode(boolean)">
+<h3>setNonFiniteFloatsMode</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setNonFiniteFloatsMode</span><wbr><span class="parameters">(boolean&nbsp;reject)</span></div>
+<div class="block">Globally disable <code>NaN</code> and <code>Infinity</code>.
+ <p>
+ Note that this method unlike <a href="CBORDecoder.html#REJECT_NON_FINITE_FLOATS"><code>CBORDecoder.REJECT_NON_FINITE_FLOATS</code></a>,
+ also affects <i>encoding</i> of <code>NaN</code> and <code>Infinity</code> values.
+ Since this is a <i>global</i> setting. you need to consider how it
+ could affect other applications running in the same JVM.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>reject</code> - If <code>true</code>, disable <code>NaN</code> and <code>Infinity</code> support.</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="formatDouble(java.lang.Double)">
 <h3>formatDouble</h3>

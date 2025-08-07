@@ -78,6 +78,7 @@ public class CBORDecoder {
     * Multiple options can be combined using the binary OR-operator ("<code>|</code>").
     * A zero (0) sets the decoder default mode.
     * The options are defined by the following constants:
+    * </p>
     * <div style='margin-top:0.3em'>{@link CBORDecoder#SEQUENCE_MODE}:</div>
     * <div style='padding:0.2em 0 0 1.2em'>If the {@link CBORDecoder#SEQUENCE_MODE}
     * option is defined, the following apply:
@@ -88,30 +89,29 @@ public class CBORDecoder {
     * (<i>empty</i> sequences are permitted).</li>
     * </ul>
     * Note that data that has not yet been decoded, is not verified for correctness.
-    <div style='margin-top:0.5em'>See also {@link CBORArray#encodeAsSequence}.</div></div>
+    * <div style='margin-top:0.5em'>See also {@link CBORArray#encodeAsSequence}.</div></div>
     * <div style='margin-top:0.8em'>{@link CBORDecoder#LENIENT_MAP_DECODING}:</div>
     * <div style='padding:0.2em 0 0 1.2em'>By default, the decoder requires
     * that CBOR maps conform to the
     * <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a> 
     * rules.
-    * The&nbsp;{@link CBORDecoder#LENIENT_MAP_DECODING} option forces the decoder
+    * <div>The {@link CBORDecoder#LENIENT_MAP_DECODING} option forces the decoder
     * to accept CBOR maps with arbitrary key ordering.
-    * Note that duplicate keys still cause a {@link CBORException} to be thrown.
-    * </div>
+    * Note that duplicate keys still cause a {@link CBORException} to be thrown.</div></div>
     * <div style='margin-top:0.8em'>{@link CBORDecoder#LENIENT_NUMBER_DECODING}:</div>
     * <div style='padding:0.2em 0 0 1.2em'>By default, the decoder requires
     * that CBOR numbers conform to the
     * <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a> rules.
-    * The&nbsp;{@link CBORDecoder#LENIENT_NUMBER_DECODING} option forces the decoder to
+    * <div>The {@link CBORDecoder#LENIENT_NUMBER_DECODING} option forces the decoder to
     * accept different representations of CBOR <code>int</code>, <code>bigint</code>,
-    * and <code>float</code> items, only limited by RFC&nbsp;8949.</div>
+    * and <code>float</code> items, only limited by RFC&nbsp;8949.</div></div>
     * <div style='margin-top:0.8em'>{@link CBORDecoder#REJECT_NON_FINITE_FLOATS}:</div>
-    * <div style='padding:0.2em 0 0 1.2em'>By default, the decoder supports 
-    * <code>NaN</code> and <code>Infinity</code> values. 
-    * In case these variants are not applicable for the application in question,
-    * the {@link CBORDecoder#REJECT_NON_FINITE_FLOATS} option
-    * causes such numbers to throw a {@link CBORException}.</div>
-    * </p>
+    * <div style='padding:0.2em 0 0 1.2em'>By default, the decoder supports
+    * the special floating-point values 
+    * <code>NaN</code>, <code>Infinity</code>, and <code>-Infinity</code>.
+    * <div>The {@link CBORDecoder#REJECT_NON_FINITE_FLOATS} option
+    * causes the occurrence of such a value to throw a {@link CBORException}.</div>
+    * <div style='margin-top:0.5em'>See also {@link CBORFloat#setNonFiniteFloatsMode(boolean)}.</div></div>
     * <p>
     * Exceeding <code>maxInputLength</code> during decoding throws a {@link CBORException}.  It is
     * <i>recommendable</i> setting this as low as possible, since malformed
@@ -120,6 +120,7 @@ public class CBORDecoder {
     * @param inputStream Stream holding CBOR data. 
     * @param options The decoder options.
     * @param maxInputLength Upper limit in bytes.
+    * @throws CBORException
     * @see #getByteCount()
     */
     public CBORDecoder(InputStream inputStream, int options, int maxInputLength) {
@@ -190,14 +191,10 @@ public class CBORDecoder {
     }
 
     private CBORFloat checkDoubleConversion(int tag, long bitFormat, double value) {
-        CBORFloat cborFloat = new CBORFloat(value);
+        CBORFloat cborFloat = new CBORFloat(value, rejectNonFiniteFloats, strictNumbers);
         if (strictNumbers &&
             (cborFloat.tag != tag || cborFloat.bitFormat != bitFormat)) {
             cborError(String.format(STDERR_NON_DETERMINISTIC_FLOAT + "%2x", tag));
-        }
-        if (rejectNonFiniteFloats && cborFloat.tag == MT_FLOAT16 &&
-            (cborFloat.bitFormat & FLOAT16_POS_INFINITY) == FLOAT16_POS_INFINITY) {
-            cborError(STDERR_NON_FINITE_FLOATS_DISABLED);
         }
         return cborFloat;
     }
@@ -206,9 +203,9 @@ public class CBORDecoder {
         int tag = readByte();
 
         // Begin with CBOR types that are uniquely defined by the tag byte.
-        switch (tag) {
-            case MT_BIG_NEGATIVE:
-            case MT_BIG_UNSIGNED:
+        return switch (tag) {
+
+            case MT_BIG_NEGATIVE, MT_BIG_UNSIGNED -> {
                 byte[] byteArray = getObject().getBytes();
                 BigInteger bigInteger = new BigInteger(1, byteArray);
                 CBORBigInt cborBigInt = new CBORBigInt(tag == MT_BIG_UNSIGNED ? 
@@ -219,28 +216,28 @@ public class CBORDecoder {
                     } 
                 } else {
                     // Normalization...
-                    return cborBigInt.clone();
+                    yield cborBigInt.clone();
                 }
-                return cborBigInt;
+                yield cborBigInt;
+            }
 
-            case MT_FLOAT16:
+            case MT_FLOAT16 -> {
                 double float64;
-                long f16Bin = getLongFromBytes(2);
+                long f16bin = getLongFromBytes(2);
 
                 // Get the significand.
-                long significand = f16Bin & ((1L << FLOAT16_SIGNIFICAND_SIZE) - 1);
+                long significand = f16bin & ((1L << FLOAT16_SIGNIFICAND_SIZE) - 1);
                 // Get the exponent.
-                long exponent = f16Bin & FLOAT16_POS_INFINITY;
+                long exponent = f16bin & FLOAT16_POS_INFINITY;
 
                 // Begin with the edge cases.
         
                 if (exponent == FLOAT16_POS_INFINITY) {
 
-                    // Special "number"
-                    
-                    // Non-deterministic representations of NaN will be flagged later.
-                    // Only simple NaNs are supported by this implementation.
-                    float64 = significand == 0 ? Double.POSITIVE_INFINITY : Double.NaN;
+                    // Non-finite numbers: Infinity, -Infinity, and NaN.
+
+                    float64 = Double.longBitsToDouble(FLOAT64_POS_INFINITY |
+                        (significand << (FLOAT64_SIGNIFICAND_SIZE - FLOAT16_SIGNIFICAND_SIZE)));
                         
                 } else {
 
@@ -256,94 +253,113 @@ public class CBORDecoder {
                     float64 = (double)significand / 
                             (1L << (FLOAT16_EXPONENT_BIAS + FLOAT16_SIGNIFICAND_SIZE - 1));
                 }
-                return checkDoubleConversion(tag,
-                                             f16Bin,
-                                             f16Bin >= FLOAT16_NEG_ZERO ? -float64 : float64);
+                yield checkDoubleConversion(tag,
+                                            f16bin,
+                                            f16bin >= FLOAT16_NEG_ZERO ? -float64 : float64);
+            }
 
-            case MT_FLOAT32:
-                long f32Bin = getLongFromBytes(4);
-                return checkDoubleConversion(tag, f32Bin, Float.intBitsToFloat((int)f32Bin));
+            case MT_FLOAT32 -> {
+                double float64;
+                long f32bin = getLongFromBytes(4);
 
-            case MT_FLOAT64:
-                long f64Bin = getLongFromBytes(8);
-                return checkDoubleConversion(tag, f64Bin, Double.longBitsToDouble(f64Bin));
+                // Begin with the edge cases.
+        
+                if ((f32bin & FLOAT32_POS_INFINITY) == FLOAT32_POS_INFINITY) {
 
-            case MT_NULL:
-                return new CBORNull();
+                    // Non-finite numbers: Infinity, -Infinity, and NaN.
+
+                    float64 = Double.longBitsToDouble(FLOAT64_POS_INFINITY |
+                        ((f32bin & ((1L << FLOAT32_SIGNIFICAND_SIZE) - 1)) << 
+                            (FLOAT64_SIGNIFICAND_SIZE - FLOAT32_SIGNIFICAND_SIZE)) |
+                        (FLOAT64_NEG_ZERO & (f32bin << 32)));
+                        
+                } else {
+
+                    // It is a "regular" number.
+
+                    float64 = Float.intBitsToFloat((int)f32bin);
+                }
+                yield checkDoubleConversion(tag, f32bin, float64);
+            }
+
+            case MT_FLOAT64 -> {
+                long f64bin = getLongFromBytes(8);
+                yield checkDoubleConversion(tag, f64bin, Double.longBitsToDouble(f64bin));
+            }
+
+            case MT_NULL -> new CBORNull();
                 
-            case MT_TRUE:
-            case MT_FALSE:
-                return new CBORBoolean(tag == MT_TRUE);
-        }
+            case MT_TRUE, MT_FALSE -> new CBORBoolean(tag == MT_TRUE);
 
-        // Then decode CBOR types that blend length of data in the tag byte.
-        long n = tag & 0x1fL;
-        if (n > 27) {
-            unsupportedTag(tag);
-        }
-        if (n > 23) {
-            // For 1, 2, 4, and 8 byte N.
-            int q = 1 << (n - 24);
-            // 1: 00000000ffffffff
-            // 2: 000000ffffffff00
-            // 4: 0000ffffffff0000
-            // 8: ffffffff00000000
-            long mask = MASK_LOWER_32 << (q / 2) * 8;
-            n = 0;
-            while (--q >= 0) {
-                n <<= 8;
-                n |= readByte();
-            }
-            // If the upper half (for 2, 4, 8 byte N) of N or a single byte
-            // N is zero, a shorter variant should have been used.
-            // In addition, a single byte N must be > 23. 
-            if (strictNumbers && ((n & mask) == 0 || (n > 0 && n < 24))) {
-                cborError(STDERR_NON_DETERMINISTIC_N);
-            }
-        }
-        // N successfully decoded, now switch on major type (upper three bits).
-        switch (tag & 0xe0) {
-            case MT_SIMPLE:
-                return new CBORSimple(checkLength(n));
-
-            case MT_TAG:
-                return new CBORTag(n, getObject());
-
-            case MT_UNSIGNED:
-                return new CBORInt(n, true);
-
-            case MT_NEGATIVE:
-                // Only let two-complement integers use long.
-                return n < 0 ?
-                    new CBORBigInt(NEGATIVE_HIGH_RANGE.add(BigInteger.valueOf(~n))) 
-                             :
-                    new CBORInt(~n, false);
-
-            case MT_BYTES:
-                return new CBORBytes(readBytes(checkLength(n)));
-
-            case MT_STRING:
-                return new CBORString(UTF8.decode(readBytes(checkLength(n))));
-
-            case MT_ARRAY:
-                CBORArray cborArray = new CBORArray();
-                for (int q = checkLength(n); --q >= 0; ) {
-                    cborArray.add(getObject());
+            default -> {
+                // Then decode CBOR types that blend length of data in the tag byte.
+                long n = tag & 0x1fL;
+                if (n > 27) {
+                    unsupportedTag(tag);
                 }
-                return cborArray;
-
-            case MT_MAP:
-                CBORMap cborMap = new CBORMap().setSortingMode(strictMaps);
-                for (int q = checkLength(n); --q >= 0; ) {
-                    cborMap.set(getObject(), getObject());
+                if (n > 23) {
+                    // For 1, 2, 4, and 8 byte N.
+                    int q = 1 << (n - 24);
+                    // 1: 00000000ffffffff
+                    // 2: 000000ffffffff00
+                    // 4: 0000ffffffff0000
+                    // 8: ffffffff00000000
+                    long mask = MASK_LOWER_32 << (q / 2) * 8;
+                    n = 0;
+                    while (--q >= 0) {
+                        n <<= 8;
+                        n |= readByte();
+                    }
+                    // If the upper half (for 2, 4, 8 byte N) of N or a single byte
+                    // N is zero, a shorter variant should have been used.
+                    // In addition, a single byte N must be > 23. 
+                    if (strictNumbers && ((n & mask) == 0 || (n > 0 && n < 24))) {
+                        cborError(STDERR_NON_DETERMINISTIC_N);
+                    }
                 }
-                // Programmatically added elements will be sorted (by default). 
-                return cborMap.setSortingMode(false);
+                // N successfully decoded, now switch on major type (upper three bits).
+                yield switch (tag & 0xe0) {
 
-            default:
-                unsupportedTag(tag);
-        }
-        return null;  // For the compiler only...
+                    case MT_SIMPLE -> new CBORSimple(checkLength(n));
+
+                    case MT_TAG -> new CBORTag(n, getObject());
+
+                    case MT_UNSIGNED -> new CBORInt(n, true);
+
+                    // Only let two-complement integers use long.
+                    case MT_NEGATIVE -> n < 0 ?
+                        new CBORBigInt(NEGATIVE_HIGH_RANGE.add(BigInteger.valueOf(~n))) 
+                                              :
+                        new CBORInt(~n, false);
+                    
+                    case MT_BYTES -> new CBORBytes(readBytes(checkLength(n)));
+
+                    case MT_STRING -> new CBORString(UTF8.decode(readBytes(checkLength(n))));
+
+                    case MT_ARRAY -> {
+                        CBORArray cborArray = new CBORArray();
+                        for (int q = checkLength(n); --q >= 0; ) {
+                            cborArray.add(getObject());
+                        }
+                        yield cborArray;
+                    }
+
+                    case MT_MAP -> {
+                        CBORMap cborMap = new CBORMap().setSortingMode(strictMaps);
+                        for (int q = checkLength(n); --q >= 0; ) {
+                            cborMap.set(getObject(), getObject());
+                        }
+                        // Programmatically added elements will be sorted (by default). 
+                        yield cborMap.setSortingMode(false);
+                    }
+
+                    default -> {
+                        unsupportedTag(tag);
+                        yield null;
+                    }
+                };
+            }
+        };
     }
 
     /**
@@ -389,10 +405,10 @@ public class CBORDecoder {
      * </p>
      * <p>
      * This conveniance method is identical to:
+     * </p>
      * <pre>  new CBORDecoder(new ByteArrayInputStream(cbor), 0, cbor.length)
      *      .decodeWithOptions();
      * </pre>
-     * </p>
      * @param cbor CBOR binary data <i>holding exactly one CBOR object</i>.
      * @return {@link CBORObject}
      * @throws CBORException
@@ -426,6 +442,4 @@ public class CBORDecoder {
     static final String STDERR_READING_LIMIT =
             "Reading past input limit";
 
-    static final String STDERR_NON_FINITE_FLOATS_DISABLED = 
-            "\"NaN\" and \"Infinity\" support is disabled";
 }
