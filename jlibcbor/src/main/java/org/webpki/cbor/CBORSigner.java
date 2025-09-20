@@ -169,6 +169,10 @@ public abstract class CBORSigner <T extends CBORSigner<?>> {
         CBORMap mapToSign = CBORCryptoUtils.unwrapContainerMap(objectToSign, 
                                                                POLICY.OPTIONAL, 
                                                                null);
+        
+        // Save and remove possible unprotected data.
+        CBORObject unprotectedData = mapToSign.containsKey(CSF_UNPROTECTED_LBL) ? 
+                                          mapToSign.remove(CSF_UNPROTECTED_LBL) : null;
 
         // Create an empty signature container object.
         CBORMap csfContainer = new CBORMap();
@@ -209,6 +213,11 @@ public abstract class CBORSigner <T extends CBORSigner<?>> {
             mapToSign.update(CSF_CONTAINER_LBL, 
                              previousSignatures.getArray().add(csfContainer),
                              true);
+        }
+
+        // Restore possible unprotected data.
+        if (unprotectedData != null) {
+            mapToSign.set(CSF_UNPROTECTED_LBL, unprotectedData);
         }
 
         // Return the now signed object.

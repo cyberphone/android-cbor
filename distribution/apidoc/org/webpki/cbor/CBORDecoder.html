@@ -106,13 +106,8 @@
 <div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> <code>options</code> flag.</div>
 </div>
 <div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#REJECT_NON_FINITE_FLOATS" class="member-name-link">REJECT_NON_FINITE_FLOATS</a></code></div>
+<div class="col-second even-row-color"><code><a href="#SEQUENCE_MODE" class="member-name-link">SEQUENCE_MODE</a></code></div>
 <div class="col-last even-row-color">
-<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> <code>options</code> flag.</div>
-</div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SEQUENCE_MODE" class="member-name-link">SEQUENCE_MODE</a></code></div>
-<div class="col-last odd-row-color">
 <div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> <code>options</code> flag.</div>
 </div>
 </div>
@@ -126,10 +121,15 @@
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.io.InputStream,int,int)" class="member-name-link">CBORDecoder</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/InputStream.html" title="class or interface in java.io" class="external-link">InputStream</a>&nbsp;inputStream,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(byte%5B%5D,int)" class="member-name-link">CBORDecoder</a><wbr>(byte[]&nbsp;cbor,
+ int&nbsp;options)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Create a customized CBOR decoder.</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.io.InputStream,int,int)" class="member-name-link">CBORDecoder</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/InputStream.html" title="class or interface in java.io" class="external-link">InputStream</a>&nbsp;inputStream,
  int&nbsp;options,
  int&nbsp;maxInputLength)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Create a customized CBOR decoder.</div>
 </div>
 </div>
@@ -223,21 +223,6 @@
 </dl>
 </section>
 </li>
-<li>
-<section class="detail" id="REJECT_NON_FINITE_FLOATS">
-<h3>REJECT_NON_FINITE_FLOATS</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">REJECT_NON_FINITE_FLOATS</span></div>
-<div class="block"><a href="#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(InputStream, int, int)</code></a> <code>options</code> flag.</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="../../../constant-values.html#org.webpki.cbor.CBORDecoder.REJECT_NON_FINITE_FLOATS">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
 </ul>
 </section>
 </li>
@@ -279,28 +264,23 @@
  </ul>
  Note that data that has not yet been decoded, is not verified for correctness.
  <div style='margin-top:0.5em'>See also <a href="CBORArray.html#encodeAsSequence()"><code>CBORArray.encodeAsSequence()</code></a>.</div></div>
+
  <div style='margin-top:0.8em'><a href="#LENIENT_MAP_DECODING"><code>LENIENT_MAP_DECODING</code></a>:</div>
  <div style='padding:0.2em 0 0 1.2em'>By default, the decoder requires
  that CBOR maps conform to the
  <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a> 
  rules.
- <div>The <a href="#LENIENT_MAP_DECODING"><code>LENIENT_MAP_DECODING</code></a> option forces the decoder
- to accept CBOR maps with arbitrary key ordering.
+ <div>The <a href="#LENIENT_MAP_DECODING"><code>LENIENT_MAP_DECODING</code></a> option makes the decoder
+ accept CBOR maps with arbitrary key ordering.
  Note that duplicate keys still cause a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> to be thrown.</div></div>
+
  <div style='margin-top:0.8em'><a href="#LENIENT_NUMBER_DECODING"><code>LENIENT_NUMBER_DECODING</code></a>:</div>
  <div style='padding:0.2em 0 0 1.2em'>By default, the decoder requires
  that CBOR numbers conform to the
  <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a> rules.
- <div>The <a href="#LENIENT_NUMBER_DECODING"><code>LENIENT_NUMBER_DECODING</code></a> option forces the decoder to
+ <div>The <a href="#LENIENT_NUMBER_DECODING"><code>LENIENT_NUMBER_DECODING</code></a> option makes the decoder
  accept different representations of CBOR <code>int</code>, <code>bigint</code>,
  and <code>float</code> items, only limited by RFC&nbsp;8949.</div></div>
- <div style='margin-top:0.8em'><a href="#REJECT_NON_FINITE_FLOATS"><code>REJECT_NON_FINITE_FLOATS</code></a>:</div>
- <div style='padding:0.2em 0 0 1.2em'>By default, the decoder supports
- the special floating-point values 
- <code>NaN</code>, <code>Infinity</code>, and <code>-Infinity</code>.
- <div>The <a href="#REJECT_NON_FINITE_FLOATS"><code>REJECT_NON_FINITE_FLOATS</code></a> option
- causes the occurrence of such a value to throw a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a>.</div>
- <div style='margin-top:0.5em'>See also <a href="CBORFloat.html#setNonFiniteFloatsMode(boolean)"><code>CBORFloat.setNonFiniteFloatsMode(boolean)</code></a>.</div></div>
  <p>
  Exceeding <code>maxInputLength</code> during decoding throws a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a>.  It is
  <i>recommendable</i> setting this as low as possible, since malformed
@@ -311,6 +291,32 @@
 <dd><code>inputStream</code> - Stream holding CBOR data.</dd>
 <dd><code>options</code> - The decoder options.</dd>
 <dd><code>maxInputLength</code> - Upper limit in bytes.</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="#getByteCount()"><code>getByteCount()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(byte[],int)">
+<h3>CBORDecoder</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORDecoder</span><wbr><span class="parameters">(byte[]&nbsp;cbor,
+ int&nbsp;options)</span></div>
+<div class="block">Create a customized CBOR decoder.
+ <p></p>
+ This constructor is identical to:
+ <div class='webpkifloat'>
+ <pre>  CBORDecoder(new ByteArrayInputStream(cbor), 0, cbor.length);</pre>
+ </div></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>cbor</code> - CBOR binary data</dd>
+<dd><code>options</code> - The decoder options.</dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
 <dt>See Also:</dt>
@@ -365,15 +371,12 @@
 <h3>decode</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">decode</span><wbr><span class="parameters">(byte[]&nbsp;cbor)</span></div>
 <div class="block">Decode CBOR data.
- <p>
- Unsupported or malformed CBOR data cause a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> to be thrown.
- </p>
- <p>
+ <p></p>
  This conveniance method is identical to:
- </p>
+ <div class='webpkifloat'>
  <pre>  new CBORDecoder(new ByteArrayInputStream(cbor), 0, cbor.length)
-      .decodeWithOptions();
- </pre></div>
+      .decodeWithOptions();</pre>
+ </div></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>cbor</code> - CBOR binary data <i>holding exactly one CBOR object</i>.</dd>

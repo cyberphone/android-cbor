@@ -214,36 +214,41 @@
 <div class="col-first even-row-color"><code>static final <a href="CBORSimple.html" title="class in org.webpki.cbor">CBORSimple</a></code></div>
 <div class="col-second even-row-color"><code><a href="#CSF_CONTAINER_LBL" class="member-name-link">CSF_CONTAINER_LBL</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Reserved label holding the CSF container object.</div>
+<div class="block">Reserved label simple(99) holding the CSF container object.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#CSF_SIGNATURE_LBL" class="member-name-link">CSF_SIGNATURE_LBL</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">CSF "signature" label (6).</div>
 </div>
-<div class="col-first even-row-color"><code>static final <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
-<div class="col-second even-row-color"><code><a href="#CXF_ALGORITHM_LBL" class="member-name-link">CXF_ALGORITHM_LBL</a></code></div>
+<div class="col-first even-row-color"><code>static final <a href="CBORSimple.html" title="class in org.webpki.cbor">CBORSimple</a></code></div>
+<div class="col-second even-row-color"><code><a href="#CSF_UNPROTECTED_LBL" class="member-name-link">CSF_UNPROTECTED_LBL</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Reserved label simple(100) holding optional unprotected data.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#CXF_ALGORITHM_LBL" class="member-name-link">CXF_ALGORITHM_LBL</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">CSF/CEF "algorithm" label (1).</div>
 </div>
-<div class="col-first odd-row-color"><code>static final <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#CXF_CERT_PATH_LBL" class="member-name-link">CXF_CERT_PATH_LBL</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
+<div class="col-second even-row-color"><code><a href="#CXF_CERT_PATH_LBL" class="member-name-link">CXF_CERT_PATH_LBL</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">CSF/CEF "certificatePath" label (5).</div>
 </div>
-<div class="col-first even-row-color"><code>static final <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
-<div class="col-second even-row-color"><code><a href="#CXF_CUSTOM_DATA_LBL" class="member-name-link">CXF_CUSTOM_DATA_LBL</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#CXF_CUSTOM_DATA_LBL" class="member-name-link">CXF_CUSTOM_DATA_LBL</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">CSF/CEF "customData" label (0).</div>
 </div>
-<div class="col-first odd-row-color"><code>static final <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#CXF_KEY_ID_LBL" class="member-name-link">CXF_KEY_ID_LBL</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
+<div class="col-second even-row-color"><code><a href="#CXF_KEY_ID_LBL" class="member-name-link">CXF_KEY_ID_LBL</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">CSF/CEF "keyId" label (3).</div>
 </div>
-<div class="col-first even-row-color"><code>static final <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
-<div class="col-second even-row-color"><code><a href="#CXF_PUBLIC_KEY_LBL" class="member-name-link">CXF_PUBLIC_KEY_LBL</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#CXF_PUBLIC_KEY_LBL" class="member-name-link">CXF_PUBLIC_KEY_LBL</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">CSF/CEF "publicKey" label (4).</div>
 </div>
 </div>
@@ -478,7 +483,14 @@
 <section class="detail" id="CSF_CONTAINER_LBL">
 <h3>CSF_CONTAINER_LBL</h3>
 <div class="member-signature"><span class="modifiers">static final</span>&nbsp;<span class="return-type"><a href="CBORSimple.html" title="class in org.webpki.cbor">CBORSimple</a></span>&nbsp;<span class="element-name">CSF_CONTAINER_LBL</span></div>
-<div class="block">Reserved label holding the CSF container object.</div>
+<div class="block">Reserved label simple(99) holding the CSF container object.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="CSF_UNPROTECTED_LBL">
+<h3>CSF_UNPROTECTED_LBL</h3>
+<div class="member-signature"><span class="modifiers">static final</span>&nbsp;<span class="return-type"><a href="CBORSimple.html" title="class in org.webpki.cbor">CBORSimple</a></span>&nbsp;<span class="element-name">CSF_UNPROTECTED_LBL</span></div>
+<div class="block">Reserved label simple(100) holding optional unprotected data.</div>
 </section>
 </li>
 </ul>

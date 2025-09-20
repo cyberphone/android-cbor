@@ -162,12 +162,11 @@ public class CBORMap extends CBORObject {
 
     /**
      * Set CBOR data using an external (dynamic) interface.
-     * <p>
+     * <p></p>
      * Sample using a construct suitable for chained writing:
-     * <pre>
-     *    setDynamic((wr) -&gt; optionalString == null ? wr : wr.set(KEY, new CBORString(optionalString))); 
-     * </pre>
-     * </p>
+     * <div class='webpkifloat'>
+     * <pre>  setDynamic((wr) -&gt; optionalString == null ? wr : wr.set(KEY, new CBORString(optionalString)));</pre>
+     * </div>
      * @param dynamic Interface (usually Lambda)
      * @return <code>this</code>
      * @throws CBORException
@@ -357,16 +356,16 @@ public class CBORMap extends CBORObject {
     byte[] internalEncode() {
         byte[] encoded = encodeTagAndN(MT_MAP, entries.size());
         for (Entry entry : entries) {
-            encoded = addByteArrays(encoded,
-                                    addByteArrays(entry.encodedKey, 
-                                                  entry.object.internalEncode()));
+            encoded = CBORUtil.concatByteArrays(encoded,
+                                                entry.encodedKey,
+                                                entry.object.internalEncode());
         }
         return encoded;
     }
         
     @Override
     void internalToString(CborPrinter cborPrinter) {
-        cborPrinter.beginMap();
+        cborPrinter.beginList('{');
         boolean notFirst = false;
         for (Entry entry : entries) {
             if (notFirst) {
@@ -378,7 +377,7 @@ public class CBORMap extends CBORObject {
             cborPrinter.append(':').space();
             entry.object.internalToString(cborPrinter);
         }
-        cborPrinter.endMap(notFirst);
+        cborPrinter.endList(notFirst, '}');
     }
     
     static final String STDERR_NON_DET_SORT_ORDER =

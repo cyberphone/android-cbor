@@ -61,21 +61,24 @@
 <div class="package-signature">package <span class="element-name">org.webpki.cbor</span></div>
 <section class="package-description" id="package-description">
 <div class="block"><h2 id="cbor---encoder-decoder-signatures-and-encryption-heading">CBOR - Encoder, Decoder, Signatures, and Encryption</h2>
-This package contains Java support for CBOR using the 
-[<a href='https://www.ietf.org/archive/id/draft-rundgren-cbor-core-11.html' class='webpkilink'>CBOR::Core</a>]
+This package contains Java support for <code>CBOR</code> 
+[<a href='https://www.rfc-editor.org/rfc/rfc8949.html' class='webpkilink'>RFC&nbsp;8949</a>]
+using the 
+[<a href='https://www.ietf.org/archive/id/draft-rundgren-cbor-core-12.html' class='webpkilink'>CBOR::Core</a>]
 cross platform profile.
 <h3 id='supported-objects'>Supported Objects</h3>
-The following table shows the supported CBOR objects (data items)
+The following table shows the supported <code>CBOR</code> objects (data items)
 and their mapping to Java, here expressed in
-CDDL&nbsp;[<a href='https://www.rfc-editor.org/rfc/rfc8610.html' class='webpkilink'>RFC&nbsp;8610</a>]
+<code>CDDL</code>&nbsp;[<a href='https://www.rfc-editor.org/rfc/rfc8610.html' class='webpkilink'>RFC&nbsp;8610</a>]
 notation:
 <div class='webpkifloat'>
 <table class='webpkitable' style='margin-left:2em'>
 <tr><th>CBOR</th><th>Implementation</th>
 <th>Java&nbsp;Mapping</th><th>Notes</th></tr>
-<tr style='text-align:center'><td><code>int</code></td><td><a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a></td><td><code>long</code></td><td>1</td></tr>
-<tr style='text-align:center'><td><code>bigint</code></td><td><a href="CBORBigInt.html" title="class in org.webpki.cbor"><code>CBORBigInt</code></a></td><td><code>BigInteger</code></td><td>1</td></tr>
-<tr style='text-align:center'><td><code>float</code></td><td><a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a></td><td><code>double</code></td><td>2</td></tr>
+<tr style='text-align:center'><td><code>int</code></td><td><a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a></td><td><code>long</code></td><td><code>1</code></td></tr>
+<tr style='text-align:center'><td><code>bigint</code></td><td><a href="CBORBigInt.html" title="class in org.webpki.cbor"><code>CBORBigInt</code></a></td><td><code>BigInteger</code></td><td><code>1</code></td></tr>
+<tr style='text-align:center'><td rowspan='2'><code>float</code></td><td><a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a></td><td><code>double</code></td><td><code>2</code></td></tr>
+<tr style='text-align:center'><td><a href="CBORNonFinite.html" title="class in org.webpki.cbor"><code>CBORNonFinite</code></a></td><td><code>long</code></td><td><code>3</code></td></tr>
 <tr style='text-align:center'><td><code>bstr</code></td><td><a href="CBORBytes.html" title="class in org.webpki.cbor"><code>CBORBytes</code></a></td><td><code>byte[]</code></td><td></td></tr>
 <tr style='text-align:center'><td><code>tstr</code></td><td><a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a></td><td><code>String</code></td><td></td></tr>
 <tr style='text-align:center'><td><code>bool</code></td><td><a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a></td><td><code>boolean</code></td><td></td></tr>
@@ -83,7 +86,7 @@ notation:
 <tr style='text-align:center'><td><code>[]</code></td><td><a href="CBORArray.html" title="class in org.webpki.cbor"><code>CBORArray</code></a></td><td></td><td></td></tr>
 <tr style='text-align:center'><td><code>{}</code></td><td><a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code></a></td><td></td><td></td></tr>
 <tr style='text-align:center'><td><code>#6.n</code></td><td><a href="CBORTag.html" title="class in org.webpki.cbor"><code>CBORTag</code></a></td><td></td><td></td></tr>
-<tr style='text-align:center'><td><code>#7.n</code></td><td><a href="CBORSimple.html" title="class in org.webpki.cbor"><code>CBORSimple</code></a></td><td><code>int</code></td><td></td></tr>
+<tr style='text-align:center'><td><code>#7.n</code></td><td><a href="CBORSimple.html" title="class in org.webpki.cbor"><code>CBORSimple</code></a></td><td></td><td></td></tr>
 </table>
 </div>
 <ol style='margin:0 0'>
@@ -91,13 +94,16 @@ notation:
  dealt with automatically.
  The encoded representation is determined by the size of the value.
 Also see <a href="CBORObject.html#getBigInteger()"><code>CBORObject.getBigInteger()</code></a>.</li>
-<li style='padding-top:0.5em'>Floating-point data covers the 16, 32, and 64-bit IEEE&nbsp;754 variants.
-Also see <a href="CBORDecoder.html#REJECT_NON_FINITE_FLOATS"><code>CBORDecoder.REJECT_NON_FINITE_FLOATS</code></a>.
+<li style='padding-top:0.5em'>Floating-point data covers the <code>16</code>, <code>32</code>, and <code>64</code>-bit
+<span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> variants.
 The encoded representation is determined by the size and precision of the value.</li>
+<li style='padding-top:0.5em'>CBOR applications may also depend on
+<a href='doc-files/non-finite-numbers.html' class='webpkilink'>Non-Finite Numbers</a>.</li>
 </ol>
 <h3 id='time-data'>Time Data</h3>
-Since CBOR lacks a native time primitive, RFC&nbsp;8949 introduces
-such a feature through tag 0 and 1.  This implementation supports these tags
+Since <code>CBOR</code> lacks a native time primitive,
+<span style='white-space:nowrap'><code>RFC</code> <code>8949</code></span> introduces
+such a feature through tag <code>0</code> and <code>1</code>.  This implementation supports these tags
 as well as making the same methods available without the tag constructs.
 For details turn to <a href="CBORTag.html#getDateTime()"><code>CBORTag.getDateTime()</code></a>,
 <a href="CBORTag.html#getEpochTime()"><code>CBORTag.getEpochTime()</code></a>, <a href="CBORObject.html#getDateTime()"><code>CBORObject.getDateTime()</code></a>,
@@ -105,49 +111,49 @@ For details turn to <a href="CBORTag.html#getDateTime()"><code>CBORTag.getDateTi
 <h3 id='deterministic-encoding'>Deterministic Encoding</h3>
 For certain security related applications, it has been proven
 useful performing cryptographic operations like
-hashing and signatures, over "raw" CBOR data.
+hashing and signatures, over "raw" <code>CBOR</code> data.
 This API supports such operations through deterministic encoding
 which also is the default mode.
 The deterministic encoding scheme is described in
-[<a href='https://www.ietf.org/archive/id/draft-rundgren-cbor-core-11.html' class='webpkilink'>CBOR::Core</a>].
+[<a href='https://www.ietf.org/archive/id/draft-rundgren-cbor-core-12.html' class='webpkilink'>CBOR::Core</a>].
 If input data does not conform to the deterministic encoding scheme,
 a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
 <p id='decoder-options'>
-For more control of the decoding process, including dealing with "legacy" CBOR
+For more control of the decoding process, including dealing with "legacy" <code>CBOR</code>
 data as well as with <a href='#examples.seq-encoding' class='webpkilink'>CBOR&nbsp;sequences</a>, see
 <a href="CBORDecoder.html#%3Cinit%3E(java.io.InputStream,int,int)"><code>CBORDecoder(inputStream, int, int)</code></a>.
 </p>
 <p>
 On output (<a href="CBORObject.html#encode()"><code>CBORObject.encode()</code></a>)
 deterministic encoding is always performed
-regardless of if CBOR data was parsed or created programmatically.
+regardless of if <code>CBOR</code> data was parsed or created programmatically.
 </p>
 <h3 id='input-data-validation'>Input Data Validation</h3>
 A properly designed system validates input data before acting upon it.
 This section describes how this can be achieved using this particular
 CBOR implementation.
 <p>
-During <a href="CBORDecoder.html#decode(byte%5B%5D)"><code>CBORDecoder.decode(byte[])</code></a>, CBOR data is checked for
+During <a href="CBORDecoder.html#decode(byte%5B%5D)"><code>CBORDecoder.decode(byte[])</code></a>, <code>CBOR</code> data is checked for
 well-formedness as well as by default, adhering to the determinism scheme.
 </p>
 <p>
-After successful decoding, the CBOR data is provided as a <a href="CBORObject.html" title="class in org.webpki.cbor"><code>CBORObject</code></a>.
-For extracting the data of CBOR primitives in a Java compatible way,
+After successful decoding, the <code>CBOR</code> data is provided as a <a href="CBORObject.html" title="class in org.webpki.cbor"><code>CBORObject</code></a>.
+For extracting the data of <code>CBOR</code> primitives in a Java compatible way,
 there are type specific access methods such as 
 <a href="CBORObject.html#getInt32()"><code>CBORObject.getInt32()</code></a> and <a href="CBORObject.html#getString()"><code>CBORObject.getString()</code></a>.
-For accessing structured CBOR objects, the
+For accessing structured <code>CBOR</code> objects, the
 <a href="CBORObject.html#getMap()"><code>CBORObject.getMap()</code></a>,
 <a href="CBORObject.html#getArray()"><code>CBORObject.getArray()</code></a>,
 and <a href="CBORObject.html#getTag()"><code>CBORObject.getTag()</code></a>
 methods, return container objects which in turn facilitate
-access to individual CBOR objects of the structure.
+access to individual <code>CBOR</code> objects of the structure.
 </p>
 <p>
 This implementation performs <i>strict type checking</i>.
-That is, if an application expects a CBOR integer and calls
+That is, if an application expects a <code>CBOR</code> integer and calls
 <a href="CBORObject.html#getInt32()"><code>CBORObject.getInt32()</code></a>, an exception will be thrown
 if the referenced object is not an instance of <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>, or 
-if the CBOR integer cannot be represented as a 32-bit two-complement value. 
+if the <code>CBOR</code> integer cannot be represented as a <code>32</code>-bit two-complement value. 
 </p>
 <p>
 However, you typically also want to verify
@@ -155,7 +161,7 @@ that <a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code
 or that <a href="CBORArray.html" title="class in org.webpki.cbor"><code>CBORArray</code></a> objects contain unread elements.
 This can be achieved by calling <a href="CBORObject.html#checkForUnread()"><code>CBORObject.checkForUnread()</code></a>,
 <i>after</i> all expected objects have been read.
-This method verifies that the current CBOR object (including
+This method verifies that the current <code>CBOR</code> object (including
 possible child objects), have been accessed, otherwise
 an exception will be thrown.
 </p>
@@ -166,7 +172,7 @@ as well as verifying that there are no unexpected objects
 inside of their respective containers.
 </p>
 <h3 id='cbor-schema-support'>"Schema" Support</h3>
-Although this package does not support a CBOR counterpart
+Although this package does not support a <code>CBOR</code> counterpart
 to <a href='https://www.w3.org/XML/Schema' class='webpkilink'>XML&nbsp;Schema</a>,
 similar functionality can be achieved using the <i>programmatic
 constructs</i> described in the previous section.
@@ -174,28 +180,29 @@ For an example, turn to
 <a href='doc-files/typed-objects.html' class='webpkilink'>Typed Objects</a>.
 <h3 id='cryptographic-support'>Cryptographic Support</h3>
 To aid the use of cryptography, support for
-<a href='doc-files/signatures.html' class='webpkilink'>Signatures</a> and 
+<a href='doc-files/signatures.html' class='webpkilink'>Embedded&nbsp;Signatures</a> and 
 <a href='doc-files/encryption.html' class='webpkilink'>Encryption</a> is integrated in the package.
 <h3 id='diagnostic-notation'>Diagnostic Notation</h3>
-Creating CBOR data in diagnostic notation
+Creating <code>CBOR</code> data in diagnostic notation
 is provided by the <a href="CBORObject.html#toString()"><code>CBORObject.toString()</code></a> method.
 <p>
-However, through the <a href="CBORDiagnosticNotation.html" title="class in org.webpki.cbor"><code>CBORDiagnosticNotation</code></a> class, CBOR data may also be provided
-in diagnostic (textual) notation, making CBOR useful for "config" and test data files as well.
+However, through the <a href="CBORDiagnosticNotation.html" title="class in org.webpki.cbor"><code>CBORDiagnosticNotation</code></a> class, <code>CBOR</code> data may also be provided
+in diagnostic (textual) notation, making <code>CBOR</code> useful for "config" and test data files as well.
 </p>
 <p>
 By adhering to the
 <a href='#deterministic-encoding' class='webpkilink'>Deterministic Encoding</a> 
-specification above, CBOR data can be <i>bidirectionally</i>
+specification above, <code>CBOR</code> data can be <i>bidirectionally</i>
 converted between its native (binary) format and diagnostic notation
 without getting corrupted.  Note though that text-binary-text "roundtrips"
 do not necessarily return identical text: <code>0x10</code> used
 as diagnostic notation input will return <code>16</code> as
 diagnostic notation output.
 Caveat: for reliable conversions, floating-point values <b>must</b>
-be aligned with IEEE&nbsp;754 encoding and rounding rules.
+be aligned with <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span>
+encoding and rounding rules.
 </p>
-The following table shows how CBOR objects should be represented in 
+The following table shows how <code>CBOR</code> objects should be represented in 
 diagnostic notation:
 
   <div class='webpkifloat'>
@@ -235,7 +242,7 @@ diagnostic notation:
         <td>1, 2</td>
       </tr>
       <tr style='text-align:center' id='float-diag'>
-        <td rowspan='3'><code>float</code></td>
+        <td rowspan='4'><code>float</code></td>
         <td><i>{sign}</i><i>n</i><kbd><b>.</b></kbd><i>n</i><i>{</i><kbd><b>e</b></kbd>&#x2009;<kbd><b>&pm;</b></kbd>&#x2009;<i>n}</i></td>
         <td style='text-align:left'>
           Floating point values
@@ -244,9 +251,17 @@ diagnostic notation:
         <td>1, 2</td>
       </tr>
       <tr style='text-align:center'>
+        <td><kbd><b>float'</b></kbd><i>hex&nbsp;data</i><kbd><b>'</b></kbd></td>
+        <td style='text-align:left'>
+          Any valid 16, 32, or 64-bit float value, including NaN with payloads
+          like <code>float'7ff0800000000001'</code>.
+        </td>
+        <td></td>
+      </tr>
+      <tr style='text-align:center'>
         <td><kbd><b>NaN</b></kbd></td>
         <td style='text-align:left'>
-          Not a number.
+          Not a number in the default encoding (<code>f97e00</code>).
         </td>
         <td></td>
       </tr>
@@ -347,8 +362,7 @@ diagnostic notation:
       are <i>ignored</i>.
     </li>
     <li style='padding-top:0.5em'>
-      <i>Input only</i>: the control characters
-      <kbd><b>'\t'</b></kbd> and <kbd><b>'\n'</b></kbd>
+      <i>Input only</i>: the control character <kbd><b>'\n'</b></kbd>
       inside of string quotes <i>become a part of the text</i>.
       For nomalizing line terminators,
       a single <kbd><b>'\r'</b></kbd> or the combination <kbd><b>'\r\n'</b></kbd>
@@ -369,29 +383,29 @@ diagnostic notation:
     </li>
   </ol>
   
-<h3 id='main.examples'>Using the CBOR API</h3>
-  This section provides a few examples on how to use the CBOR API.
-  <h5 id='examples.encoding' style='margin:1em 0 0.5em 0'>Encode CBOR Data</h5>
-The following code shows how you can create CBOR-encoded data:
+<h3 id='main.examples'>Using the <code>CBOR</code> API</h3>
+  This section provides a few examples on how to use the <code>CBOR</code> API.
+  <h5 id='examples.encoding' style='margin:1em 0 0.5em 0'>Encode <code>CBOR</code> Data</h5>
+The following code shows how you can create <code>CBOR</code>-encoded data:
 <div class='webpkifloat'><div class='webpkibox' style='margin:0.5em 0 0.5em 2em;width:50em'>byte[]&nbsp;cbor&nbsp;=&nbsp;new&nbsp;CBORMap()<br>&nbsp;&nbsp;&nbsp;&nbsp;.set(new&nbsp;CBORInt(1),&nbsp;new&nbsp;CBORFloat(45.7))<br>&nbsp;&nbsp;&nbsp;&nbsp;.set(new&nbsp;CBORInt(2),&nbsp;new&nbsp;CBORString(&quot;Hi&nbsp;there!&quot;)).encode();<br><br>System.out.println(HexaDecimal.encode(cbor));<br><span style='color:#007fdd'>a201fb4046d9999999999a0269486920746865726521</span><br></div></div>
-  <h5 id='examples.decoding' style='margin:1em 0 0.5em 0'>Decode CBOR Data</h5>
-The following code shows how you can decode CBOR-encoded data,
+  <h5 id='examples.decoding' style='margin:1em 0 0.5em 0'>Decode <code>CBOR</code> Data</h5>
+The following code shows how you can decode <code>CBOR</code>-encoded data,
 here using the result of the previous encoding example:
 <div class='webpkifloat'><div class='webpkibox' style='margin:0.5em 0 0.5em 2em;width:50em'>CBORMap&nbsp;map&nbsp;=&nbsp;CBORDecoder.decode(cbor).getMap();<br><br>System.out.println(map.toString());&nbsp;&nbsp;//&nbsp;Diagnostic&nbsp;notation<br><span style='color:#007fdd'>{<br>&nbsp;&nbsp;1:&nbsp;45.7,<br>&nbsp;&nbsp;2:&nbsp;&quot;Hi&nbsp;there!&quot;<br>}</span><br><br>System.out.println("Value="&nbsp;+&nbsp;map.get(new&nbsp;CBORInt(1)).getFloat64());<br><span style='color:#007fdd'>Value=45.7</span><br></div></div>
-  <h5 id='examples.variant-decoding' style='margin:1em 0 0.5em 0'>Decode Variant CBOR Data</h5>
-The following code shows how you can decode variant CBOR-encoded data:
+  <h5 id='examples.variant-decoding' style='margin:1em 0 0.5em 0'>Decode Variant <code>CBOR</code> Data</h5>
+The following code shows how you can decode variant <code>CBOR</code>-encoded data:
 <div class='webpkifloat'><div class='webpkibox' style='margin:0.5em 0 0.5em 2em;width:50em'>CBORObject&nbsp;intOrString&nbsp;=&nbsp;CBORDecoder.decode(cbor);<br>if&nbsp;(intOrString&nbsp;instanceof&nbsp;CBORInt)&nbsp;{<br>&nbsp;&nbsp;int&nbsp;i&nbsp;=&nbsp;intOrString.getInt32();<br>&nbsp;&nbsp;//&nbsp;Do&nbsp;something&nbsp;with&nbsp;i...<br>}&nbsp;else&nbsp;{<br>&nbsp;&nbsp;//&nbsp;This&nbsp;line&nbsp;will&nbsp;throw&nbsp;an&nbsp;exception&nbsp;if&nbsp;the&nbsp;object&nbsp;is&nbsp;not&nbsp;a&nbsp;CBORString<br>&nbsp;&nbsp;String&nbsp;s&nbsp;=&nbsp;intOrString.getString();<br>&nbsp;&nbsp;//&nbsp;Do&nbsp;something&nbsp;with&nbsp;s...<br>}<br></div></div>
-  <h5 id='examples.dn-decoding' style='margin:1em 0 0.5em 0'>Decode CBOR Diagnostic Notation</h5>
-The following code shows how you can decode CBOR provided in
+  <h5 id='examples.dn-decoding' style='margin:1em 0 0.5em 0'>Decode <code>CBOR</code> Diagnostic Notation</h5>
+The following code shows how you can decode <code>CBOR</code> provided in
 <a href='#diagnostic-notation' class='webpkilink'>Diagnostic&nbsp;Notation</a>:
 <div class='webpkifloat'><div class='webpkibox' style='margin:0.5em 0 0.5em 2em;width:50em'>byte[]&nbsp;cbor&nbsp;=&nbsp;CBORDiagnosticNotation.convert("""<br>{<br>#&nbsp;Comments&nbsp;are&nbsp;also&nbsp;permitted<br>&nbsp;&nbsp;1:&nbsp;45.7,<br>&nbsp;&nbsp;2:&nbsp;&quot;Hi&nbsp;there!&quot;<br>}""").encode();<br><br>System.out.println(HexaDecimal.encode(cbor));<br><span style='color:#007fdd'>a201fb4046d9999999999a0269486920746865726521</span><br></div></div>
-  <h5 id='examples.seq-encoding' style='margin:1em 0 0.5em 0'>Encode CBOR Sequence</h5>
-The following code shows how you can create CBOR sequences:
+  <h5 id='examples.seq-encoding' style='margin:1em 0 0.5em 0'>Encode <code>CBOR</code> Sequence</h5>
+The following code shows how you can create <code>CBOR</code> sequences:
 <div class='webpkifloat'><div class='webpkibox' style='margin:0.5em 0 0.5em 2em;width:50em'>byte[]&nbsp;cbor&nbsp;=&nbsp;new CBORArray()<br>&nbsp;&nbsp;.add(new CBORMap().set(new CBORInt(7),&nbsp;new CBORString(&quot;Hi!&quot;)))<br>&nbsp;&nbsp;.add(new CBORFloat(4.5))<br>&nbsp;&nbsp;.encodeAsSequence();<br><br>System.out.println(HexaDecimal.encode(cbor));<br><span style='color:#007fdd'>a10763486921f94480</span><br></div></div>
-  <h5 id='examples.seq-decoding' style='margin:1em 0 0.5em 0'>Decode CBOR Sequence</h5>
-The following code shows how you can decode CBOR sequences,
+  <h5 id='examples.seq-decoding' style='margin:1em 0 0.5em 0'>Decode <code>CBOR</code> Sequence</h5>
+The following code shows how you can decode <code>CBOR</code> sequences,
 here using the result of the previous encoding example:
-<div class='webpkifloat'><div class='webpkibox' style='margin:0.5em 0 0.5em 2em;width:50em'>CBORDecoder&nbsp;decoder&nbsp;=&nbsp;new&nbsp;CBORDecoder(new ByteArrayInputStream(cbor),<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CBORDecoder.SEQUENCE_MODE,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cbor.length);<br>CBORObject&nbsp;object;<br>while&nbsp;((object&nbsp;=&nbsp;decoder.decodeWithOptions())&nbsp;!=&nbsp;null)&nbsp;{<br>&nbsp;&nbsp;System.out.println(&quot;\n&quot;&nbsp;+&nbsp;object.toString());<br>}<br><br><span style='color:#007fdd'>{<br>&nbsp;&nbsp;7:&nbsp;&quot;Hi!&quot;<br>}</span><br><br><span style='color:#007fdd'>4.5</span><br></div></div></div>
+<div class='webpkifloat'><div class='webpkibox' style='margin:0.5em 0 0.5em 2em;width:50em'>CBORDecoder&nbsp;decoder&nbsp;=&nbsp;new&nbsp;CBORDecoder(cbor,&nbsp;CBORDecoder.SEQUENCE_MODE);<br>CBORObject&nbsp;object;<br>while&nbsp;((object&nbsp;=&nbsp;decoder.decodeWithOptions())&nbsp;!=&nbsp;null)&nbsp;{<br>&nbsp;&nbsp;System.out.println(&quot;\n&quot;&nbsp;+&nbsp;object.toString());<br>}<br><br><span style='color:#007fdd'>{<br>&nbsp;&nbsp;7:&nbsp;&quot;Hi!&quot;<br>}</span><br><br><span style='color:#007fdd'>4.5</span><br></div></div></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -514,58 +528,64 @@ here using the result of the previous encoding example:
 <div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">Support interface for dynamic CBOR generation.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORNull.html" title="class in org.webpki.cbor">CBORNull</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORNonFinite.html" title="class in org.webpki.cbor">CBORNonFinite</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Class for holding CBOR <i>non-finite</i> floating-point objects.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORNull.html" title="class in org.webpki.cbor">CBORNull</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for holding CBOR <code>null</code> objects.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Base class for all CBOR objects.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORPublicKey.html" title="class in org.webpki.cbor">CBORPublicKey</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORPublicKey.html" title="class in org.webpki.cbor">CBORPublicKey</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class handling Java/COSE public key conversions.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a>&lt;T extends <a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a>&lt;?&gt;&gt;</div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a>&lt;T extends <a href="CBORSigner.html" title="class in org.webpki.cbor">CBORSigner</a>&lt;?&gt;&gt;</div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Base class for signing data.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORSimple.html" title="class in org.webpki.cbor">CBORSimple</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORSimple.html" title="class in org.webpki.cbor">CBORSimple</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for holding CBOR <code>#7.n</code> (simple) objects.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORString.html" title="class in org.webpki.cbor">CBORString</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORString.html" title="class in org.webpki.cbor">CBORString</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class for holding CBOR <code>tstr</code> objects.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORSymKeyDecrypter.html" title="class in org.webpki.cbor">CBORSymKeyDecrypter</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORSymKeyDecrypter.html" title="class in org.webpki.cbor">CBORSymKeyDecrypter</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for symmetric key decryption.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="CBORSymKeyDecrypter.KeyLocator.html" title="interface in org.webpki.cbor">CBORSymKeyDecrypter.KeyLocator</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="CBORSymKeyDecrypter.KeyLocator.html" title="interface in org.webpki.cbor">CBORSymKeyDecrypter.KeyLocator</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">Interface for dynamic key retrieval.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORSymKeyEncrypter.html" title="class in org.webpki.cbor">CBORSymKeyEncrypter</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORSymKeyEncrypter.html" title="class in org.webpki.cbor">CBORSymKeyEncrypter</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class for symmetric key encryption.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class for holding CBOR <code>#6.n</code> (tag) objects.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORTag.COTXObject.html" title="class in org.webpki.cbor">CBORTag.COTXObject</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORTag.COTXObject.html" title="class in org.webpki.cbor">CBORTag.COTXObject</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Return object for COTX tags.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORTypedObjectDecoder.html" title="class in org.webpki.cbor">CBORTypedObjectDecoder</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORTypedObjectDecoder.html" title="class in org.webpki.cbor">CBORTypedObjectDecoder</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Base class for typed objects decoders.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORTypedObjectDecoderCache.html" title="class in org.webpki.cbor">CBORTypedObjectDecoderCache</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORTypedObjectDecoderCache.html" title="class in org.webpki.cbor">CBORTypedObjectDecoderCache</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Cache for typed object decoders.</div>
 </div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CBORUtil.html" title="class in org.webpki.cbor">CBORUtil</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CBORValidator.html" title="class in org.webpki.cbor">CBORValidator</a>&lt;T extends <a href="CBORValidator.html" title="class in org.webpki.cbor">CBORValidator</a>&lt;T&gt;&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Base class for validating signatures.</div>

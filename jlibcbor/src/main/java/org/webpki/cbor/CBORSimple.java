@@ -20,6 +20,13 @@ import static org.webpki.cbor.CBORInternal.*;
 
 /**
  * Class for holding CBOR <code>#7.n</code> (simple) objects.
+ * <p>
+ * A primary use case for <code>simple</code> types in the range of <code>0-19</code> and <code>32-255</code>,
+ * is serving as a limited set of <i>unique and reserved labels</i> (keys) in CBOR maps.
+ * The <code>simple(99)</code> label featured in
+ * <a href='../../webpki/cbor/doc-files/signatures.html' class='webpkilink'>Embedded&nbsp;Signatures</a>
+ * shows a representative example.
+ * </p>
  */
 public class CBORSimple extends CBORObject {
 
@@ -31,8 +38,9 @@ public class CBORSimple extends CBORObject {
      * Simple values are limited to:
      * <code>0-23</code> and <code>32-255</code>.
      * </p>
-     * @param value int value
+     * @param value Value/type of simple
      * @throws CBORException
+     * @see CBORObject#getSimple()
      */
     public CBORSimple(int value) {
         this.value = value;
@@ -53,6 +61,7 @@ public class CBORSimple extends CBORObject {
                    .append(')');
     }
 
-    static final String STDERR_SIMPLE_VALUE_OUT_OF_RANGE = "Simple value out of range: " ;
+    static final String STDERR_SIMPLE_VALUE_OUT_OF_RANGE = 
+            "Simple value out of range: " ;
 
 }

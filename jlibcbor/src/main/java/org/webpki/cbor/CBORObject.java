@@ -76,12 +76,6 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
         return object;
     }
 
-    static byte[] addByteArrays(byte[]a, byte[] b) {
-        byte[] result = Arrays.copyOf(a, a.length + b.length);
-        System.arraycopy(b, 0, result, a.length, b.length);
-        return result;
-    }
-
     static void integerRangeError(String integerType) {
         cborError(STDERR_INT_RANGE + integerType);
     }
@@ -302,7 +296,39 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
             integerRangeError("Uint8");
         }
         return (int)value;
-    }    
+    }
+
+    /**
+     * Get "extended" CBOR <code>float64</code> value.
+     * <p>
+     * Note that unlike {@link #getFloat64()}, this method also supports the
+     * {@link Double#NaN},
+     * {@link Double#POSITIVE_INFINITY}, and 
+     * {@link Double#NEGATIVE_INFINITY} non-finite variants.
+     * </p>
+     * <p>
+     * This method requires that the object is a
+     * {@link CBORFloat} or a {@link CBORNonFinite}, otherwise a {@link CBORException} is thrown.
+     * </p>
+     * 
+     * @return <code>double</code>
+     * @throws CBORException
+     * @see CBORFloat#createExtendedFloat(double)
+     */
+    public double getExtendedFloat64() {
+        if (this instanceof CBORNonFinite nf) {
+            return switch (nf.isSimple() ? (int)nf.getNonFinite() : 0) {
+                case 0x7e00 -> Double.NaN;
+                case 0x7c00 -> Double.POSITIVE_INFINITY;
+                case 0xfc00 -> Double.NEGATIVE_INFINITY;
+                default -> {
+                    cborError(STDERR_ONLY_QUIET_NAN);
+                    yield 0.0;
+                }
+            };
+        }
+        return getFloat64();
+    }
 
     /**
      * Get CBOR <code>float64</code> value.
@@ -310,7 +336,12 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * This method requires that the object is a
      * {@link CBORFloat}, otherwise a {@link CBORException} is thrown.
      * </p>
-     * 
+     * <p>
+     * Unlike {@link #getExtendedFloat64()}, this method only accepts "regular" floating-point
+     * numbers.  This makes it adapted for CBOR protocols that do not consider <code>NaN</code>
+     * or <code>Infinity</code> valid items.  That is, the latter cause a {@link CBORException}
+     * to be thrown.
+     * </p>
      * @return <code>double</code>
      * @throws CBORException
      */
@@ -322,7 +353,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * Get CBOR <code>float32</code> value.
      * <p>
      * This method requires that the object is a
-     * {@link CBORFloat} holding a 16 or 32-bit IEEE 754 value, 
+     * {@link CBORFloat} holding a 16 or 32-bit <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> value, 
      * otherwise a {@link CBORException} is thrown.
      * </p>
      * 
@@ -341,7 +372,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * Get CBOR <code>float16</code> value.
      * <p>
      * This method requires that the object is a
-     * {@link CBORFloat} holding a 16-bit IEEE 754 value, 
+     * {@link CBORFloat} holding a 16-bit <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> value, 
      * otherwise a {@link CBORException} is thrown.
      * </p>
      * 
@@ -421,7 +452,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     /**
      * Get UNIX <code>Epoch</code> time object.
      * <p>
-     * This method requires that the underlying object is a 
+     * This method requires that the object is a 
      * {@link CBORInt} or {@link CBORFloat}, 
      * otherwise a {@link CBORException} is thrown.
      * </p>
@@ -441,7 +472,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     /**
      * Get ISO <code>date/time</code> object.
      * <p>
-     * This method requires that the underlying object is a 
+     * This method requires that the object is a 
      * {@link CBORString} that is compatible with ISO date/time
      * [<a href='https://www.rfc-editor.org/rfc/rfc3339.html' class='webpkilink'>RFC&nbsp;3339</a>], 
      * otherwise a {@link CBORException} is thrown.
@@ -592,11 +623,13 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     
     static class CborPrinter {
  
-        static final String INDENT = "  ";
+        static final String INDENT       = "  ";
+        static final int MAX_LINE_LENGTH = 70;  // RFCs
         
         private int indentationLevel;
         private StringBuilder outputBuffer;
         private boolean prettyPrint;
+        private int startOfLine;
                
         private CborPrinter(boolean prettyPrint) {
             outputBuffer = new StringBuilder();
@@ -605,15 +638,41 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
 
         void newlineAndIndent() {
             if (prettyPrint) {
+                startOfLine = outputBuffer.length();
                 outputBuffer.append('\n');
                 for (int i = 0; i < indentationLevel; i++) {
                     outputBuffer.append(INDENT);
                 }
             }
         }
+
+        boolean arrayFolding(CBORArray array) {
+            if (prettyPrint) {
+                if (array.size() == 0) {
+                    return false;
+                }
+                boolean arraysInArrays = true;
+                for (CBORObject element : array.toArray()) {
+                    if (!(element instanceof CBORArray)) {
+                        arraysInArrays = false;
+                        break;
+                    }
+                }
+                if (arraysInArrays) {
+                    return true;
+                }
+                if (outputBuffer.length() - startOfLine + // Where we are staing at the moment.
+                    array.size() +                        // space after comma.
+                    2 +                                   // [] 
+                    array.toDiagnosticNotation(false).length() > MAX_LINE_LENGTH) {
+                    return true;
+                }
+            }
+            return false;
+        }
         
-        void beginMap() {
-            outputBuffer.append('{');
+        void beginList(char startChar) {
+            outputBuffer.append(startChar);
             indentationLevel++;
         }
         
@@ -623,12 +682,12 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
             }
         }
 
-        void endMap(boolean notEmpty) {
+        void endList(boolean notEmpty, char endChar) {
             indentationLevel--;
             if (notEmpty) {
                 newlineAndIndent();
             }
-            outputBuffer.append('}');
+            outputBuffer.append(endChar);
         }
 
         CborPrinter append(String text) {
@@ -657,8 +716,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      */
     @Override
     public boolean equals(Object object) {
-        return object instanceof CBORObject && 
-            Arrays.equals(((CBORObject) object).encode(), encode());
+        return object instanceof CBORObject o && Arrays.equals(o.encode(), encode());
     }
 
     /**
@@ -753,5 +811,8 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
 
     static final String STDERR_MAP_KEY_IMMUTABLE =
             "Map keys are immutable";
+
+   static final String STDERR_ONLY_QUIET_NAN =
+            "getCombinedFloat64() only supports the \"quiet\" NaN (7e00)";
 
 }

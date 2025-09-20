@@ -23,11 +23,12 @@ import static org.webpki.cbor.CBORInternal.*;
 /**
  * Class for holding CBOR <code>float</code> objects.
  * <p>
- * Numbers are constrained to the IEEE 754 notation
- * using the length 16, 32, and 64 bit on the "wire".  Which
+ * Numbers are in the <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> format
+ * using the length <code>16</code>, <code>32</code>, and <code>64</code> bit on the "wire".  Which
  * length to use is governed by the size and precision 
  * required to (minimally) correctly represent a number.
  * </p>
+ * @see <a href='doc-files/non-finite-numbers.html' class='webpkilink'>Non-Finite Numbers</a>
  */
 public class CBORFloat extends CBORObject {
 
@@ -38,9 +39,24 @@ public class CBORFloat extends CBORObject {
     int tag;
     long bitFormat;
 
-    static boolean globalRejectNonFiniteFloats;
-
-    CBORFloat(double value, boolean rejectNonFiniteFloats, boolean rejectNaNWithPayloads) {
+    /**
+     * Creates a CBOR <code>float</code> object.
+     * <p>
+     * This constructor only implements support for finite ("regular") floating point
+     * numbers.  That is, a {@link Double#NaN} argument causes a {@link CBORException}
+     * to be thrown.
+     * </p>
+     * <p>
+     * {@link CBORObject#getFloat64()} is the <i>decoder</i> counterpart.
+     * </p>
+     * <p>
+     * For <code>NaN</code> and <code>Infinity</code> support see
+     * {@link CBORFloat#createExtendedFloat(double)}.
+     * </p>
+     * 
+     * @param value Floating-point value
+     */
+    public CBORFloat(double value) {
         this.value = value;
 
         // Initial assumption: the number is a plain vanilla 64-bit double.
@@ -48,31 +64,20 @@ public class CBORFloat extends CBORObject {
         tag = MT_FLOAT64;
         bitFormat = Double.doubleToRawLongBits(value);
 
-        // Check for possible edge cases.
+        // Check for forbidden numbers.
+
+        if ((bitFormat & FLOAT64_POS_INFINITY) == FLOAT64_POS_INFINITY) {
+
+            // Non-finite numbers: Infinity, -Infinity, and NaN.
+            cborError(STDERR_NON_FINITE_NOT_PERMITTED);
+
+        }
 
         if ((bitFormat & ~FLOAT64_NEG_ZERO) == FLOAT64_POS_ZERO) {
 
             // Some zeroes are apparently more zero than others :)
             tag = MT_FLOAT16;
             bitFormat = (bitFormat == FLOAT64_POS_ZERO) ? FLOAT16_POS_ZERO : FLOAT16_NEG_ZERO;
-
-        } else if ((bitFormat & FLOAT64_POS_INFINITY) == FLOAT64_POS_INFINITY) {
-
-            // Non-finite numbers: Infinity, -Infinity, and NaN.
-            if (globalRejectNonFiniteFloats || rejectNonFiniteFloats) {
-                cborError(STDERR_NON_FINITE_FLOATS_DISABLED);
-            }
-            tag = MT_FLOAT16;
-            if ((bitFormat & ((1L << FLOAT64_SIGNIFICAND_SIZE) - 1L)) != 0) {
-                if (rejectNaNWithPayloads && (bitFormat != FLOAT64_NOT_A_NUMBER)) {
-                    cborError(STDERR_NAN_WITH_PAYLOADS_NOT_PERMITTED);
-                }
-                // Deterministic representation of NaN => Only "quiet" NaNs are supported.
-                bitFormat = FLOAT16_NOT_A_NUMBER;
-            } else {
-                bitFormat = (bitFormat == FLOAT64_POS_INFINITY) ?
-                                           FLOAT16_POS_INFINITY : FLOAT16_NEG_INFINITY;
-            }
 
         } else {
 
@@ -139,68 +144,39 @@ public class CBORFloat extends CBORObject {
         }
     }
 
-    /**
-     * Creates a CBOR <code>float</code> object.
+     /**
+     * Creates an "extended" CBOR <code>float</code> object.
      * <p>
-     * Note that this implementation does not provide a specific constructor
-     * for Java <code>float</code> values.
-     * Due to the CBOR normalization algorithm, numbers are still correctly encoded.
+     * Unlike {@link CBORFloat#CBORFloat(double)}, this method also supports the
+     * {@link Double#NaN},
+     * {@link Double#POSITIVE_INFINITY}, and 
+     * {@link Double#NEGATIVE_INFINITY} non-finite variants.
      * </p>
      * <p>
-     * See also {@link CBORObject#getFloat64()} and {@link CBORObject#getFloat32()}
+     * {@link CBORObject#getExtendedFloat64()} is the <i>decoder</i> counterpart.
      * </p>
      * <p>
-     * For <code>NaN</code> and <code>Infinity</code> support see
-     * {@link CBORDecoder#REJECT_NON_FINITE_FLOATS} and
-     * {@link #setNonFiniteFloatsMode(boolean)}.
+     * Note that return type is either {@link CBORFloat} or {@link CBORNonFinite}, depending
+     * on if the argument is a "regular" floating-point value of one of the non-finite variants.
      * </p>
-     * 
-     * @param value Java double
+     * @param value Floating-point value
+     * @return {@link CBORObject}
      * @throws CBORException
+     * @see CBORNonFinite#CBORNonFinite(long)
      */
-    public CBORFloat(double value) {
-        this(value, false, true);
-    }
-
-    /**
-     * Globally disable <code>NaN</code> and <code>Infinity</code>.
-     * <p>
-     * Note that this method unlike {@link CBORDecoder#REJECT_NON_FINITE_FLOATS},
-     * also affects <i>encoding</i> of <code>NaN</code> and <code>Infinity</code> values.
-     * Since this is a <i>global</i> setting. you need to consider how it
-     * could affect other applications running in the same JVM.
-     * </p>
-     * @param reject If <code>true</code>, disable <code>NaN</code> and <code>Infinity</code> support.
-     */
-    public static void setNonFiniteFloatsMode(boolean reject) {
-        globalRejectNonFiniteFloats = reject;
-    }
-
-    /**
-     * Get number in diagnostic notation.
-     * <p>
-     * Floating point numbers are serialized using at least
-     * one integer digit (may be <code>0</code>), a decimal point, and
-     * one or more fractional digits. 
-     * </p>
-     * <p>
-     * Possible exponents are written as <code>e&pm;</code><i>n</i>, where <i>n</i> != <code>0</code>.
-     * </p>
-     * This method also supports <code>NaN</code>, <code>Infinity</code>, and <code>-Infinity</code>.
-     * 
-     * @param value The double
-     * @return The double in string format
-     */
-    public static String formatDouble(Double value) {
-        // Catch things the serializer is not designed for.
-        if (value == 0 || value.isInfinite() || value.isNaN()) {
-            return value.toString();
+    public static CBORObject createExtendedFloat(double value) {
+        if (Double.isFinite(value)) {
+            return new CBORFloat(value);
         }
-        return Float64Stringifier.encode(value, false);
+        CBORNonFinite nf = new CBORNonFinite(Double.doubleToRawLongBits(value));
+        if (!nf.isSimple()) {
+            cborError(STDERR_NON_TRIVIAL_NAN_NOT_PERMITTED);
+        }
+        return nf;
     }
 
     /**
-     * Get length of the optimized IEEE 754 type.
+     * Get length of the serialized <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> object.
      * <p>
      * Note that you must cast a {@link CBORObject} to {@link CBORFloat}
      * in order to access {@link CBORFloat#length()}.
@@ -218,13 +194,14 @@ public class CBORFloat extends CBORObject {
     
     @Override
     void internalToString(CborPrinter cborPrinter) {
-         cborPrinter.append(formatDouble(value));
+        cborPrinter.append((value == 0 || !Double.isFinite(value)) ?
+            String.valueOf(value) : Float64Stringifier.encode(value, false));
     }
 
-    static final String STDERR_NON_FINITE_FLOATS_DISABLED = 
-        "\"NaN\" and \"Infinity\" support is disabled";
+    static final String STDERR_NON_FINITE_NOT_PERMITTED = 
+            "Not permitted, see \"CBORNonFinite\" for details";
 
-    static final String STDERR_NAN_WITH_PAYLOADS_NOT_PERMITTED = 
-        "NaN with payloads are not permitted in deterministic mode";
+    static final String STDERR_NON_TRIVIAL_NAN_NOT_PERMITTED = 
+            "createExtendedFloat() does not support non-trivial NaNs";
 
 }

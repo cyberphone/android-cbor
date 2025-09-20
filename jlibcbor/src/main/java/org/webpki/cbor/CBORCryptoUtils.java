@@ -156,6 +156,7 @@ public class CBORCryptoUtils {
             if (tagPolicy == POLICY.FORBIDDEN) {
                 inputError("Tag encountered", tagPolicy);
             }
+            // Do NOT replace this with a tag in instanceof!
             CBORTag tag = container.getTag();
             container = tag.object;
             if (tag.cotxObject != null) {
@@ -246,6 +247,6 @@ public class CBORCryptoUtils {
      * For internal use only
      */
     static final String STDERR_KEY_ID_PUBLIC = 
-            "\"keyId\" cannot be combined with public key objects";
+        "\"keyId\" cannot be combined with public key objects";
 
 }
