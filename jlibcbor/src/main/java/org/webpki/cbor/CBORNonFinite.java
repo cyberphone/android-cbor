@@ -53,7 +53,7 @@ public class CBORNonFinite extends CBORObject {
 
     static final long PAYLOAD_MASK = ((1L << FLOAT64_SIGNIFICAND_SIZE) - 1L);
 
-    void createDetermnisticEncoding(long value) {
+    void createDeterministicEncoding(long value) {
         original = value;
         while (true) {
             this.value = value;
@@ -112,7 +112,7 @@ public class CBORNonFinite extends CBORObject {
      */
     @SuppressWarnings("this-escape")
     public CBORNonFinite(long value) {
-        createDetermnisticEncoding(value);
+        createDeterministicEncoding(value);
     }
 
     /**
@@ -125,7 +125,7 @@ public class CBORNonFinite extends CBORObject {
      * @param payload Payload data
      * @return {@link CBORNonFinite}
      */
-    public static CBORNonFinite createPayloadObject(long payload) {
+    public static CBORNonFinite createPayload(long payload) {
         if ((payload & PAYLOAD_MASK) != payload) {
             cborError(STDERR_PAYLOAD_RANGE);
         }
@@ -136,7 +136,7 @@ public class CBORNonFinite extends CBORObject {
     /**
      * Get payload data.
      * <p>
-     * This method is the "consumer" counterpart to {@link #createPayloadObject(long)}.
+     * This method is the "consumer" counterpart to {@link #createPayload(long)}.
      * </p>
      * @return Payload
      */
@@ -152,7 +152,7 @@ public class CBORNonFinite extends CBORObject {
      */
     public CBORNonFinite setSign(boolean sign) {
         long mask = 1L << ((encoded.length * 8) - 1L);
-        createDetermnisticEncoding((value & (mask - 1L)) | (sign ? mask : 0));
+        createDeterministicEncoding((value & (mask - 1L)) | (sign ? mask : 0));
         return this;
     }
 

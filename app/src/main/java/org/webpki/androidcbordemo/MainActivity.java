@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
                 .set(new CBORInt(++index), new CBORArray()
                         .add(new CBORFloat(0.0))
                         .add(new CBORFloat(2.0000001e+38))
-                        .add(new CBORFloat(Double.NEGATIVE_INFINITY)));
+                        .add(CBORFloat.createExtendedFloat(Double.NEGATIVE_INFINITY)));
     }
 
     @JavascriptInterface

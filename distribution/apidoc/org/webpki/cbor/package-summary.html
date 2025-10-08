@@ -64,7 +64,7 @@
 This package contains Java support for <code>CBOR</code> 
 [<a href='https://www.rfc-editor.org/rfc/rfc8949.html' class='webpkilink'>RFC&nbsp;8949</a>]
 using the 
-[<a href='https://www.ietf.org/archive/id/draft-rundgren-cbor-core-12.html' class='webpkilink'>CBOR::Core</a>]
+[<a href='https://www.ietf.org/archive/id/draft-rundgren-cbor-core-13.html' class='webpkilink'>CBOR::Core</a>]
 cross platform profile.
 <h3 id='supported-objects'>Supported Objects</h3>
 The following table shows the supported <code>CBOR</code> objects (data items)
@@ -115,7 +115,7 @@ hashing and signatures, over "raw" <code>CBOR</code> data.
 This API supports such operations through deterministic encoding
 which also is the default mode.
 The deterministic encoding scheme is described in
-[<a href='https://www.ietf.org/archive/id/draft-rundgren-cbor-core-12.html' class='webpkilink'>CBOR::Core</a>].
+[<a href='https://www.ietf.org/archive/id/draft-rundgren-cbor-core-13.html' class='webpkilink'>CBOR::Core</a>].
 If input data does not conform to the deterministic encoding scheme,
 a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
 <p id='decoder-options'>
@@ -349,7 +349,7 @@ diagnostic notation:
         <td></td>
         <td><kbd><b>,</b></kbd></td>
         <td style='text-align:left'>Separator character for CBOR sequences.</td>
-        <td>6</td>
+        <td></td>
       </tr>
     </table>
   </div>
@@ -357,13 +357,13 @@ diagnostic notation:
     <li>The letter <i>n</i> in the Syntax column denotes one or more digits.</li>
     <li style='padding-top:0.5em'>The optional <i>{sign}</i> must be a single hyphen (<kbd><b>'-'</b></kbd>) character.</li>
     <li style='padding-top:0.5em'>
-      <i>Input only</i>: between the quotes, the whitespace characters
-      (<kbd><b>' '</b></kbd>, <kbd><b>'\t'</b></kbd>, <kbd><b>'\r'</b></kbd>, <kbd><b>'\n'</b></kbd>)
+      <i>Input only</i>: between tokens, the whitespace characters
+      <kbd><b>' '</b></kbd>, <kbd><b>'\t'</b></kbd>, <kbd><b>'\r'</b></kbd>, and <kbd><b>'\n'</b></kbd>,
       are <i>ignored</i>.
     </li>
     <li style='padding-top:0.5em'>
-      <i>Input only</i>: the control character <kbd><b>'\n'</b></kbd>
-      inside of string quotes <i>become a part of the text</i>.
+      <i>Input only</i>: inside of string quotes,
+      the control character <kbd><b>'\n'</b></kbd> becomes a part of the text string.
       For nomalizing line terminators,
       a single <kbd><b>'\r'</b></kbd> or the combination <kbd><b>'\r\n'</b></kbd>
       are rewritten as <kbd><b>'\n'</b></kbd>.
@@ -373,10 +373,10 @@ diagnostic notation:
       immediately preceding the newline may be used.
     </li>
     <li style='padding-top:0.5em'>
-      Text strings may also include JavaScript compatible escape sequences
-      (<kbd><b>'\''</b></kbd>, <kbd><b>'\"'</b></kbd>, <kbd><b>'\\'</b></kbd>,
+      Text strings may also include the JavaScript compatible escape sequences
+      <kbd><b>'\''</b></kbd>, <kbd><b>'\"'</b></kbd>, <kbd><b>'\\'</b></kbd>,
       <kbd><b>'\b'</b></kbd>, <kbd><b>'\f'</b></kbd>, <kbd><b>'\n'</b></kbd>,
-      <kbd><b>'\r'</b></kbd>, <kbd><b>'\t'</b></kbd>, <kbd><b>'\u</b></kbd><i>hhhh</i><kbd><b>'</b></kbd>).
+      <kbd><b>'\r'</b></kbd>, <kbd><b>'\t'</b></kbd>, and <kbd><b>'\u</b></kbd><i>hhhh</i><kbd><b>'</b></kbd>.
     </li>
     <li style='padding-top:0.5em'>
       <i>Input only</i>.

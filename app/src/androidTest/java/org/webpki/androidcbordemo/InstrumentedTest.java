@@ -48,6 +48,7 @@ import org.webpki.crypto.OkpSupport;
 
 import org.webpki.util.HexaDecimal;
 
+import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -62,6 +63,8 @@ import java.security.cert.X509Certificate;
 
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
+import java.security.spec.EdECPoint;
+import java.security.spec.EdECPublicKeySpec;
 import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.NamedParameterSpec;
 import java.security.spec.RSAKeyGenParameterSpec;
@@ -179,6 +182,28 @@ public class InstrumentedTest {
              (byte)0x6f, (byte)0xc2, (byte)0xc4, (byte)0xaf,
              (byte)0x1f, (byte)0x95, (byte)0xf5, (byte)0xe4}
         ));
+    }
+
+    @Test
+    public void ed25519RawPublicKey() throws Exception {
+        byte[] raw = {(byte)0xfe, (byte)0x49, (byte)0xac, (byte)0xf5, (byte)0xb9,
+                (byte)0x2b, (byte)0x6e, (byte)0x92, (byte)0x35, (byte)0x94,
+                (byte)0xf2, (byte)0xe8, (byte)0x33, (byte)0x68, (byte)0xf6,
+                (byte)0x80, (byte)0xac, (byte)0x92, (byte)0x4b, (byte)0xe9,
+                (byte)0x3c, (byte)0xf5, (byte)0x33, (byte)0xae, (byte)0xca,
+                (byte)0xf8, (byte)0x02, (byte)0xe3, (byte)0x77, (byte)0x57,
+                (byte)0xf8, (byte)0xc9};
+
+        byte[] reversed = new byte[raw.length];
+        for (int i = 0; i < raw.length; i++ ) {
+            reversed[i] = raw[raw.length - 1 - i];
+        }
+        boolean hibit = (reversed[0] & 0x80) > 0;
+        reversed[0] &= 0x7f;
+        EdECPublicKeySpec spec =
+                new EdECPublicKeySpec(NamedParameterSpec.ED25519,
+                        new EdECPoint (hibit, new BigInteger(reversed)));
+        PublicKey publicKey = KeyFactory.getInstance("Ed25519").generatePublic(spec);
     }
 
     @Test
