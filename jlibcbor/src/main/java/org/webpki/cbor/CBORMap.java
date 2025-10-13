@@ -78,7 +78,7 @@ public class CBORMap extends CBORObject {
         }
     }
 
-    ArrayList<Entry> entries = new ArrayList<>();
+    ArrayList<Entry> entries = new ArrayList<>(20);
 
     /**
      * Creates an empty CBOR <code>{}</code> (map).
