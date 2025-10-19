@@ -104,8 +104,8 @@ public class MainActivity extends AppCompatActivity {
     final static String TOOLBAR_HTML = """
 <!DOCTYPE html><html>
 <head><meta name='viewport' content='width=device-width, initial-scale=1.0'></head>
-<body style='background:#ffffaa;margin:0'>
-<div style='border-width:0 0 0.15em 0;border-color:grey;border-style:solid'>
+<body style='background:#ffffdd;margin:0'>
+<div style='border-width:0.1em 0 0.1em 0;border-color:#b0b0b0;border-style:solid'>
 <svg style='height:3em;padding:5px 0.5em 2px 0.5em' xmlns="http://www.w3.org/2000/svg"
 viewBox='0 0 104 36' version="1.1">
 <title>CBOR Logotype</title>
