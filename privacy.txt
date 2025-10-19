@@ -1,0 +1,3 @@
+The CBOR app signs or encrypts CBOR data given by the user.
+The result is presented on the screen.
+Data is neither stored or transmitted in any way.
