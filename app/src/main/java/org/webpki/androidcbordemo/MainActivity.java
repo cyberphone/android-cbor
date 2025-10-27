@@ -536,7 +536,7 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
         try {
             byte[] unencryptedData = UTF8.encode(arbitraryData);
             KEY_TYPES encType = KEY_TYPES.valueOf(keyType);
-            CBOREncrypter encrypter;
+            CBOREncrypter<?> encrypter;
             switch (encType) {
                 case EC_KEY:
                 case RSA_KEY:
