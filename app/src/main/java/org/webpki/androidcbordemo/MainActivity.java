@@ -104,10 +104,9 @@ public class MainActivity extends AppCompatActivity {
     final static String TOOLBAR_HTML = """
 <!DOCTYPE html><html>
 <head><meta name='viewport' content='width=device-width, initial-scale=1.0'></head>
-<body style='background:#ffffdd;margin:0'>
-<div style='border-width:0.1em 0 0.1em 0;border-color:#b0b0b0;border-style:solid'>
-<svg style='height:3em;padding:5px 0.5em 2px 0.5em' xmlns="http://www.w3.org/2000/svg"
-viewBox='0 0 104 36' version="1.1">
+<body style='box-sizing:border-box;background:#ffffdd;margin:0;border-width:0.1em 0 0.1em 0;border-color:#b0b0b0;border-style:solid'>
+<div style='display:table-cell'>
+<svg style='display:block;height:3em;padding:5px 0.5em' xmlns="http://www.w3.org/2000/svg" viewBox='0 0 104 36' version="1.1">
 <title>CBOR Logotype</title>
 <defs><filter id="shadow">
 <feDropShadow dx="1" dy="1" stdDeviation="1" flood-opacity="0.5"/>
