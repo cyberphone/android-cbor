@@ -23,7 +23,6 @@ import android.util.Log;
 
 import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceResponse;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebResourceRequest;
@@ -149,7 +148,7 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
 -4.0429683 -1.5625,-1.40625 -4.53125,-1.4257813 h -5.742187 z"/>
   </g>
   </g>
-</svg></div>
+</svg></div><div id='domain' style='vertical-align:bottom;display:table-cell'/>
 </body></html>""";
 
     enum KEY_TYPES {EC_KEY, RSA_KEY, PKI, SYMMETRIC_KEY}
@@ -171,6 +170,8 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
         "<h3 style='text-align:center'>";
 
     WebView webView;
+
+    WebView toolBar;
 
     static WebViewAssetLoader.PathHandler ph = path -> null;
 
@@ -238,21 +239,13 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
         loadHtml("", "ERROR", "<pre style='color:red'>" + msg + "</pre>");
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-        WebView toolBar = findViewById(R.id.toolbar);
-        toolBar.loadData(Base64.encodeToString(
-                TOOLBAR_HTML.getBytes(), Base64.NO_PADDING), "text/html", "base64");
+    void setToolbarText(String text) {
+        toolBar.evaluateJavascript(
+        "document.getElementById('domain').innerHTML = '" + text + "';", null);
+    }
+    void toolBarReadyContinue() {
         webView = (WebView) findViewById(R.id.webView);
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
+        webView.getSettings().setJavaScriptEnabled(true);
         webView.addJavascriptInterface (this, "WebPKI");
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -268,6 +261,29 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
             version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         } catch (Exception e) {
         }
+        setToolbarText("Version: " + version);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+        toolBar = findViewById(R.id.toolbar);
+        toolBar.getSettings().setJavaScriptEnabled(true);
+        toolBar.loadData(Base64.encodeToString(
+                TOOLBAR_HTML.getBytes(), Base64.NO_PADDING), "text/html", "base64");
+        toolBar.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                toolBarReadyContinue();
+             }
+        });
      }
 
     void addCommandButton(StringBuilder buffer, String button, String executor) {
