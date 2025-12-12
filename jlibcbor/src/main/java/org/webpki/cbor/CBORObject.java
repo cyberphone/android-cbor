@@ -18,10 +18,12 @@ package org.webpki.cbor;
 
 import java.math.BigInteger;
 
-import java.util.Arrays;
-import java.util.GregorianCalendar;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 
-import org.webpki.util.ISODateTime;
+import java.util.Arrays;
+
+import java.util.regex.Pattern;
 
 import static org.webpki.cbor.CBORInternal.*;
 
@@ -30,7 +32,7 @@ import static org.webpki.cbor.CBORInternal.*;
  * <p>
  * In this implementation "object" should be regarded as 
  * equivalent to the  
- * CBOR [<a href='https://www.rfc-editor.org/rfc/rfc8949.html' class='webpkilink'>RFC&nbsp;8949</a>]
+ * CBOR [<a href='https://www.rfc-editor.org/rfc/rfc8949.html' class='webpkilink'>RFC8949</a>]
  * term, "data item".
  * </p>
  */
@@ -49,7 +51,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     abstract byte[] internalEncode();
 
     /**
-     * Encode CBOR object.
+     * Encode (aka "serialize") CBOR object.
      * <p>
      * Note: this method always return CBOR data using 
      * <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a>.
@@ -76,8 +78,8 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
         return object;
     }
 
-    static void integerRangeError(String integerType) {
-        cborError(STDERR_INT_RANGE + integerType);
+    static void outOfRangeError(String type) {
+        cborError(STDERR_OUT_OF_RANGE + type + "\"");
     }
 
     byte[] encodeTagAndValue(int tag, int length, long value) {
@@ -153,7 +155,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
         CBORInt CBORInt = getCBORInt();
         long value = CBORInt.value;
         if (CBORInt.unsigned && (value < 0)) {
-            integerRangeError("Int64");
+            outOfRangeError("Int64");
         }
         return value;
     }
@@ -173,9 +175,33 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     public long getUint64() {
         CBORInt CBORInt = getCBORInt();
         if (!CBORInt.unsigned) {
-            integerRangeError("Uint64");
+            outOfRangeError("Uint64");
         }
         return CBORInt.value;
+    }
+
+    /**
+     * Get CBOR <code>int</code> value.
+     * <p>
+     * This method requires that the object is a
+     * {@link CBORInt} and has a value ranging from JavaScript's 
+     * <code>Number.MIN_SAFE_INTEGER</code> (<code>-9007199254740991</code>) to
+     * <code>Number.MAX_SAFE_INTEGER</code> (<code>9007199254740991</code>).
+     * </p>
+     * <p>
+     * Since 53-bit integers are specific to JavaScript, this method
+     * should be used with caution in cross-platform scenarios.
+     * </p>
+     * 
+     * @return <code>long</code>
+     * @throws CBORException
+     */
+    public long getInt53() {
+        long value = getInt64();
+        if (value > MAX_SAFE_JS_INTEGER || value < MIN_SAFE_JS_INTEGER) {
+            outOfRangeError("Int53");
+        }
+        return value;
     }
 
     /**
@@ -193,7 +219,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     public int getInt32() {
         long value = getInt64();
         if (value > Integer.MAX_VALUE || value < Integer.MIN_VALUE) {
-            integerRangeError("Int32");
+            outOfRangeError("Int32");
         }
         return (int)value;
     }
@@ -213,7 +239,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     public long getUint32() {
         long value = getInt64();
         if ((value & UINT32_MASK) != 0) {
-            integerRangeError("Uint32");
+            outOfRangeError("Uint32");
         }
         return value;
     }    
@@ -233,7 +259,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     public int getInt16() {
         long value = getInt64();
         if (value > Short.MAX_VALUE || value < Short.MIN_VALUE) {
-            integerRangeError("Int16");
+            outOfRangeError("Int16");
         }
         return (int)value;
     }
@@ -253,7 +279,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     public int getUint16() {
         long value = getInt64();
         if ((value & UINT16_MASK) != 0) {
-            integerRangeError("Uint16");
+            outOfRangeError("Uint16");
         }
         return (int)value;
     }    
@@ -273,7 +299,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     public int getInt8() {
         long value = getInt64();
         if (value > Byte.MAX_VALUE || value < Byte.MIN_VALUE) {
-            integerRangeError("Int8");
+            outOfRangeError("Int8");
         }
         return (int)value;
     }
@@ -293,7 +319,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     public int getUint8() {
         long value = getInt64();
         if ((value & UINT8_MASK) != 0) {
-            integerRangeError("Uint8");
+            outOfRangeError("Uint8");
         }
         return (int)value;
     }
@@ -363,7 +389,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     public float getFloat32() {
         CBORFloat floatingPoint = (CBORFloat) getTypeAndMarkAsRead(CBORFloat.class);
         if (floatingPoint.tag == MT_FLOAT64) {
-            cborError(STDERR_FLOAT_RANGE);
+            outOfRangeError("Float32");
         }
         return (float)floatingPoint.value;
     }
@@ -382,7 +408,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     public float getFloat16() {
         CBORFloat floatingPoint = (CBORFloat) getTypeAndMarkAsRead(CBORFloat.class);
         if (floatingPoint.tag != MT_FLOAT16) {
-            cborError(STDERR_FLOAT_RANGE);
+            outOfRangeError("Float16");
         }
         return (float)floatingPoint.value;
     }
@@ -450,41 +476,73 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
 
     /**
-     * Get UNIX <code>Epoch</code> time object.
-     * <p>
-     * This method requires that the object is a 
-     * {@link CBORInt} or {@link CBORFloat}, 
-     * otherwise a {@link CBORException} is thrown.
-     * </p>
-      * 
-     * @return <code>GregorianCalendar</code>
-     * @see CBORTag#getEpochTime()
-     * @throws CBORException
+     * Get <code>EpochTime</code> object.
+     *
+<div style='margin-top:0.5em'>
+Depending on the type of the current object, this method performs a
+{@link #getInt64()} or a {@link #getFloat64()}.
+The returned number is subsequently used to initiate an {@link Instant} object.</div>
+<div style='margin-top:0.5em'>
+If not <i>all</i> of the following conditions are met,
+a {@link CBORException} is thrown:
+<ul style='padding:0;margin:0 0 0.5em 1.2em'>
+<li style='margin-top:0'>The underlying object
+is a {@link CBORInt} or {@link CBORFloat}.</li>
+<li>The Epoch 
+[<a href='https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap04.html#tag_04_19'
+ class='webpkilink'>TIME</a>] object is within the range:
+<span style='white-space:nowrap'><code>0</code> (<code>"1970-01-01T00:00:00Z"</code>)</span> to
+<span style='white-space:nowrap'><code>253402300799</code> (<code>"9999-12-31T23:59:59Z"</code>)</span>.</li>
+</ul>
+    @return {@link Instant}
+    @see CBORTag#getEpochTime()
+    @see CBORUtil#createEpochTime(Instant, boolean)
+    @throws CBORException
      */
-    public GregorianCalendar getEpochTime() {
-        long timeInMillis = this instanceof CBORInt ? 
-                                  getInt64() * 1000 : Math.round(getFloat64() * 1000);
-        GregorianCalendar gregorianCalendar = new GregorianCalendar();
-        gregorianCalendar.setTimeInMillis(timeInMillis);
-        return gregorianCalendar;
+    public Instant getEpochTime() {
+        double epochSeconds = this instanceof CBORInt ? (double) getInt64() : getFloat64();
+        if (epochSeconds < 0 || epochSeconds > (MAX_INSTANT_IN_MILLIS / 1000L)) {
+            CBORUtil.epochOutOfRange(epochSeconds);
+        }
+        return Instant.ofEpochMilli(Math.round(epochSeconds * 1000));
     }
 
+    static final Pattern RFC3339_5_6_PATTERN = Pattern.compile(
+            "(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2})(\\.\\d{1,9})?([+-]\\d{2}:\\d{2}|Z)");
     /**
-     * Get ISO <code>date/time</code> object.
-     * <p>
-     * This method requires that the object is a 
-     * {@link CBORString} that is compatible with ISO date/time
-     * [<a href='https://www.rfc-editor.org/rfc/rfc3339.html' class='webpkilink'>RFC&nbsp;3339</a>], 
-     * otherwise a {@link CBORException} is thrown.
-     * </p>
-      * 
-     * @return <code>GregorianCalendar</code>
-     * @throws CBORException
-     * @throws IllegalArgumentException
-     * @see CBORTag#getDateTime()
+     * Get <code>DateTime</code> object.
+     * 
+<div style='margin-top:0.5em'>
+This method performs a {@link #getString()}.
+The returned string is subsequently used to initiate an {@link Instant} object.</div>
+<div style='margin-top:0.5em'>
+If not <i>all</i> of the following conditions are met, a {@link CBORException} is thrown:
+<ul style='padding:0;margin:0 0 0.5em 1.2em'>
+<li style='margin-top:0'>The underlying object is a
+{@link CBORString}.</li>
+<li>The string matches the ISO date/time format described
+in section&nbsp;5.6 of
+[<a href='https://www.rfc-editor.org/rfc/rfc3339.html#section-5.6' class='webpkilink'>RFC3339</a>].</li>
+<li>The <i>optional</i> sub-second field (<code>.nnn</code>) features <i>less</i> than ten digits.</li>
+<li>The date/time object is within the range:
+<code style='white-space:nowrap'>"0000-01-01T00:00:00Z"</code> to
+<code style='white-space:nowrap'>"9999-12-31T23:59:59Z"</code>.</li>
+</ul>
+</div>
+
+    @return {@link Instant}
+    @throws CBORException
+    @see CBORTag#getDateTime()
+    @see CBORUtil#createDateTime(Instant, boolean, boolean)
      */
-    public GregorianCalendar getDateTime() {
-        return ISODateTime.decode(getString(), ISODateTime.COMPLETE);
+    public Instant getDateTime() {
+        String dateTime = getString();
+        if (!RFC3339_5_6_PATTERN.matcher(dateTime).matches()) {
+            cborError("\"DateTime\" syntax error: " + dateTime);
+        }
+        Instant instant = ZonedDateTime.parse(dateTime).toInstant();
+        CBORUtil.instantDateTimeToMillisCheck(instant);
+        return instant;
     }
 
     /**
@@ -800,14 +858,11 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
         return CBORDecoder.decode(encode());
     }
 
-    static final String STDERR_INT_RANGE =
-            "CBOR integer does not fit a Java \"";
+    static final String STDERR_OUT_OF_RANGE =
+            "Value out of range for \"";
     
     static final String STDERR_ARGUMENT_IS_NULL =
             "Argument \"null\" is not permitted";
-
-    static final String STDERR_FLOAT_RANGE =
-            "Value out of range for \"float\"";
 
     static final String STDERR_MAP_KEY_IMMUTABLE =
             "Map keys are immutable";

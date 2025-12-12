@@ -27,27 +27,27 @@ import org.webpki.util.UTF8;
 import static org.webpki.cbor.CBORInternal.*;
 
 /**
- * CBOR decoder class.
+ * Class for decoding (aka "deserializing") CBOR data.
  */
 public class CBORDecoder {
 
     /**
      * {@link CBORDecoder#CBORDecoder(InputStream, int, int)} <code>options</code> flag.
      */
-    public final static int SEQUENCE_MODE            = 0x1;
+    public final static int SEQUENCE_MODE           = 0x1;
 
     /**
      * {@link CBORDecoder#CBORDecoder(InputStream, int, int)} <code>options</code> flag.
      */
-    public final static int LENIENT_MAP_DECODING     = 0x2;
+    public final static int LENIENT_MAP_DECODING    = 0x2;
 
     /**
      * {@link CBORDecoder#CBORDecoder(InputStream, int, int)} <code>options</code> flag.
      */
-    public final static int LENIENT_NUMBER_DECODING  = 0x4;
+    public final static int LENIENT_NUMBER_DECODING = 0x4;
 
 
-    static final BigInteger NEGATIVE_HIGH_RANGE = new BigInteger("-10000000000000000", 16);
+    static final BigInteger MIN_INT_VALUE_MINUS_ONE = new BigInteger("-10000000000000001", 16);
    
     private InputStream inputStream;
     private boolean sequenceMode;
@@ -74,7 +74,7 @@ public class CBORDecoder {
     * A zero (0) sets the decoder default mode.
     * The options are defined by the following constants:
     * </p>
-    * <div style='margin-top:0.3em'>{@link CBORDecoder#SEQUENCE_MODE}:</div>
+    * <div id='Option-SEQUENCE_MODE' style='margin-top:0.3em'>{@link CBORDecoder#SEQUENCE_MODE}:</div>
     * <div style='padding:0.2em 0 0 1.2em'>If the {@link CBORDecoder#SEQUENCE_MODE}
     * option is defined, the following apply:
     * <ul style='padding:0;margin:0 0 0.5em 1.2em'>
@@ -86,7 +86,7 @@ public class CBORDecoder {
     * Note that data that has not yet been decoded, is not verified for correctness.
     * <div style='margin-top:0.5em'>See also {@link CBORArray#encodeAsSequence}.</div></div>
     *
-    * <div style='margin-top:0.8em'>{@link CBORDecoder#LENIENT_MAP_DECODING}:</div>
+    * <div id='Option-LENIENT_MAP_DECODING' style='margin-top:0.8em'>{@link CBORDecoder#LENIENT_MAP_DECODING}:</div>
     * <div style='padding:0.2em 0 0 1.2em'>By default, the decoder requires
     * that CBOR maps conform to the
     * <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a> 
@@ -95,16 +95,17 @@ public class CBORDecoder {
     * accept CBOR maps with arbitrary key ordering.
     * Note that duplicate keys still cause a {@link CBORException} to be thrown.</div></div>
     *
-    * <div style='margin-top:0.8em'>{@link CBORDecoder#LENIENT_NUMBER_DECODING}:</div>
+    * <div id='Option-LENIENT_NUMBER_DECODING' style='margin-top:0.8em'>{@link CBORDecoder#LENIENT_NUMBER_DECODING}:</div>
     * <div style='padding:0.2em 0 0 1.2em'>By default, the decoder requires
     * that CBOR numbers conform to the
     * <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a> rules.
     * <div>The {@link CBORDecoder#LENIENT_NUMBER_DECODING} option makes the decoder
-    * accept different representations of CBOR <code>int</code>, <code>bigint</code>,
-    * and <code>float</code> items, only limited by RFC&nbsp;8949.</div></div>
+    * accept different representations of CBOR <code>int/bigint</code>
+    * and <code>float</code> objects, only limited by
+    * [<a href='https://www.rfc-editor.org/rfc/rfc8949.html' class='webpkilink'>RFC8949</a>].</div></div>
     * <p>
     * Exceeding <code>maxInputLength</code> during decoding throws a {@link CBORException}.  It is
-    * <i>recommendable</i> setting this as low as possible, since malformed
+    * <i>recommendable</i> setting this as low as possible since malformed
     * CBOR objects may request any amount of memory.
     * </p>
     * @param inputStream Stream holding CBOR data. 
@@ -229,7 +230,7 @@ public class CBORDecoder {
                                                                    bigInteger : bigInteger.not());
                 if (strictNumbers) {
                     if (byteArray.length <= 8 || byteArray[0] == 0) {
-                        cborError(STDERR_NON_DETERMINISTIC_BIGNUM);
+                        cborError(STDERR_NON_DETERMINISTIC_BIGINT);
                     } 
                 } else {
                     // Normalization...
@@ -325,7 +326,7 @@ public class CBORDecoder {
 
                     // Only let two-complement integers use long.
                     case MT_NEGATIVE -> n < 0 ?
-                        new CBORBigInt(NEGATIVE_HIGH_RANGE.add(BigInteger.valueOf(~n))) 
+                        new CBORBigInt(MIN_INT_VALUE_MINUS_ONE.subtract(BigInteger.valueOf(n))) 
                                               :
                         new CBORInt(~n, false);
                     
@@ -418,11 +419,11 @@ public class CBORDecoder {
     static final String STDERR_N_RANGE_ERROR =
             "N out of range: ";
 
-    static final String STDERR_NON_DETERMINISTIC_BIGNUM =
-            "Non-deterministic encoding of bignum";
+    static final String STDERR_NON_DETERMINISTIC_BIGINT =
+            "Non-deterministic encoding of bigint";
 
     static final String STDERR_NON_DETERMINISTIC_FLOAT =
-            "Non-deterministic encoding of floating point value: ";
+            "Non-deterministic encoding of float value: ";
 
     static final String STDERR_NON_DETERMINISTIC_N =
             "Non-deterministic encoding of N";

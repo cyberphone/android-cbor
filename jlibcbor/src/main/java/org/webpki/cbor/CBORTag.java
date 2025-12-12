@@ -18,7 +18,7 @@ package org.webpki.cbor;
 
 import static org.webpki.cbor.CBORInternal.*;
 
-import java.util.GregorianCalendar;
+import java.time.Instant;
 
 /**
  * Class for holding CBOR <code>#6.n</code> (tag) objects.
@@ -79,8 +79,8 @@ public class CBORTag extends CBORObject {
     CBORObject object;
 
     // Specialized tag data,
-    GregorianCalendar dateTime;
-    GregorianCalendar epochTime;
+    Instant dateTime;
+    Instant epochTime;
     COTXObject cotxObject;
 
     /**
@@ -169,12 +169,12 @@ public class CBORTag extends CBORObject {
      * This method assumes that a valid CBOR tag 0 has been found, 
      * otherwise a {@link CBORException} is thrown.
      * </p>
-     * @return <code>GregorianCalendar</code>
+     * @return {@link Instant}
      * @see CBORObject#getDateTime()
      * @throws CBORException
      */
     @Override
-    public GregorianCalendar getDateTime() {
+    public Instant getDateTime() {
         if (dateTime == null) {
             tagSyntaxError(STDERR_ISO_DATE_TIME);
         }
@@ -189,12 +189,12 @@ public class CBORTag extends CBORObject {
      * This method assumes that a valid CBOR tag 1 has been found, 
      * otherwise a {@link CBORException} is thrown.
      * </p>
-     * @return <code>GregorianCalendar</code>
+     * @return {@link Instant}
      * @see CBORObject#getEpochTime()
      * @throws CBORException
      */
     @Override
-    public GregorianCalendar getEpochTime() {
+    public Instant getEpochTime() {
         if (epochTime == null) {
             tagSyntaxError(STDERR_EPOCH_TIME);
         }

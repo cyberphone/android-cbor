@@ -51,7 +51,7 @@ import java.security.cert.X509Certificate;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 
-import java.util.GregorianCalendar;
+import java.time.Instant;
 
 import org.webpki.cbor.CBORArray;
 import org.webpki.cbor.CBORAsymKeyDecrypter;
@@ -79,6 +79,7 @@ import org.webpki.cbor.CBORSigner;
 import org.webpki.cbor.CBORSymKeyDecrypter;
 import org.webpki.cbor.CBORSymKeyEncrypter;
 import org.webpki.cbor.CBORString;
+import org.webpki.cbor.CBORUtil;
 import org.webpki.cbor.CBORTag;
 import org.webpki.cbor.CBORValidator;
 import org.webpki.cbor.CBORX509Decrypter;
@@ -92,7 +93,6 @@ import org.webpki.crypto.KeyEncryptionAlgorithms;
 import org.webpki.crypto.KeyTypes;
 
 import org.webpki.util.HexaDecimal;
-import org.webpki.util.ISODateTime;
 import org.webpki.util.UTF8;
 
 /**
@@ -321,8 +321,7 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
         return new CBORMap()
                 .set(new CBORInt(++index),
                      new CBORString("'CBOR Sample' " +
-                             ISODateTime.encode(new GregorianCalendar(),
-                                                ISODateTime.LOCAL_NO_SUBSECONDS)))
+                             CBORUtil.createDateTime(Instant.now(), false, false).getString()))
                 .set(new CBORInt(++index),
                            new CBORBytes(
                         new byte[]{(byte)0x50, (byte)0x42, (byte)0x12, (byte)0x3a, (byte)0x65,

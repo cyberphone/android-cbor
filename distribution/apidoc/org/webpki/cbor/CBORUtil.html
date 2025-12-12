@@ -82,6 +82,7 @@
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CBORUtil</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Utility methods.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -99,6 +100,19 @@
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static byte[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#concatByteArrays(byte%5B%5D...)" class="member-name-link">concatByteArrays</a><wbr>(byte[]...&nbsp;listOfArrays)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORString.html" title="class in org.webpki.cbor">CBORString</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createDateTime(java.time.Instant,boolean,boolean)" class="member-name-link">createDateTime</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Instant.html" title="class or interface in java.time" class="external-link">Instant</a>&nbsp;instant,
+ boolean&nbsp;millis,
+ boolean&nbsp;utc)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Create <code>DateTime</code> object.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createEpochTime(java.time.Instant,boolean)" class="member-name-link">createEpochTime</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Instant.html" title="class or interface in java.time" class="external-link">Instant</a>&nbsp;instant,
+ boolean&nbsp;millis)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Create <code>EpochTime</code> object.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static long</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reverseBits(long,int)" class="member-name-link">reverseBits</a><wbr>(long&nbsp;bits,
  int&nbsp;fieldWidth)</code></div>
@@ -123,6 +137,114 @@
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="createDateTime(java.time.Instant,boolean,boolean)">
+<h3>createDateTime</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORString.html" title="class in org.webpki.cbor">CBORString</a></span>&nbsp;<span class="element-name">createDateTime</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Instant.html" title="class or interface in java.time" class="external-link">Instant</a>&nbsp;instant,
+ boolean&nbsp;millis,
+ boolean&nbsp;utc)</span></div>
+<div class="block">Create <code>DateTime</code> object.
+ 
+<div style='margin-top:0.5em'>
+This method creates a date/time string in the ISO format described in section 5.6&nbsp;of 
+[<a href='https://www.rfc-editor.org/rfc/rfc3339.html#section-5.6' class='webpkilink'>RFC3339</a>].
+The string is subsequently wrapped in a <a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a> object.</div>
+<div style='margin-top:0.5em'>
+If the <code>instant</code> object is not within
+the range <code style='white-space:nowrap'>"0000-01-01T00:00:00Z"</code> to
+<code style='white-space:nowrap'>"9999-12-31T23:59:59Z"</code>,
+a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown .</div>
+<div style='margin-top:0.5em'>
+If <code>millis</code> is <code>true</code> the date/time string will feature
+milliseconds (<code>.nnn</code>) as well.</div>
+<div style='margin-top:0.5em'>Sample code:</div>
+<div style='margin:0.3em 0 0 1.2em'><code>CBORString iso = CBORUtil.createDateTime(Instant.now(), true, false);<br>
+System.out.println(iso.toString());<br>
+<span style='color:#007fdd'>"2025-12-05T13:55:42.418+01:00"</span></code></div></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>instant</code> - Time source object.</dd>
+<dd><code>millis</code> - <div style='margin-left:2em'>
+If <code>millis</code> is <code>true</code>,
+the milliseconds of the <code>instant</code> object will be
+featured in the created time object.  Note: if the millisecond
+part of the <code>instant</code> object is zero,
+<code>millis</code> is considered to be <code>false</code>.
+<div style='margin-top:0.5em'>If <code>millis</code> is
+<code>false</code>, the millisecond part of the <code>instant</code>
+object will not be used, but may after <i>rounding</i>,
+add a second to the created time object.
+Rounding is performed for milliseconds <code>&ge;500</code>,
+and always in the <i>positive</i> direction.</div><div></dd>
+<dd><code>utc</code> - <div style='margin-left:2em'>
+If <code>utc</i></code> is <code>true</code>,
+the <code>UTC</code> time zone (denoted by a terminating <code>Z</code>) will be used,
+else the local time followed by the <code>UTC</code> offset
+(<code>&plusmn;hh:mm</code>) will be used.</div></dd>
+<dt>Returns:</dt>
+<dd><a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a></dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getDateTime()"><code>CBORObject.getDateTime()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createEpochTime(java.time.Instant,boolean)">
+<h3>createEpochTime</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">createEpochTime</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Instant.html" title="class or interface in java.time" class="external-link">Instant</a>&nbsp;instant,
+ boolean&nbsp;millis)</span></div>
+<div class="block">Create <code>EpochTime</code> object.
+ 
+<div style='margin-top:0.5em'>
+This method creates an Epoch
+[<a href='https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap04.html#tag_04_19' class='webpkilink'>TIME</a>] time stamp.</div>
+<div style='margin-top:0.5em'>
+If the <code>instant</code> object is not within
+the range <span style='white-space:nowrap'><code>0</code> (<code>"1970-01-01T00:00:00Z"</code>)</span> to
+<span style='white-space:nowrap'><code>253402300799</code> (<code>"9999-12-31T23:59:59Z"</code>)</span>,
+a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.</div>
+<div style='margin-top:0.5em'>
+If <code>millis</code> is <code>true</code> a <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a>
+object holding seconds with a milliseconds fraction will be created,
+else a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object holding seconds will be created.</div>
+<div style='margin-top:0.5em'>Sample code:</div>
+<div style='margin:0.3em 0 0 1.2em'><code>CBORObject epoch = CBORUtil.createEpochTime(Instant.now(), false);<br>
+System.out.println(epoch.toString());<br>
+<span style='color:#007fdd'>1764939916</span></code></div></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>instant</code> - Time source object.</dd>
+<dd><code>millis</code> - <div style='margin-left:2em'>
+If <code>millis</code> is <code>true</code>,
+the milliseconds of the <code>instant</code> object will be
+featured in the created time object.  Note: if the millisecond
+part of the <code>instant</code> object is zero,
+<code>millis</code> is considered to be <code>false</code>.
+<div style='margin-top:0.5em'>If <code>millis</code> is
+<code>false</code>, the millisecond part of the <code>instant</code>
+object will not be used, but may after <i>rounding</i>,
+add a second to the created time object.
+Rounding is performed for milliseconds <code>&ge;500</code>,
+and always in the <i>positive</i> direction.</div><div></dd>
+<dt>Returns:</dt>
+<dd><a href="CBORObject.html" title="class in org.webpki.cbor"><code>CBORObject</code></a></dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getEpochTime()"><code>CBORObject.getEpochTime()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="concatByteArrays(byte[]...)">
 <h3>concatByteArrays</h3>

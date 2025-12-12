@@ -22,11 +22,18 @@ import static org.webpki.cbor.CBORInternal.*;
 
 /**
  * Class for holding CBOR <code>int</code> objects.
+ * <div id='negative-integers' class='webpkicomment' style='margin-top:1em'>
+ * Note that {@link CBORInt} does not support negative integers (CBOR major type 1)
+ * beyond the normal range for 64-bit signed integers 
+ * (<span style='white-space:nowrap'><code>-2<sup>63</sup></code></span>&#x2009;).
+ * In the unlikely case there is a need to explicitly deal with such integers,
+ * using {@link CBORBigInt} is the supported workaround.
  */
 public class CBORInt extends CBORObject {
 
-    static final BigInteger MAX_CBOR_INTEGER_MAGNITUDE = new BigInteger("ffffffffffffffff", 16);
-    
+    static final BigInteger MAX_INT_MAGNITUDE = new BigInteger("ffffffffffffffff", 16);    
+    static final BigInteger MIN_INT_VALUE     = new BigInteger("-10000000000000000", 16);
+
     long value;
     boolean unsigned;
     
@@ -51,7 +58,8 @@ public class CBORInt extends CBORObject {
         this.value = value;
         this.unsigned = unsigned;
         if (!unsigned && value >= 0) {
-            cborError(STDERR_INT_VALUE_OUT_OF_RANGE + value);
+            cborError(STDERR_INT_VALUE_OUT_OF_RANGE + 
+                MIN_INT_VALUE.add(BigInteger.valueOf(value)).toString());
         }
     }
 
@@ -75,7 +83,7 @@ public class CBORInt extends CBORObject {
 
     BigInteger toBigInteger() {
         BigInteger bigInteger = BigInteger.valueOf(value);
-        return unsigned ? bigInteger.and(MAX_CBOR_INTEGER_MAGNITUDE) : bigInteger;
+        return unsigned ? bigInteger.and(MAX_INT_MAGNITUDE) : bigInteger;
     }
 
     @Override
@@ -84,6 +92,6 @@ public class CBORInt extends CBORObject {
     }
 
     static final String STDERR_INT_VALUE_OUT_OF_RANGE = 
-            "Integer out of range: ";
+            "Long out of range: ";
 
 }
