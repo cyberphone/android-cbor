@@ -90,10 +90,11 @@
 <span class="extends-implements">extends <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span></div>
 <div class="block">Class for holding CBOR <code>float</code> objects.
  <p>
- Numbers are in the <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> format
- using the length <code>16</code>, <code>32</code>, and <code>64</code> bit on the "wire".  Which
- length to use is governed by the size and precision 
- required to (minimally) correctly represent a number.
+ Floating-point numbers are expressed in the
+ <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> format
+ using the length <code>16</code>, <code>32</code>, and <code>64</code> bit on the "wire".
+ Which length to use is governed by the size and precision 
+ required to (minimally) correctly represent a value.
  </p></div>
 <dl class="notes">
 <dt>See Also:</dt>
@@ -137,6 +138,16 @@
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Creates an "extended" CBOR <code>float</code> object.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORFloat.html" title="class in org.webpki.cbor">CBORFloat</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createFloat16(double)" class="member-name-link">createFloat16</a><wbr>(double&nbsp;value)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a CBOR <code>float16</code> object.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORFloat.html" title="class in org.webpki.cbor">CBORFloat</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createFloat32(double)" class="member-name-link">createFloat32</a><wbr>(double&nbsp;value)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a CBOR <code>float32</code> object.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#length()" class="member-name-link">length</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -147,7 +158,7 @@
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-org.webpki.cbor.CBORObject">Methods inherited from class&nbsp;org.webpki.cbor.<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></h3>
-<code><a href="CBORObject.html#checkForUnread()">checkForUnread</a>, <a href="CBORObject.html#clone()">clone</a>, <a href="CBORObject.html#compareTo(org.webpki.cbor.CBORObject)">compareTo</a>, <a href="CBORObject.html#encode()">encode</a>, <a href="CBORObject.html#equals(java.lang.Object)">equals</a>, <a href="CBORObject.html#getArray()">getArray</a>, <a href="CBORObject.html#getBigInteger()">getBigInteger</a>, <a href="CBORObject.html#getBoolean()">getBoolean</a>, <a href="CBORObject.html#getBytes()">getBytes</a>, <a href="CBORObject.html#getDateTime()">getDateTime</a>, <a href="CBORObject.html#getEpochTime()">getEpochTime</a>, <a href="CBORObject.html#getExtendedFloat64()">getExtendedFloat64</a>, <a href="CBORObject.html#getFloat16()">getFloat16</a>, <a href="CBORObject.html#getFloat32()">getFloat32</a>, <a href="CBORObject.html#getFloat64()">getFloat64</a>, <a href="CBORObject.html#getInt16()">getInt16</a>, <a href="CBORObject.html#getInt32()">getInt32</a>, <a href="CBORObject.html#getInt53()">getInt53</a>, <a href="CBORObject.html#getInt64()">getInt64</a>, <a href="CBORObject.html#getInt8()">getInt8</a>, <a href="CBORObject.html#getMap()">getMap</a>, <a href="CBORObject.html#getSimple()">getSimple</a>, <a href="CBORObject.html#getString()">getString</a>, <a href="CBORObject.html#getTag()">getTag</a>, <a href="CBORObject.html#getUint16()">getUint16</a>, <a href="CBORObject.html#getUint32()">getUint32</a>, <a href="CBORObject.html#getUint64()">getUint64</a>, <a href="CBORObject.html#getUint8()">getUint8</a>, <a href="CBORObject.html#hashCode()">hashCode</a>, <a href="CBORObject.html#isNull()">isNull</a>, <a href="CBORObject.html#scan()">scan</a>, <a href="CBORObject.html#toDiagnosticNotation(boolean)">toDiagnosticNotation</a>, <a href="CBORObject.html#toString()">toString</a></code></div>
+<code><a href="CBORObject.html#checkForUnread()">checkForUnread</a>, <a href="CBORObject.html#clone()">clone</a>, <a href="CBORObject.html#compareTo(org.webpki.cbor.CBORObject)">compareTo</a>, <a href="CBORObject.html#encode()">encode</a>, <a href="CBORObject.html#equals(java.lang.Object)">equals</a>, <a href="CBORObject.html#getArray()">getArray</a>, <a href="CBORObject.html#getBigInteger()">getBigInteger</a>, <a href="CBORObject.html#getBoolean()">getBoolean</a>, <a href="CBORObject.html#getBytes()">getBytes</a>, <a href="CBORObject.html#getDateTime()">getDateTime</a>, <a href="CBORObject.html#getEpochTime()">getEpochTime</a>, <a href="CBORObject.html#getExtendedFloat64()">getExtendedFloat64</a>, <a href="CBORObject.html#getFloat16()">getFloat16</a>, <a href="CBORObject.html#getFloat32()">getFloat32</a>, <a href="CBORObject.html#getFloat64()">getFloat64</a>, <a href="CBORObject.html#getInt16()">getInt16</a>, <a href="CBORObject.html#getInt32()">getInt32</a>, <a href="CBORObject.html#getInt53()">getInt53</a>, <a href="CBORObject.html#getInt64()">getInt64</a>, <a href="CBORObject.html#getInt8()">getInt8</a>, <a href="CBORObject.html#getMap()">getMap</a>, <a href="CBORObject.html#getSimple()">getSimple</a>, <a href="CBORObject.html#getString()">getString</a>, <a href="CBORObject.html#getTag()">getTag</a>, <a href="CBORObject.html#getUint16()">getUint16</a>, <a href="CBORObject.html#getUint32()">getUint32</a>, <a href="CBORObject.html#getUint64()">getUint64</a>, <a href="CBORObject.html#getUint8()">getUint8</a>, <a href="CBORObject.html#hashCode()">hashCode</a>, <a href="CBORObject.html#isNull()">isNull</a>, <a href="CBORObject.html#scan()">scan</a>, <a href="CBORObject.html#toDiagnostic(boolean)">toDiagnostic</a>, <a href="CBORObject.html#toString()">toString</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -209,7 +220,7 @@
  </p>
  <p>
  Note that return type is either <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a> or <a href="CBORNonFinite.html" title="class in org.webpki.cbor"><code>CBORNonFinite</code></a>, depending
- on if the argument is a "regular" floating-point value of one of the non-finite variants.
+ on if the argument is a "regular" floating-point value or one of the non-finite variants.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -222,6 +233,71 @@
 <dd>
 <ul class="tag-list">
 <li><a href="CBORNonFinite.html#%3Cinit%3E(long)"><code>CBORNonFinite(long)</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createFloat32(double)">
+<h3>createFloat32</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORFloat.html" title="class in org.webpki.cbor">CBORFloat</a></span>&nbsp;<span class="element-name">createFloat32</span><wbr><span class="parameters">(double&nbsp;value)</span></div>
+<div class="block">Creates a CBOR <code>float32</code> object.
+ <p>
+ This method creates a <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a> object,
+ where the value is converted to fit CBOR <code>float32</code> representation.
+ </p>
+ <p>
+ If the value (after applying
+ <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> conversion rules),
+ is out of range, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p>
+ <p>
+ Note that this method returns a <code>float16</code> compatible object
+ if the value and precision is <i>equivalent</i> to the <code>float32</code>
+ representation (e.g. <code>2.5</code>).
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - Floating-point value</dd>
+<dt>Returns:</dt>
+<dd><a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a></dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getFloat32()"><code>CBORObject.getFloat32()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createFloat16(double)">
+<h3>createFloat16</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORFloat.html" title="class in org.webpki.cbor">CBORFloat</a></span>&nbsp;<span class="element-name">createFloat16</span><wbr><span class="parameters">(double&nbsp;value)</span></div>
+<div class="block">Creates a CBOR <code>float16</code> object.
+ <p>
+ This method creates a <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a> object,
+ where the value is converted to fit CBOR <code>float16</code> representation.
+ </p>
+ <p>
+ If the value (after applying
+ <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> conversion rules),
+ is out of range, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - Floating-point value</dd>
+<dt>Returns:</dt>
+<dd><a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a></dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getFloat16()"><code>CBORObject.getFloat16()</code></a></li>
 </ul>
 </dd>
 </dl>

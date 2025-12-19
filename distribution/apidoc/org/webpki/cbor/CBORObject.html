@@ -268,7 +268,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="block">Scan CBOR object and mark it as read.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toDiagnosticNotation(boolean)" class="member-name-link">toDiagnosticNotation</a><wbr>(boolean&nbsp;prettyPrint)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toDiagnostic(boolean)" class="member-name-link">toDiagnostic</a><wbr>(boolean&nbsp;prettyPrint)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Render CBOR object in
  <a href='package-summary.html#diagnostic-notation' class='webpkilink'>Diagnostic Notation</a>.</div>
@@ -303,13 +303,16 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
  <p>
  Note: this method always return CBOR data using 
  <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a>.
- </p>
- <p>
- See also <a href="CBORArray.html#encodeAsSequence()"><code>CBORArray.encodeAsSequence()</code></a>.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>CBOR encoded <code>byteArray</code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORArray.html#encodeAsSequence()"><code>CBORArray.encodeAsSequence()</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -573,6 +576,12 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <dd><code>float</code></dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list-long">
+<li><a href="CBORFloat.html#createFloat32(double)"><code>CBORFloat.createFloat32(double)</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -591,6 +600,12 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <dd><code>float</code></dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list-long">
+<li><a href="CBORFloat.html#createFloat16(double)"><code>CBORFloat.createFloat16(double)</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -671,21 +686,24 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Instant.html" title="class or interface in java.time" class="external-link">Instant</a></span>&nbsp;<span class="element-name">getEpochTime</span>()</div>
 <div class="block">Get <code>EpochTime</code> object.
 
-<div style='margin-top:0.5em'>
-Depending on the type of the current object, this method performs a
-<a href="#getInt64()"><code>getInt64()</code></a> or a <a href="#getFloat64()"><code>getFloat64()</code></a>.
-The returned number is subsequently used to initiate an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Instant.html" title="class or interface in java.time" class="external-link"><code>Instant</code></a> object.</div>
-<div style='margin-top:0.5em'>
-If not <i>all</i> of the following conditions are met,
-a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown:
-<ul style='padding:0;margin:0 0 0.5em 1.2em'>
-<li style='margin-top:0'>The underlying object
-is a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> or <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a>.</li>
-<li>The Epoch 
-[<a href='https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap04.html#tag_04_19' class='webpkilink'>TIME</a>] object is within the range:
-<span style='white-space:nowrap'><code>0</code> (<code>"1970-01-01T00:00:00Z"</code>)</span> to
-<span style='white-space:nowrap'><code>253402300799</code> (<code>"9999-12-31T23:59:59Z"</code>)</span>.</li>
-</ul></div>
+ <div style='margin-top:0.5em'>
+ Depending on the type of the current object, this method performs a
+ <a href="#getInt64()"><code>getInt64()</code></a> or a <a href="#getFloat64()"><code>getFloat64()</code></a>.
+ The returned number is subsequently used for initiating an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Instant.html" title="class or interface in java.time" class="external-link"><code>Instant</code></a> object.</div>
+ <div style='margin-top:0.5em'>
+ If not <i>all</i> of the following conditions are met,
+ a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown:
+ <ul style='padding:0;margin:0 0 0.5em 1.2em'>
+ <li style='margin-top:0'>The underlying object
+ is a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> or <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a>.</li>
+ <li>The Epoch 
+ [<a href='https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap04.html#tag_04_19' class='webpkilink'>TIME</a>] object is within the range:
+ <span style='white-space:nowrap'><code>0</code> 
+ (<code>"1970-01-01T00:00:00Z"</code>)</span> to
+ <span style='white-space:nowrap'><code>253402300799</code> 
+ (<code>"9999-12-31T23:59:59Z"</code>)</span>.</li>
+ </ul>
+ </div></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Instant.html" title="class or interface in java.time" class="external-link"><code>Instant</code></a></dd>
@@ -707,23 +725,24 @@ is a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Instant.html" title="class or interface in java.time" class="external-link">Instant</a></span>&nbsp;<span class="element-name">getDateTime</span>()</div>
 <div class="block">Get <code>DateTime</code> object.
  
-<div style='margin-top:0.5em'>
-This method performs a <a href="#getString()"><code>getString()</code></a>.
-The returned string is subsequently used to initiate an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Instant.html" title="class or interface in java.time" class="external-link"><code>Instant</code></a> object.</div>
-<div style='margin-top:0.5em'>
-If not <i>all</i> of the following conditions are met, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown:
-<ul style='padding:0;margin:0 0 0.5em 1.2em'>
-<li style='margin-top:0'>The underlying object is a
-<a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a>.</li>
-<li>The string matches the ISO date/time format described
-in section&nbsp;5.6 of
-[<a href='https://www.rfc-editor.org/rfc/rfc3339.html#section-5.6' class='webpkilink'>RFC3339</a>].</li>
-<li>The <i>optional</i> sub-second field (<code>.nnn</code>) features <i>less</i> than ten digits.</li>
-<li>The date/time object is within the range:
-<code style='white-space:nowrap'>"0000-01-01T00:00:00Z"</code> to
-<code style='white-space:nowrap'>"9999-12-31T23:59:59Z"</code>.</li>
-</ul>
-</div></div>
+ <div style='margin-top:0.5em'>
+ This method performs a <a href="#getString()"><code>getString()</code></a>.
+ The returned string is subsequently used for initiating an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Instant.html" title="class or interface in java.time" class="external-link"><code>Instant</code></a> object.</div>
+ <div style='margin-top:0.5em'>
+ If not <i>all</i> of the following conditions are met, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown:
+ <ul style='padding:0;margin:0 0 0.5em 1.2em'>
+ <li style='margin-top:0'>The underlying object is a
+ <a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a>.</li>
+ <li>The string matches the ISO date/time format described
+ in section&nbsp;5.6 of
+ [<a href='https://www.rfc-editor.org/rfc/rfc3339.html#section-5.6' class='webpkilink'>RFC3339</a>].</li>
+ <li>The <i>optional</i> sub-second field (<code>.nnn</code>) 
+ features <i>less</i> than ten digits.</li>
+ <li>The date/time object is within the range:
+ <code style='white-space:nowrap'>"0000-01-01T00:00:00Z"</code> to
+ <code style='white-space:nowrap'>"9999-12-31T23:59:59Z"</code>.</li>
+ </ul>
+ </div></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Instant.html" title="class or interface in java.time" class="external-link"><code>Instant</code></a></dd>
@@ -815,11 +834,16 @@ in section&nbsp;5.6 of
  <p>
  This method sets the status of this object as well as to possible
  child objects to &quot;read&quot;.
- </p>
- See also <a href="#checkForUnread()"><code>checkForUnread()</code></a>.</div>
+ </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><code>this</code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="#checkForUnread()"><code>checkForUnread()</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -833,11 +857,16 @@ in section&nbsp;5.6 of
  possible child objects have been read
  (through calling <a href="#getBytes()"><code>getBytes()</code></a> etc.),
  and throws a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> if this is not the case.
- </p>
- See also <a href="#scan()"><code>scan()</code></a>.</div>
+ </p></div>
 <dl class="notes">
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="#scan()"><code>scan()</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -891,9 +920,9 @@ in section&nbsp;5.6 of
 </section>
 </li>
 <li>
-<section class="detail" id="toDiagnosticNotation(boolean)">
-<h3>toDiagnosticNotation</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toDiagnosticNotation</span><wbr><span class="parameters">(boolean&nbsp;prettyPrint)</span></div>
+<section class="detail" id="toDiagnostic(boolean)">
+<h3>toDiagnostic</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toDiagnostic</span><wbr><span class="parameters">(boolean&nbsp;prettyPrint)</span></div>
 <div class="block">Render CBOR object in
  <a href='package-summary.html#diagnostic-notation' class='webpkilink'>Diagnostic Notation</a>.
  <p>
@@ -915,7 +944,7 @@ in section&nbsp;5.6 of
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toString</span>()</div>
 <div class="block">Render CBOR object in a pretty-printed form.
  <p>
- Equivalent to <a href="#toDiagnosticNotation(boolean)"><code>toDiagnosticNotation(boolean)</code></a>
+ Equivalent to <a href="#toDiagnostic(boolean)"><code>toDiagnostic(boolean)</code></a>
  with the argument set to <code>true</code>.
  </p></div>
 <dl class="notes">

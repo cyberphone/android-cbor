@@ -99,7 +99,9 @@
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static byte[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#concatByteArrays(byte%5B%5D...)" class="member-name-link">concatByteArrays</a><wbr>(byte[]...&nbsp;listOfArrays)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Concatenate a set of byte-arrays.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORString.html" title="class in org.webpki.cbor">CBORString</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createDateTime(java.time.Instant,boolean,boolean)" class="member-name-link">createDateTime</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Instant.html" title="class or interface in java.time" class="external-link">Instant</a>&nbsp;instant,
  boolean&nbsp;millis,
@@ -113,13 +115,11 @@
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Create <code>EpochTime</code> object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static long</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reverseBits(long,int)" class="member-name-link">reverseBits</a><wbr>(long&nbsp;bits,
- int&nbsp;fieldWidth)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static byte[]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unsignedLongToByteArray(long)" class="member-name-link">unsignedLongToByteArray</a><wbr>(long&nbsp;value)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static byte[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unsignedLongToByteArray(long)" class="member-name-link">unsignedLongToByteArray</a><wbr>(long&nbsp;value)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Convert <code>long</code> to <code>byte[]</code>.</div>
+</div>
 </div>
 </div>
 </div>
@@ -145,42 +145,43 @@
  boolean&nbsp;utc)</span></div>
 <div class="block">Create <code>DateTime</code> object.
  
-<div style='margin-top:0.5em'>
-This method creates a date/time string in the ISO format described in section 5.6&nbsp;of 
-[<a href='https://www.rfc-editor.org/rfc/rfc3339.html#section-5.6' class='webpkilink'>RFC3339</a>].
-The string is subsequently wrapped in a <a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a> object.</div>
-<div style='margin-top:0.5em'>
-If the <code>instant</code> object is not within
-the range <code style='white-space:nowrap'>"0000-01-01T00:00:00Z"</code> to
-<code style='white-space:nowrap'>"9999-12-31T23:59:59Z"</code>,
-a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown .</div>
-<div style='margin-top:0.5em'>
-If <code>millis</code> is <code>true</code> the date/time string will feature
-milliseconds (<code>.nnn</code>) as well.</div>
-<div style='margin-top:0.5em'>Sample code:</div>
-<div style='margin:0.3em 0 0 1.2em'><code>CBORString iso = CBORUtil.createDateTime(Instant.now(), true, false);<br>
-System.out.println(iso.toString());<br>
-<span style='color:#007fdd'>"2025-12-05T13:55:42.418+01:00"</span></code></div></div>
+ <div style='margin-top:0.5em'>
+ This method creates a date/time string in the ISO format described in section 5.6&nbsp;of 
+ [<a href='https://www.rfc-editor.org/rfc/rfc3339.html#section-5.6' class='webpkilink'>RFC3339</a>].
+ The string is subsequently wrapped in a <a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a> object.</div>
+ <div style='margin-top:0.5em'>
+ If the <code>instant</code> object is not within
+ the range <code style='white-space:nowrap'>"0000-01-01T00:00:00Z"</code> to
+ <code style='white-space:nowrap'>"9999-12-31T23:59:59Z"</code>,
+ a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown .</div>
+ <div style='margin-top:0.5em'>
+ If <code>millis</code> is <code>true</code> the date/time string will feature
+ milliseconds (<code>.nnn</code>) as well.</div>
+ <div style='margin-top:0.5em'>Sample code:</div>
+ <div style='margin:0.3em 0 0 1.2em'>
+ <code>CBORString iso = CBORUtil.createDateTime(Instant.now(), true, false);<br>
+ System.out.println(iso.toString());<br>
+ <span style='color:#007fdd'>"2025-12-05T13:55:42.418+01:00"</span></code></div></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>instant</code> - Time source object.</dd>
 <dd><code>millis</code> - <div style='margin-left:2em'>
-If <code>millis</code> is <code>true</code>,
-the milliseconds of the <code>instant</code> object will be
-featured in the created time object.  Note: if the millisecond
-part of the <code>instant</code> object is zero,
-<code>millis</code> is considered to be <code>false</code>.
-<div style='margin-top:0.5em'>If <code>millis</code> is
-<code>false</code>, the millisecond part of the <code>instant</code>
-object will not be used, but may after <i>rounding</i>,
-add a second to the created time object.
-Rounding is performed for milliseconds <code>&ge;500</code>,
-and always in the <i>positive</i> direction.</div><div></dd>
+ If <code>millis</code> is <code>true</code>,
+ the milliseconds of the <code>instant</code> object will be
+ featured in the created time object.  Note: if the millisecond
+ part of the <code>instant</code> object is zero,
+ <code>millis</code> is considered to be <code>false</code>.
+ <div style='margin-top:0.5em'>If <code>millis</code> is
+ <code>false</code>, the millisecond part of the <code>instant</code>
+ object will not be used, but may after <i>rounding</i>,
+ add a second to the created time object.
+ Rounding is performed for milliseconds <code>&ge;500</code>,
+ and always in the <i>positive</i> direction.</div></div></dd>
 <dd><code>utc</code> - <div style='margin-left:2em'>
-If <code>utc</i></code> is <code>true</code>,
-the <code>UTC</code> time zone (denoted by a terminating <code>Z</code>) will be used,
-else the local time followed by the <code>UTC</code> offset
-(<code>&plusmn;hh:mm</code>) will be used.</div></dd>
+ If <code>utc</code> is <code>true</code>,
+ the <code>UTC</code> time zone (denoted by a terminating <code>Z</code>) will be used,
+ else the local time followed by the <code>UTC</code> offset
+ (<code>&plusmn;hh:mm</code>) will be used.</div></dd>
 <dt>Returns:</dt>
 <dd><a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a></dd>
 <dt>Throws:</dt>
@@ -201,37 +202,39 @@ else the local time followed by the <code>UTC</code> offset
  boolean&nbsp;millis)</span></div>
 <div class="block">Create <code>EpochTime</code> object.
  
-<div style='margin-top:0.5em'>
-This method creates an Epoch
-[<a href='https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap04.html#tag_04_19' class='webpkilink'>TIME</a>] time stamp.</div>
-<div style='margin-top:0.5em'>
-If the <code>instant</code> object is not within
-the range <span style='white-space:nowrap'><code>0</code> (<code>"1970-01-01T00:00:00Z"</code>)</span> to
-<span style='white-space:nowrap'><code>253402300799</code> (<code>"9999-12-31T23:59:59Z"</code>)</span>,
-a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.</div>
-<div style='margin-top:0.5em'>
-If <code>millis</code> is <code>true</code> a <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a>
-object holding seconds with a milliseconds fraction will be created,
-else a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object holding seconds will be created.</div>
-<div style='margin-top:0.5em'>Sample code:</div>
-<div style='margin:0.3em 0 0 1.2em'><code>CBORObject epoch = CBORUtil.createEpochTime(Instant.now(), false);<br>
-System.out.println(epoch.toString());<br>
-<span style='color:#007fdd'>1764939916</span></code></div></div>
+ <div style='margin-top:0.5em'>
+ This method creates an Epoch
+ [<a href='https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap04.html#tag_04_19' class='webpkilink'>TIME</a>] time stamp.</div>
+ <div style='margin-top:0.5em'>
+ If the <code>instant</code> object is not within
+ the range <span style='white-space:nowrap'><code>0</code>
+ (<code>"1970-01-01T00:00:00Z"</code>)</span> to
+ <span style='white-space:nowrap'><code>253402300799</code> 
+ (<code>"9999-12-31T23:59:59Z"</code>)</span>,
+ a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.</div>
+ <div style='margin-top:0.5em'>
+ If <code>millis</code> is <code>true</code> a <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a>
+ object holding seconds with a milliseconds fraction will be created,
+ else a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object holding seconds will be created.</div>
+ <div style='margin-top:0.5em'>Sample code:</div>
+ <div style='margin:0.3em 0 0 1.2em'>
+ <code>CBORObject epoch = CBORUtil.createEpochTime(Instant.now(), false);<br>
+ System.out.println(epoch.toString());<br>
+ <span style='color:#007fdd'>1764939916</span></code></div></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>instant</code> - Time source object.</dd>
 <dd><code>millis</code> - <div style='margin-left:2em'>
-If <code>millis</code> is <code>true</code>,
-the milliseconds of the <code>instant</code> object will be
-featured in the created time object.  Note: if the millisecond
-part of the <code>instant</code> object is zero,
-<code>millis</code> is considered to be <code>false</code>.
-<div style='margin-top:0.5em'>If <code>millis</code> is
-<code>false</code>, the millisecond part of the <code>instant</code>
-object will not be used, but may after <i>rounding</i>,
-add a second to the created time object.
-Rounding is performed for milliseconds <code>&ge;500</code>,
-and always in the <i>positive</i> direction.</div><div></dd>
+ If <code>millis</code> is <code>true</code>,
+ the milliseconds of the <code>instant</code> object will be
+ featured in the created time object.  Note: if the millisecond
+ part of the <code>instant</code> object is zero,
+ <code>millis</code> is considered to be <code>false</code>.
+ <div style='margin-top:0.5em'>If <code>millis</code> is
+ <code>false</code>, the millisecond part of the <code>instant</code>
+ object will not be used, but may after <i>rounding</i>,
+ add a second to the created time object.
+ Rounding is performed for milliseconds <code>&ge;500</code>.</div></div></dd>
 <dt>Returns:</dt>
 <dd><a href="CBORObject.html" title="class in org.webpki.cbor"><code>CBORObject</code></a></dd>
 <dt>Throws:</dt>
@@ -249,19 +252,26 @@ and always in the <i>positive</i> direction.</div><div></dd>
 <section class="detail" id="concatByteArrays(byte[]...)">
 <h3>concatByteArrays</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">concatByteArrays</span><wbr><span class="parameters">(byte[]...&nbsp;listOfArrays)</span></div>
+<div class="block">Concatenate a set of byte-arrays.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>listOfArrays</code> - Sort of self-explanatory.</dd>
+<dt>Returns:</dt>
+<dd><code>byte[]</code></dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="unsignedLongToByteArray(long)">
 <h3>unsignedLongToByteArray</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">unsignedLongToByteArray</span><wbr><span class="parameters">(long&nbsp;value)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="reverseBits(long,int)">
-<h3>reverseBits</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">reverseBits</span><wbr><span class="parameters">(long&nbsp;bits,
- int&nbsp;fieldWidth)</span></div>
+<div class="block">Convert <code>long</code> to <code>byte[]</code>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - Value to be converted.</dd>
+<dt>Returns:</dt>
+<dd><code>byte[]</code></dd>
+</dl>
 </section>
 </li>
 </ul>
