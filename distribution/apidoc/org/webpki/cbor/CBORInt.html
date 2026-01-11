@@ -43,7 +43,7 @@
 <ul>
 <li>Field</li>
 <li><a href="#constructor-detail">Constr</a></li>
-<li>Method</li>
+<li><a href="#method-detail">Method</a></li>
 </ul>
 </li>
 </ul>
@@ -61,7 +61,7 @@
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method-detail">Method</a></li>
 </ul>
 </div>
 </div>
@@ -88,15 +88,23 @@
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CBORInt</span>
 <span class="extends-implements">extends <a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span></div>
-<div class="block">Class for holding CBOR <code>int</code> objects.
- 
- <div id='negative-integers' class='webpkicomment' style='margin-top:1em'>
- Note that <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> does not support negative integers (CBOR major type 1)
- beyond the normal range for 64-bit signed integers 
- (<span style='white-space:nowrap'><code>-2<sup>63</sup></code></span>&#x2009;).
- In the unlikely case there is a need to explicitly deal with such integers,
- using <a href="CBORBigInt.html" title="class in org.webpki.cbor"><code>CBORBigInt</code></a> is the supported workaround.
- </div></div>
+<div class="block">Class for holding CBOR integer objects.
+ <p>
+ For fine-grained control of programmatically created integers,
+ the following methods are provided as an <i>alternative</i> to the constructor:
+ <a href="#createInt8(int)"><code>createInt8(int)</code></a>,
+ <a href="#createUint8(int)"><code>createUint8(int)</code></a>,
+ <a href="#createInt16(int)"><code>createInt16(int)</code></a>,
+ <a href="#createUint16(int)"><code>createUint16(int)</code></a>,
+ <a href="#createInt32(long)"><code>createInt32(long)</code></a>,
+ <a href="#createUint32(long)"><code>createUint32(long)</code></a>,
+ <a href="#createInt53(long)"><code>createInt53(long)</code></a>,
+ <a href="#createInt128(java.math.BigInteger)"><code>createInt128(BigInteger)</code></a>, and
+ <a href="#createUint128(java.math.BigInteger)"><code>createUint128(BigInteger)</code></a>.
+ Note that these methods <i>do not change data</i>; they
+ only verify that data is within expected limits, and if that is the case,
+ finish the operation using the standard constructor.
+ </p></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -115,7 +123,11 @@
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(long,boolean)" class="member-name-link">CBORInt</a><wbr>(long&nbsp;value,
  boolean&nbsp;unsigned)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Creates a CBOR unsigned or negative <code>int</code> object.</div>
+<div class="block">Creates a CBOR <code>int</code> object.</div>
+</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.math.BigInteger)" class="member-name-link">CBORInt</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link">BigInteger</a>&nbsp;value)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Creates a CBOR <code>integer</code> object.</div>
 </div>
 </div>
 </section>
@@ -124,9 +136,64 @@
 <li>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
+<div id="method-summary-table">
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div id="method-summary-table.tabpanel" role="tabpanel">
+<div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createInt128(java.math.BigInteger)" class="member-name-link">createInt128</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link">BigInteger</a>&nbsp;value)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a CBOR <code>int128</code> object.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createInt16(int)" class="member-name-link">createInt16</a><wbr>(int&nbsp;value)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a CBOR <code>int16</code> object.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createInt32(long)" class="member-name-link">createInt32</a><wbr>(long&nbsp;value)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a CBOR <code>int32</code> object.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createInt53(long)" class="member-name-link">createInt53</a><wbr>(long&nbsp;value)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a CBOR <code>int53</code> object.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createInt8(int)" class="member-name-link">createInt8</a><wbr>(int&nbsp;value)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a CBOR <code>int8</code> object.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createUint128(java.math.BigInteger)" class="member-name-link">createUint128</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link">BigInteger</a>&nbsp;value)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a CBOR <code>uint128</code> object.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createUint16(int)" class="member-name-link">createUint16</a><wbr>(int&nbsp;value)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a CBOR <code>uint16</code> object.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createUint32(long)" class="member-name-link">createUint32</a><wbr>(long&nbsp;value)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a CBOR <code>uint32</code> object.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createUint8(int)" class="member-name-link">createUint8</a><wbr>(int&nbsp;value)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a CBOR <code>uint8</code> object.</div>
+</div>
+</div>
+</div>
+</div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-org.webpki.cbor.CBORObject">Methods inherited from class&nbsp;org.webpki.cbor.<a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></h3>
-<code><a href="CBORObject.html#checkForUnread()">checkForUnread</a>, <a href="CBORObject.html#clone()">clone</a>, <a href="CBORObject.html#compareTo(org.webpki.cbor.CBORObject)">compareTo</a>, <a href="CBORObject.html#encode()">encode</a>, <a href="CBORObject.html#equals(java.lang.Object)">equals</a>, <a href="CBORObject.html#getArray()">getArray</a>, <a href="CBORObject.html#getBigInteger()">getBigInteger</a>, <a href="CBORObject.html#getBoolean()">getBoolean</a>, <a href="CBORObject.html#getBytes()">getBytes</a>, <a href="CBORObject.html#getDateTime()">getDateTime</a>, <a href="CBORObject.html#getEpochTime()">getEpochTime</a>, <a href="CBORObject.html#getExtendedFloat64()">getExtendedFloat64</a>, <a href="CBORObject.html#getFloat16()">getFloat16</a>, <a href="CBORObject.html#getFloat32()">getFloat32</a>, <a href="CBORObject.html#getFloat64()">getFloat64</a>, <a href="CBORObject.html#getInt16()">getInt16</a>, <a href="CBORObject.html#getInt32()">getInt32</a>, <a href="CBORObject.html#getInt53()">getInt53</a>, <a href="CBORObject.html#getInt64()">getInt64</a>, <a href="CBORObject.html#getInt8()">getInt8</a>, <a href="CBORObject.html#getMap()">getMap</a>, <a href="CBORObject.html#getSimple()">getSimple</a>, <a href="CBORObject.html#getString()">getString</a>, <a href="CBORObject.html#getTag()">getTag</a>, <a href="CBORObject.html#getUint16()">getUint16</a>, <a href="CBORObject.html#getUint32()">getUint32</a>, <a href="CBORObject.html#getUint64()">getUint64</a>, <a href="CBORObject.html#getUint8()">getUint8</a>, <a href="CBORObject.html#hashCode()">hashCode</a>, <a href="CBORObject.html#isNull()">isNull</a>, <a href="CBORObject.html#scan()">scan</a>, <a href="CBORObject.html#toDiagnostic(boolean)">toDiagnostic</a>, <a href="CBORObject.html#toString()">toString</a></code></div>
+<code><a href="CBORObject.html#checkForUnread()">checkForUnread</a>, <a href="CBORObject.html#clone()">clone</a>, <a href="CBORObject.html#compareTo(org.webpki.cbor.CBORObject)">compareTo</a>, <a href="CBORObject.html#encode()">encode</a>, <a href="CBORObject.html#equals(java.lang.Object)">equals</a>, <a href="CBORObject.html#getArray()">getArray</a>, <a href="CBORObject.html#getBigInteger()">getBigInteger</a>, <a href="CBORObject.html#getBoolean()">getBoolean</a>, <a href="CBORObject.html#getBytes()">getBytes</a>, <a href="CBORObject.html#getDateTime()">getDateTime</a>, <a href="CBORObject.html#getEpochTime()">getEpochTime</a>, <a href="CBORObject.html#getExtendedFloat64()">getExtendedFloat64</a>, <a href="CBORObject.html#getFloat16()">getFloat16</a>, <a href="CBORObject.html#getFloat32()">getFloat32</a>, <a href="CBORObject.html#getFloat64()">getFloat64</a>, <a href="CBORObject.html#getInt128()">getInt128</a>, <a href="CBORObject.html#getInt16()">getInt16</a>, <a href="CBORObject.html#getInt32()">getInt32</a>, <a href="CBORObject.html#getInt53()">getInt53</a>, <a href="CBORObject.html#getInt64()">getInt64</a>, <a href="CBORObject.html#getInt8()">getInt8</a>, <a href="CBORObject.html#getMap()">getMap</a>, <a href="CBORObject.html#getSimple()">getSimple</a>, <a href="CBORObject.html#getString()">getString</a>, <a href="CBORObject.html#getTag()">getTag</a>, <a href="CBORObject.html#getUint128()">getUint128</a>, <a href="CBORObject.html#getUint16()">getUint16</a>, <a href="CBORObject.html#getUint32()">getUint32</a>, <a href="CBORObject.html#getUint64()">getUint64</a>, <a href="CBORObject.html#getUint8()">getUint8</a>, <a href="CBORObject.html#hashCode()">hashCode</a>, <a href="CBORObject.html#isNull()">isNull</a>, <a href="CBORObject.html#scan()">scan</a>, <a href="CBORObject.html#toDiagnostic(boolean)">toDiagnostic</a>, <a href="CBORObject.html#toString()">toString</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -142,27 +209,49 @@
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="&lt;init&gt;(java.math.BigInteger)">
+<h3>CBORInt</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORInt</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link">BigInteger</a>&nbsp;value)</span></div>
+<div class="block">Creates a CBOR <code>integer</code> object.
+ <p>
+ Constructor supporting integers of any size.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - Big integer value</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getBigInteger()"><code>CBORObject.getBigInteger()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="&lt;init&gt;(long,boolean)">
 <h3>CBORInt</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CBORInt</span><wbr><span class="parameters">(long&nbsp;value,
  boolean&nbsp;unsigned)</span></div>
-<div class="block">Creates a CBOR unsigned or negative <code>int</code> object.
+<div class="block">Creates a CBOR <code>int</code> object.
  <p>
- Unsigned integers range from <code>0</code> to 
- <span style='white-space:nowrap'><code>2<sup>64</sup>-1</code></span>,
- while valid negative integers range from <code>-1</code> to
- <span style='white-space:nowrap'><code>-2<sup>63</sup></code></span>.
+ If the <code>unsigned</code> flag is <code>true</code>, <code>value</code> is treated
+ as an <i>unsigned</i> long with range <code>0</code> to <code>0xffffffffffffffff</code>.
  </p>
  <p>
- See also <a href="CBORBigInt.html#%3Cinit%3E(java.math.BigInteger)"><code>CBORBigInt(BigInteger)</code></a> and
- <a href="CBORObject.html#getBigInteger()"><code>CBORObject.getBigInteger()</code></a>.
+ If the <code>unsigned</code> flag is <code>false</code>, <code>value</code> is treated
+ as a standard java (<i>signed</i>) long with range <code>-0x8000000000000000</code> to <code>0x7fffffffffffffff</code>.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>value</code> - long value</dd>
-<dd><code>unsigned</code> - <code>true</code> if value should be considered as unsigned</dd>
-<dt>Throws:</dt>
-<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dd><code>unsigned</code> - <code>true</code> =&gt; unsigned</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="#%3Cinit%3E(java.math.BigInteger)"><code>CBORInt(BigInteger)</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -173,11 +262,266 @@
 <div class="block">Creates a CBOR signed <code>int</code> object.
  <p>
  This constructor is equivalent to 
- <a href="#%3Cinit%3E(long,boolean)"><code><code>CBORInt(value, value &gt;= 0)</code></code></a>.
+ <a href="#%3Cinit%3E(long,boolean)"><code><code>CBORInt(value, false)</code></code></a>.
  </p></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>value</code> - Java (signed) long type</dd>
+<dd><code>value</code> - Java (<i>signed</i>) long</dd>
+</dl>
+</section>
+</li>
+</ul>
+</section>
+</li>
+<!-- ============ METHOD DETAIL ========== -->
+<li>
+<section class="method-details" id="method-detail">
+<h2>Method Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="createInt8(int)">
+<h3>createInt8</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></span>&nbsp;<span class="element-name">createInt8</span><wbr><span class="parameters">(int&nbsp;value)</span></div>
+<div class="block">Creates a CBOR <code>int8</code> object.
+ <p>
+ This method creates a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object,
+ where the value is verified to be within
+ <code>-0x80</code> to 
+ <code>0x7f</code>.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - Integer</dd>
+<dt>Returns:</dt>
+<dd><a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code> - If value is out of range</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getInt8()"><code>CBORObject.getInt8()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createUint8(int)">
+<h3>createUint8</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></span>&nbsp;<span class="element-name">createUint8</span><wbr><span class="parameters">(int&nbsp;value)</span></div>
+<div class="block">Creates a CBOR <code>uint8</code> object.
+ <p>
+ This method creates a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object,
+ where the value is verified to be within
+ <code>0</code> to 
+ <code>0xff</code>.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - Integer</dd>
+<dt>Returns:</dt>
+<dd><a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code> - If value is out of range</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getUint8()"><code>CBORObject.getUint8()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createInt16(int)">
+<h3>createInt16</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></span>&nbsp;<span class="element-name">createInt16</span><wbr><span class="parameters">(int&nbsp;value)</span></div>
+<div class="block">Creates a CBOR <code>int16</code> object.
+ <p>
+ This method creates a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object,
+ where the value is verified to be within
+ <code>-0x8000</code> to 
+ <code>0x7fff</code>.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - Integer</dd>
+<dt>Returns:</dt>
+<dd><a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code> - If value is out of range</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getInt16()"><code>CBORObject.getInt16()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createUint16(int)">
+<h3>createUint16</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></span>&nbsp;<span class="element-name">createUint16</span><wbr><span class="parameters">(int&nbsp;value)</span></div>
+<div class="block">Creates a CBOR <code>uint16</code> object.
+ <p>
+ This method creates a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object,
+ where the value is verified to be within
+ <code>0</code> to 
+ <code>0xffff</code>.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - Integer</dd>
+<dt>Returns:</dt>
+<dd><a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code> - If value is out of range</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getUint16()"><code>CBORObject.getUint16()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createInt32(long)">
+<h3>createInt32</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></span>&nbsp;<span class="element-name">createInt32</span><wbr><span class="parameters">(long&nbsp;value)</span></div>
+<div class="block">Creates a CBOR <code>int32</code> object.
+ <p>
+ This method creates a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object,
+ where the value is verified to be within
+ <code>-0x80000000</code> to 
+ <code>0x7fffffff</code>.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - Integer</dd>
+<dt>Returns:</dt>
+<dd><a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code> - If value is out of range</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getInt32()"><code>CBORObject.getInt32()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createUint32(long)">
+<h3>createUint32</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></span>&nbsp;<span class="element-name">createUint32</span><wbr><span class="parameters">(long&nbsp;value)</span></div>
+<div class="block">Creates a CBOR <code>uint32</code> object.
+ <p>
+ This method creates a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object,
+ where the value is verified to be within
+ <code>0</code> to 
+ <code>0xffffffff</code>.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - Integer</dd>
+<dt>Returns:</dt>
+<dd><a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code> - If value is out of range</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getUint32()"><code>CBORObject.getUint32()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createInt53(long)">
+<h3>createInt53</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></span>&nbsp;<span class="element-name">createInt53</span><wbr><span class="parameters">(long&nbsp;value)</span></div>
+<div class="block">Creates a CBOR <code>int53</code> object.
+ <p>
+ This method creates a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object,
+ where the value is verified to be within the JavaScript limits
+ <code>Number.MIN_SAFE_INTEGER</code> (<code>-9007199254740991</code>) to
+ <code>Number.MAX_SAFE_INTEGER</code> (<code>9007199254740991</code>).
+ </p>
+ <p>
+ Since 53-bit integers are specific to JavaScript, <code>int53</code> objects
+ should be used with caution in cross-platform scenarios.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - Integer</dd>
+<dt>Returns:</dt>
+<dd><a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code> - If value is out of range</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getInt53()"><code>CBORObject.getInt53()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createInt128(java.math.BigInteger)">
+<h3>createInt128</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></span>&nbsp;<span class="element-name">createInt128</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link">BigInteger</a>&nbsp;value)</span></div>
+<div class="block">Creates a CBOR <code>int128</code> object.
+ <p>
+ This method creates a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object,
+ where the value is verified to be within
+ <code>-0x80000000000000000000000000000000</code> to 
+ <code>0x7fffffffffffffffffffffffffffffff</code>.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - Integer</dd>
+<dt>Returns:</dt>
+<dd><a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code> - If value is out of range</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getInt128()"><code>CBORObject.getInt128()</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createUint128(java.math.BigInteger)">
+<h3>createUint128</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></span>&nbsp;<span class="element-name">createUint128</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link">BigInteger</a>&nbsp;value)</span></div>
+<div class="block">Creates a CBOR <code>uint128</code> object.
+ <p>
+ This method creates a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object,
+ where the value is verified to be within
+ <code>0</code> to 
+ <code>0xffffffffffffffffffffffffffffffff</code>.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - Integer</dd>
+<dt>Returns:</dt>
+<dd><a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> object</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code> - If value is out of range</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORObject.html#getUint128()"><code>CBORObject.getUint128()</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>

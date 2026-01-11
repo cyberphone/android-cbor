@@ -70,7 +70,7 @@ public class CBORFloat extends CBORObject {
         if ((bitFormat & FLOAT64_POS_INFINITY) == FLOAT64_POS_INFINITY) {
 
             // Non-finite numbers: Infinity, -Infinity, and NaN.
-            cborError(STDERR_NON_FINITE_NOT_PERMITTED);
+            cborError(STDERR_NAN_INFINITY_NOT_PERMITTED);
 
         }
 
@@ -176,18 +176,19 @@ public class CBORFloat extends CBORObject {
         return nf;
     }
 
-    static float overflowCheck(float value) {
-        if (!Float.isFinite(value)) {
-            cborError("Value out of range for this floating-point type");
+    static float reduce32(double value) {
+        if (!Double.isFinite(value)) {
+            cborError(STDERR_NAN_INFINITY_NOT_PERMITTED);
         }
-        return value;
+        return (float)value;
     }
 
-    static float reduce32Check(double value) {
-        if (!Double.isFinite(value)) {
-            cborError("Not permitted: 'NaN/Infinity'");
+    static CBORFloat returnConverted(float float32, double original, String type) {
+        if (Float.isFinite(float32)) {
+            return new CBORFloat(float32);
         }
-        return overflowCheck((float)value);
+        createExtendedFloat(original).outOfRangeError(type);
+        return null;       
     }
 
     /**
@@ -199,7 +200,7 @@ public class CBORFloat extends CBORObject {
      * <p>
      * If the value (after applying
      * <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> conversion rules),
-     * is out of range, a {@link CBORException} is thrown.
+     * is out of range, or is <i>non-finite</i>, a {@link CBORException} is thrown.
      * </p>
      * <p>
      * Note that this method returns a <code>float16</code> compatible object
@@ -212,7 +213,7 @@ public class CBORFloat extends CBORObject {
      * @see #getFloat32()
      */
     public static CBORFloat createFloat32(double value) {
-        return new CBORFloat(reduce32Check(value));
+        return returnConverted(reduce32(value), value, "Float32");
     }
 
     /**
@@ -224,7 +225,7 @@ public class CBORFloat extends CBORObject {
      * <p>
      * If the value (after applying
      * <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> conversion rules),
-     * is out of range, a {@link CBORException} is thrown.
+     * is out of range, or is <i>non-finite</i>, a {@link CBORException} is thrown.
      * </p>
      * @param value Floating-point value
      * @return {@link CBORFloat}
@@ -232,13 +233,8 @@ public class CBORFloat extends CBORObject {
      * @see #getFloat16()
      */
     public static CBORFloat createFloat16(double value) {
- if (android.os.Build.VERSION.SDK_INT >= 36) {
-        return new CBORFloat(
-            overflowCheck(Float.float16ToFloat(Float.floatToFloat16(reduce32Check(value)))));
-} else {
-        cborError("Version 36 needed!");
-        return null;
-}
+        return returnConverted(Float.float16ToFloat(Float.floatToFloat16(reduce32(value))),
+                               value, "Float16");
     }
 
     /**
@@ -260,14 +256,13 @@ public class CBORFloat extends CBORObject {
     
     @Override
     void internalToString(CborPrinter cborPrinter) {
-        cborPrinter.append((value == 0 || !Double.isFinite(value)) ?
-            String.valueOf(value) : Float64Stringifier.encode(value, false));
+        cborPrinter.append(Float64Stringifier.encode(value, false));
     }
-
-    static final String STDERR_NON_FINITE_NOT_PERMITTED = 
-            "Not permitted, see \"CBORNonFinite\" for details";
 
     static final String STDERR_NAN_WITH_PAYLOADS_NOT_PERMITTED = 
             "createExtendedFloat() does not support NaN with payloads";
+
+    static final String STDERR_NAN_INFINITY_NOT_PERMITTED = 
+            "Not permitted: 'NaN/Infinity'";
 
 }

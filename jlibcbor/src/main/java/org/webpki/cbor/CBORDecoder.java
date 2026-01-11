@@ -143,11 +143,11 @@ public class CBORDecoder {
     }
 
     private void unsupportedTag(int tag) {
-        cborError(String.format(STDERR_UNSUPPORTED_TAG + "%02x", tag));
+        cborError(STDERR_UNSUPPORTED_TAG, tag);
     }
     
     private void outOfLimitTest(int increment) {
-        if ((byteCount += increment) > maxInputLength || byteCount < 0) {
+        if ((byteCount += increment) > maxInputLength) {
             cborError(STDERR_READING_LIMIT);
         }
     }
@@ -191,14 +191,14 @@ public class CBORDecoder {
 
     private int checkLength(long n) {
         if (n < 0 || n > Integer.MAX_VALUE) {
-            cborError(STDERR_N_RANGE_ERROR + n);
+            cborError(STDERR_N_RANGE_ERROR, n);
         }
         return (int)n;
     }
 
     private void floatDeterminismError(int tag, long bitFormat) {
-        cborError(String.format(STDERR_NON_DETERMINISTIC_FLOAT + "%2x%0" +
-           (4 << (tag - MT_FLOAT16)) + "x", tag, bitFormat));
+        cborError(STDERR_NON_DETERMINISTIC_FLOAT + (4 << (tag - MT_FLOAT16)) + "x", 
+                  tag, bitFormat);
     }
 
     private CBORFloat returnFloat(int tag, long bitFormat, double value) {
@@ -226,17 +226,12 @@ public class CBORDecoder {
             case MT_BIG_NEGATIVE, MT_BIG_UNSIGNED -> {
                 byte[] byteArray = getObject().getBytes();
                 BigInteger bigInteger = new BigInteger(1, byteArray);
-                CBORBigInt cborBigInt = new CBORBigInt(tag == MT_BIG_UNSIGNED ? 
-                                                                   bigInteger : bigInteger.not());
-                if (strictNumbers) {
-                    if (byteArray.length <= 8 || byteArray[0] == 0) {
-                        cborError(STDERR_NON_DETERMINISTIC_BIGINT);
-                    } 
-                } else {
-                    // Normalization...
-                    yield cborBigInt.clone();
-                }
-                yield cborBigInt;
+                CBORInt cborInt = new CBORInt(tag == MT_BIG_UNSIGNED ? 
+                                                          bigInteger : bigInteger.not());
+                if (strictNumbers && (byteArray.length <= 8 || byteArray[0] == 0)) {
+                    cborError(STDERR_NON_DETERMINISTIC_BIGINT);
+                } 
+                yield cborInt;
             }
 
             case MT_FLOAT16 -> {
@@ -324,10 +319,12 @@ public class CBORDecoder {
 
                     case MT_UNSIGNED -> new CBORInt(n, true);
 
-                    // Only let two-complement integers use long.
-                    case MT_NEGATIVE -> n < 0 ?
-                        new CBORBigInt(MIN_INT_VALUE_MINUS_ONE.subtract(BigInteger.valueOf(n))) 
-                                              :
+                    case MT_NEGATIVE ->  n < 0 ?
+                        // Black magic?  Well, a Java "long" is used for the int64/uint64 range,
+                        // while numbers < Long.MIN_VALUE switch over to "BigInteger" using the
+                        // following not entirely obvious transformation:  
+                        new CBORInt(MIN_INT_VALUE_MINUS_ONE.subtract(BigInteger.valueOf(n))) 
+                                               :
                         new CBORInt(~n, false);
                     
                     case MT_BYTES -> new CBORBytes(readBytes(checkLength(n)));
@@ -414,16 +411,16 @@ public class CBORDecoder {
     }
     
     static final String STDERR_UNSUPPORTED_TAG =
-            "Unsupported tag: ";
+            "Unsupported tag: %02x";
 
     static final String STDERR_N_RANGE_ERROR =
-            "N out of range: ";
+            "N out of range: %d";
 
     static final String STDERR_NON_DETERMINISTIC_BIGINT =
             "Non-deterministic encoding of bigint";
 
     static final String STDERR_NON_DETERMINISTIC_FLOAT =
-            "Non-deterministic encoding of float value: ";
+            "Non-deterministic encoding of float value: %2x%0";
 
     static final String STDERR_NON_DETERMINISTIC_N =
             "Non-deterministic encoding of N";

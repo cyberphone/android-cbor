@@ -38,6 +38,10 @@ import static org.webpki.cbor.CBORInternal.*;
  */
 public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
 
+    static final BigInteger MIN_INT_128  = new BigInteger("-80000000000000000000000000000000", 16);
+    static final BigInteger MAX_INT_128  = new BigInteger("7fffffffffffffffffffffffffffffff", 16);
+    static final BigInteger MAX_UINT_128 = new BigInteger("ffffffffffffffffffffffffffffffff", 16);
+
     // Package level constructor
     CBORObject() {}
     
@@ -53,7 +57,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     /**
      * Encode (aka "serialize") CBOR object.
      * <p>
-     * Note: this method always return CBOR data using 
+     * Note: this method always returns CBOR data using 
      * <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a>.
      * </p>
      *
@@ -77,8 +81,8 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
         return object;
     }
 
-    static void outOfRangeError(String type) {
-        cborError(STDERR_OUT_OF_RANGE + type + "\"");
+    void outOfRangeError(String type) {
+        cborError(STDERR_OUT_OF_RANGE, type, this.toString());
     }
 
     byte[] encodeTagAndValue(int tag, int length, long value) {
@@ -121,77 +125,119 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
 
     /**
-     * Get CBOR <code>bigint</code> value.
+     * Get CBOR <code>integer</code> object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORBigInt} or {@link CBORInt},
-     * otherwise a {@link CBORException} is thrown.
+     * Get CBOR integers of any size.
+     * </p>
+     * <p>
+     * If current object is not a {@link CBORInt}, a {@link CBORException} is thrown.
      * </p>
      * 
+     * @see CBORInt#CBORInt(BigInteger)
      * @return <code>BigInteger</code>
      * @throws CBORException
      */
     public BigInteger getBigInteger() {
-        if (this instanceof CBORInt) {
-            return getCBORInt().toBigInteger();
+        return getCBORInt().toBigInteger();
+    }
+
+    BigInteger checkInt128(BigInteger value, BigInteger min, BigInteger max, String type) {
+        if (value.compareTo(min) < 0 || value.compareTo(max) > 0) {
+            outOfRangeError(type);
         }
-        return ((CBORBigInt) getTypeAndMarkAsRead(CBORBigInt.class)).value;
+        return value;
     }
 
     /**
-     * Get CBOR <code>int</code> value.
+     * Get CBOR <code>int128</code> object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORInt} and has a value ranging from
+     * If current object is not a
+     * {@link CBORInt}, or holds a value outside the range
+     * <code>-0x80000000000000000000000000000000</code> to 
+     * <code>0x7fffffffffffffffffffffffffffffff</code>, a {@link CBORException} is thrown.
+     * </p>
+     * 
+     * @see CBORInt#createInt128(BigInteger)
+     * @return 128-bit signed integer.
+     * @throws CBORException
+     */
+    public BigInteger getInt128() {
+        return checkInt128(getBigInteger(), MIN_INT_128, MAX_INT_128, "Int128");
+    }
+
+    /**
+     * Get CBOR <code>uint128</code> object.
+     * <p>
+     * If current object is not a
+     * {@link CBORInt}, or holds a value outside the range
+     * <code>0</code> to 
+     * <code>0xffffffffffffffffffffffffffffffff</code>, a {@link CBORException} is thrown.
+     * </p>
+     * 
+     * @see CBORInt#createUint128(BigInteger)
+     * @return 128-bit unsigned integer.
+     * @throws CBORException
+     */
+    public BigInteger getUint128() {
+        return checkInt128(getBigInteger(), BigInteger.ZERO, MAX_UINT_128, "Uint128");
+    } 
+
+    /**
+     * Get CBOR <code>int64</code> object.
+     * <p>
+     * If current object is not a
+     * {@link CBORInt}, or holds a value outside the range
      * <code>-0x8000000000000000</code> to 
-     * <code>0x7fffffffffffffff</code>.
+     * <code>0x7fffffffffffffff</code>, a {@link CBORException} is thrown.
      * </p>
      * 
      * @return <code>long</code>
      * @throws CBORException
      */
     public long getInt64() {
-        CBORInt CBORInt = getCBORInt();
-        long value = CBORInt.value;
-        if (CBORInt.unsigned && (value < 0)) {
+        CBORInt cborInt = getCBORInt();
+        long value = cborInt.value;
+        if (cborInt.bigValue != null || (cborInt.unsigned && (value < 0))) {
             outOfRangeError("Int64");
         }
         return value;
     }
 
     /**
-     * Get CBOR <code>uint</code> value.
+     * Get CBOR <code>uint64</code> object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORInt} and has a value ranging from
+     * If current object is not a
+     * {@link CBORInt}, or holds a value outside the range
      * <code>0</code> to 
-     * <code>0xffffffffffffffff</code>.
+     * <code>0xffffffffffffffff</code>, a {@link CBORException} is thrown.
      * </p>
      * 
      * @return <code>long</code>
      * @throws CBORException
      */
     public long getUint64() {
-        CBORInt CBORInt = getCBORInt();
-        if (!CBORInt.unsigned) {
+        CBORInt cborInt = getCBORInt();
+        if (cborInt.bigValue != null || !cborInt.unsigned) {
             outOfRangeError("Uint64");
         }
-        return CBORInt.value;
+        return cborInt.value;
     }
 
     /**
-     * Get CBOR <code>int</code> value.
+     * Get CBOR <code>int53</code> object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORInt} and has a value ranging from JavaScript's 
+     * If current object is not a
+     * {@link CBORInt}, or holds a value outside the JavaScript limits
      * <code>Number.MIN_SAFE_INTEGER</code> (<code>-9007199254740991</code>) to
-     * <code>Number.MAX_SAFE_INTEGER</code> (<code>9007199254740991</code>).
+     * <code>Number.MAX_SAFE_INTEGER</code> (<code>9007199254740991</code>),
+     * a {@link CBORException} is thrown.
      * </p>
      * <p>
-     * Since 53-bit integers are specific to JavaScript, this method
+     * Since 53-bit integers are specific to JavaScript, <code>int53</code> objects
      * should be used with caution in cross-platform scenarios.
      * </p>
      * 
+     * @see CBORInt#createInt53(long)
      * @return <code>long</code>
      * @throws CBORException
      */
@@ -204,14 +250,15 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
 
     /**
-     * Get CBOR <code>int</code> value.
+     * Get CBOR <code>int32</code> object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORInt} and has a value ranging from
+     * If current object is not a
+     * {@link CBORInt}, or holds a value outside the range
      * <code>-0x80000000</code> to 
-     * <code>0x7fffffff</code>.
+     * <code>0x7fffffff</code>, a {@link CBORException} is thrown.
      * </p>
      * 
+     * @see CBORInt#createInt32(long)
      * @return <code>int</code>
      * @throws CBORException
      */
@@ -224,14 +271,15 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
 
     /**
-     * Get CBOR <code>uint</code> value.
+     * Get CBOR <code>uint32</code> object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORInt} and has a value ranging from
+     * If current object is not a
+     * {@link CBORInt}, or holds a value outside the range
      * <code>0</code> to 
-     * <code>0xffffffff</code>.
+     * <code>0xffffffff</code>, a {@link CBORException} is thrown.
      * </p>
      * 
+     * @see CBORInt#createUint32(long)
      * @return <code>long</code>
      * @throws CBORException
      */
@@ -244,14 +292,15 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }    
 
     /**
-     * Get CBOR <code>int</code> value.
+     * Get CBOR <code>int16</code> object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORInt} and has a value ranging from
+     * If current object is not a
+     * {@link CBORInt}, or holds a value outside the range
      * <code>-0x8000</code> to 
-     * <code>0x7fff</code>.
+     * <code>0x7fff</code>, a {@link CBORException} is thrown.
      * </p>
      * 
+     * @see CBORInt#createInt16(int)
      * @return <code>int</code>
      * @throws CBORException
      */
@@ -264,14 +313,15 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
 
     /**
-     * Get CBOR <code>uint</code> value.
+     * Get CBOR <code>uint16</code> object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORInt} and has a value ranging from
+     * If current object is not a
+     * {@link CBORInt}, or holds a value outside the range
      * <code>0</code> to 
-     * <code>0xffff</code>.
+     * <code>0xffff</code>, a {@link CBORException} is thrown.
      * </p>
      * 
+     * @see CBORInt#createUint16(int)
      * @return <code>int</code>
      * @throws CBORException
      */
@@ -284,14 +334,15 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }    
 
     /**
-     * Get CBOR <code>int</code> value.
+     * Get CBOR <code>int8</code> object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORInt} and has a value ranging from
+     * If current object is not a
+     * {@link CBORInt}, or holds a value outside the range
      * <code>-0x80</code> to 
-     * <code>0x7f</code>.
+     * <code>0x7f</code>, a {@link CBORException} is thrown.
      * </p>
      * 
+     * @see CBORInt#createInt8(int)
      * @return <code>int</code>
      * @throws CBORException
      */
@@ -304,14 +355,15 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
 
     /**
-     * Get CBOR <code>uint</code> value.
+     * Get CBOR <code>uint8</code> object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORInt} and has a value ranging from
+     * If current object is not a
+     * {@link CBORInt}, or holds a value outside the range
      * <code>0</code> to 
-     * <code>0xff</code>.
+     * <code>0xff</code>, a {@link CBORException} is thrown.
      * </p>
      * 
+     * @see CBORInt#createUint8(int)
      * @return <code>int</code>
      * @throws CBORException
      */
@@ -324,16 +376,18 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
 
     /**
-     * Get "extended" CBOR <code>float64</code> value.
+     * Get "extended" CBOR <code>float</code> object.
+     * <p>
+     * If current object is not a
+     * {@link CBORFloat} holding a 64, 32, or 16-bit
+     * <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> number, 
+     * a {@link CBORException} is thrown.
+     * </p>
      * <p>
      * Note that unlike {@link #getFloat64()}, this method also supports the
      * {@link Double#NaN},
      * {@link Double#POSITIVE_INFINITY}, and 
      * {@link Double#NEGATIVE_INFINITY} non-finite variants.
-     * </p>
-     * <p>
-     * This method requires that the object is a
-     * {@link CBORFloat} or a {@link CBORNonFinite}, otherwise a {@link CBORException} is thrown.
      * </p>
      * 
      * @return <code>double</code>
@@ -356,15 +410,17 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
 
     /**
-     * Get CBOR <code>float64</code> value.
+     * Get CBOR <code>float</code> object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORFloat}, otherwise a {@link CBORException} is thrown.
+     * If current object is not a
+     * {@link CBORFloat} holding a 64, 32, or 16-bit
+     * <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> number, 
+     * a {@link CBORException} is thrown.
      * </p>
      * <p>
      * Unlike {@link #getExtendedFloat64()}, this method only accepts "regular" floating-point
      * numbers.  This makes it adapted for CBOR protocols that do not consider <code>NaN</code>
-     * or <code>Infinity</code> valid items.  That is, the latter cause a {@link CBORException}
+     * or <code>Infinity</code> as valid items.  That is, the latter cause a {@link CBORException}
      * to be thrown.
      * </p>
      * 
@@ -376,11 +432,12 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
  
     /**
-     * Get CBOR <code>float32</code> value.
+     * Get CBOR <code>float32</code> object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORFloat} holding a 16 or 32-bit <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> value, 
-     * otherwise a {@link CBORException} is thrown.
+     * If current object is not a
+     * {@link CBORFloat} holding a 32-bit or 16-bit 
+     * <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> number, 
+     * a {@link CBORException} is thrown.
      * </p>
      * 
      * @see CBORFloat#createFloat32(double)
@@ -396,11 +453,12 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
 
     /**
-     * Get CBOR <code>float16</code> value.
+     * Get CBOR <code>float16</code> object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORFloat} holding a 16-bit <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> value, 
-     * otherwise a {@link CBORException} is thrown.
+     * If current object is not a
+     * {@link CBORFloat} holding a 16-bit
+     * <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> number, 
+     * a {@link CBORException} is thrown.
      * </p>
      * 
      * @see CBORFloat#createFloat16(double)
@@ -416,11 +474,10 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
 
     /**
-     * Get CBOR <code>#7.n</code> (simple) value.
+     * Get CBOR <code>#7.n</code> (simple) object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORSimple}, 
-     * otherwise a {@link CBORException} is thrown.
+     * If current object is not a
+     * {@link CBORSimple}, a {@link CBORException} is thrown.
      * </p>
      * 
      * @return <code>int</code>
@@ -431,10 +488,10 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
 
     /**
-     * Get CBOR <code>bool</code> value.
+     * Get CBOR <code>bool</code> object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORBoolean}, otherwise a {@link CBORException} is thrown.
+     * If current object is not a
+     * {@link CBORBoolean}, a {@link CBORException} is thrown.
      * </p>
      * 
      * @return <code>boolean</code>
@@ -447,7 +504,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     /**
      * Check for CBOR <code>null</code>.
      * <p>
-     * If the object is a {@link CBORNull} the call will return
+     * If current object is a {@link CBORNull} the call will return
      * <code>true</code>, else it will return <code>false</code>.
      * </p>
      * <p>
@@ -468,8 +525,8 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     /**
      * Get CBOR <code>tstr</code> object.
      * <p>
-     * This method requires that the object is a 
-     * {@link CBORString}, otherwise a {@link CBORException} is thrown.
+     * If current object is not a 
+     * {@link CBORString}, a {@link CBORException} is thrown.
      * </p>
       * 
      * @return <code>String</code>
@@ -557,8 +614,8 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     /**
      * Get CBOR <code>bstr</code> object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORBytes}, otherwise a {@link CBORException} is thrown.
+     * If current object is not a
+     * {@link CBORBytes}, a {@link CBORException} is thrown.
      * </p>
      * 
      * @return <code>byteArray</code>
@@ -569,13 +626,16 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
 
     /**
-     * Get CBOR <code>map</code> object.
+     * Get handle to CBOR <code>{}</code> (map) object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORMap}, otherwise a {@link CBORException} is thrown.
+     * If current object is not a
+     * {@link CBORMap}, a {@link CBORException} is thrown.
+     * </p>
+     * <p>
+     * Note: do not replace this method with a cast!
      * </p>
      * 
-     * @return CBOR <code>map</code> object
+     * @return CBOR <code>{}</code> (map) object
      * @throws CBORException
      */
     public CBORMap getMap() {
@@ -583,13 +643,16 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
 
     /**
-     * Get CBOR <code>array</code> object.
+     * Get handle to CBOR <code>[]</code> (array) object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORArray}, otherwise a {@link CBORException} is thrown.
+     * If current object is not a
+     * {@link CBORArray}, a {@link CBORException} is thrown.
+     * </p>
+     * <p>
+     * Note: do not replace this method with a cast!
      * </p>
      * 
-     * @return CBOR <code>array</code> object
+     * @return CBOR <code>[]</code> (array) object
      * @throws CBORException
      */
     public CBORArray getArray() {
@@ -597,13 +660,16 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
     
     /**
-     * Get CBOR <code>tag</code> object.
+     * Get handle to CBOR <code>#6.n</code> (tag) object.
      * <p>
-     * This method requires that the object is a
-     * {@link CBORTag}, otherwise a {@link CBORException} is thrown.
+     * If current object is not a
+     * {@link CBORTag}, a {@link CBORException} is thrown.
+     * </p>
+     * <p>
+     * Note: do not replace this method with a cast!
      * </p>
      * 
-     * @return CBOR <code>tag</code> object
+     * @return CBOR <code>#6.n</code> (tag) object
      * @throws CBORException
      */
     public CBORTag getTag() {
@@ -632,7 +698,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     /**
      * Scan CBOR object and mark it as read.
      * <p>
-     * This method sets the status of this object as well as to possible
+     * This method sets the status of the current object as well as to possible
      * child objects to &quot;read&quot;.
      * </p>
      * 
@@ -830,7 +896,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * Render CBOR object in
      * <a href='package-summary.html#diagnostic-notation' class='webpkilink'>Diagnostic Notation</a>.
      * <p>
-     * If the object (as well as possible
+     * If current object (as well as possible
      * child objects), conforms to the subset of data types supported by JSON,
      * this method can also be used to generate JSON data.
      * </p>
@@ -869,7 +935,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     }
 
     static final String STDERR_OUT_OF_RANGE =
-            "Value out of range for \"";
+            "Value out of range for \"%s\": %s";
     
     static final String STDERR_ARGUMENT_IS_NULL =
             "Argument \"null\" is not permitted";

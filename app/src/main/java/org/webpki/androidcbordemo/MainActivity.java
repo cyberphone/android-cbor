@@ -58,7 +58,6 @@ import org.webpki.cbor.CBORAsymKeyDecrypter;
 import org.webpki.cbor.CBORAsymKeyEncrypter;
 import org.webpki.cbor.CBORAsymKeySigner;
 import org.webpki.cbor.CBORAsymKeyValidator;
-import org.webpki.cbor.CBORBigInt;
 import org.webpki.cbor.CBORBoolean;
 import org.webpki.cbor.CBORBytes;
 import org.webpki.cbor.CBORCryptoConstants;
@@ -329,7 +328,7 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
                                    (byte)0x84, (byte)0x71, (byte)0xf8, (byte)0xc0, (byte)0x89,
                                    (byte)0x91, (byte)0x3b}))
                 .set(new CBORInt(++index),
-                     new CBORBigInt(new BigInteger("-653625362513652165356656")))
+                     new CBORInt(new BigInteger("-653625362513652165356656")))
                 .set(new CBORInt(++index), new CBORArray()
                         .add(new CBORNull())
                         .add(new CBORBoolean(true))

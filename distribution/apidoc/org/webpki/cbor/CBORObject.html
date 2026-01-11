@@ -85,7 +85,7 @@
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></code>, <code><a href="CBORBigInt.html" title="class in org.webpki.cbor">CBORBigInt</a></code>, <code><a href="CBORBoolean.html" title="class in org.webpki.cbor">CBORBoolean</a></code>, <code><a href="CBORBytes.html" title="class in org.webpki.cbor">CBORBytes</a></code>, <code><a href="CBORFloat.html" title="class in org.webpki.cbor">CBORFloat</a></code>, <code><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code>, <code><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></code>, <code><a href="CBORNonFinite.html" title="class in org.webpki.cbor">CBORNonFinite</a></code>, <code><a href="CBORNull.html" title="class in org.webpki.cbor">CBORNull</a></code>, <code><a href="CBORSimple.html" title="class in org.webpki.cbor">CBORSimple</a></code>, <code><a href="CBORString.html" title="class in org.webpki.cbor">CBORString</a></code>, <code><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></code></dd>
+<dd><code><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></code>, <code><a href="CBORBoolean.html" title="class in org.webpki.cbor">CBORBoolean</a></code>, <code><a href="CBORBytes.html" title="class in org.webpki.cbor">CBORBytes</a></code>, <code><a href="CBORFloat.html" title="class in org.webpki.cbor">CBORFloat</a></code>, <code><a href="CBORInt.html" title="class in org.webpki.cbor">CBORInt</a></code>, <code><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></code>, <code><a href="CBORNonFinite.html" title="class in org.webpki.cbor">CBORNonFinite</a></code>, <code><a href="CBORNull.html" title="class in org.webpki.cbor">CBORNull</a></code>, <code><a href="CBORSimple.html" title="class in org.webpki.cbor">CBORSimple</a></code>, <code><a href="CBORString.html" title="class in org.webpki.cbor">CBORString</a></code>, <code><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">CBORObject</span>
@@ -140,17 +140,17 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getArray()" class="member-name-link">getArray</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>array</code> object.</div>
+<div class="block">Get handle to CBOR <code>[]</code> (array) object.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link">BigInteger</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBigInteger()" class="member-name-link">getBigInteger</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>bigint</code> value.</div>
+<div class="block">Get CBOR <code>integer</code> object.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBoolean()" class="member-name-link">getBoolean</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>bool</code> value.</div>
+<div class="block">Get CBOR <code>bool</code> object.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>byte[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBytes()" class="member-name-link">getBytes</a>()</code></div>
@@ -170,87 +170,97 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getExtendedFloat64()" class="member-name-link">getExtendedFloat64</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get "extended" CBOR <code>float64</code> value.</div>
+<div class="block">Get "extended" CBOR <code>float</code> object.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFloat16()" class="member-name-link">getFloat16</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>float16</code> value.</div>
+<div class="block">Get CBOR <code>float16</code> object.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFloat32()" class="member-name-link">getFloat32</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>float32</code> value.</div>
+<div class="block">Get CBOR <code>float32</code> object.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFloat64()" class="member-name-link">getFloat64</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>float64</code> value.</div>
+<div class="block">Get CBOR <code>float</code> object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInt16()" class="member-name-link">getInt16</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link">BigInteger</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInt128()" class="member-name-link">getInt128</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>int</code> value.</div>
+<div class="block">Get CBOR <code>int128</code> object.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInt32()" class="member-name-link">getInt32</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInt16()" class="member-name-link">getInt16</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>int</code> value.</div>
+<div class="block">Get CBOR <code>int16</code> object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInt53()" class="member-name-link">getInt53</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInt32()" class="member-name-link">getInt32</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>int</code> value.</div>
+<div class="block">Get CBOR <code>int32</code> object.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInt64()" class="member-name-link">getInt64</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInt53()" class="member-name-link">getInt53</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>int</code> value.</div>
+<div class="block">Get CBOR <code>int53</code> object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInt8()" class="member-name-link">getInt8</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInt64()" class="member-name-link">getInt64</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>int</code> value.</div>
+<div class="block">Get CBOR <code>int64</code> object.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMap()" class="member-name-link">getMap</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInt8()" class="member-name-link">getInt8</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>map</code> object.</div>
+<div class="block">Get CBOR <code>int8</code> object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSimple()" class="member-name-link">getSimple</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMap()" class="member-name-link">getMap</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>#7.n</code> (simple) value.</div>
+<div class="block">Get handle to CBOR <code>{}</code> (map) object.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getString()" class="member-name-link">getString</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSimple()" class="member-name-link">getSimple</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get CBOR <code>#7.n</code> (simple) object.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getString()" class="member-name-link">getString</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get CBOR <code>tstr</code> object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTag()" class="member-name-link">getTag</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTag()" class="member-name-link">getTag</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get handle to CBOR <code>#6.n</code> (tag) object.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link">BigInteger</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUint128()" class="member-name-link">getUint128</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>tag</code> object.</div>
+<div class="block">Get CBOR <code>uint128</code> object.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUint16()" class="member-name-link">getUint16</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>uint</code> value.</div>
+<div class="block">Get CBOR <code>uint16</code> object.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUint32()" class="member-name-link">getUint32</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>uint</code> value.</div>
+<div class="block">Get CBOR <code>uint32</code> object.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUint64()" class="member-name-link">getUint64</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>uint</code> value.</div>
+<div class="block">Get CBOR <code>uint64</code> object.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUint8()" class="member-name-link">getUint8</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get CBOR <code>uint</code> value.</div>
+<div class="block">Get CBOR <code>uint8</code> object.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
@@ -301,7 +311,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">encode</span>()</div>
 <div class="block">Encode (aka "serialize") CBOR object.
  <p>
- Note: this method always return CBOR data using 
+ Note: this method always returns CBOR data using 
  <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a>.
  </p></div>
 <dl class="notes">
@@ -320,17 +330,74 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getBigInteger()">
 <h3>getBigInteger</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link">BigInteger</a></span>&nbsp;<span class="element-name">getBigInteger</span>()</div>
-<div class="block">Get CBOR <code>bigint</code> value.
+<div class="block">Get CBOR <code>integer</code> object.
  <p>
- This method requires that the object is a
- <a href="CBORBigInt.html" title="class in org.webpki.cbor"><code>CBORBigInt</code></a> or <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>,
- otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ Get CBOR integers of any size.
+ </p>
+ <p>
+ If current object is not a <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><code>BigInteger</code></dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORInt.html#%3Cinit%3E(java.math.BigInteger)"><code>CBORInt(BigInteger)</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getInt128()">
+<h3>getInt128</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link">BigInteger</a></span>&nbsp;<span class="element-name">getInt128</span>()</div>
+<div class="block">Get CBOR <code>int128</code> object.
+ <p>
+ If current object is not a
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>, or holds a value outside the range
+ <code>-0x80000000000000000000000000000000</code> to 
+ <code>0x7fffffffffffffffffffffffffffffff</code>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>128-bit signed integer.</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list-long">
+<li><a href="CBORInt.html#createInt128(java.math.BigInteger)"><code>CBORInt.createInt128(BigInteger)</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getUint128()">
+<h3>getUint128</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigInteger.html" title="class or interface in java.math" class="external-link">BigInteger</a></span>&nbsp;<span class="element-name">getUint128</span>()</div>
+<div class="block">Get CBOR <code>uint128</code> object.
+ <p>
+ If current object is not a
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>, or holds a value outside the range
+ <code>0</code> to 
+ <code>0xffffffffffffffffffffffffffffffff</code>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>128-bit unsigned integer.</dd>
+<dt>Throws:</dt>
+<dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list-long">
+<li><a href="CBORInt.html#createUint128(java.math.BigInteger)"><code>CBORInt.createUint128(BigInteger)</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -338,12 +405,12 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getInt64()">
 <h3>getInt64</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getInt64</span>()</div>
-<div class="block">Get CBOR <code>int</code> value.
+<div class="block">Get CBOR <code>int64</code> object.
  <p>
- This method requires that the object is a
- <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and has a value ranging from
+ If current object is not a
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>, or holds a value outside the range
  <code>-0x8000000000000000</code> to 
- <code>0x7fffffffffffffff</code>.
+ <code>0x7fffffffffffffff</code>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -357,12 +424,12 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getUint64()">
 <h3>getUint64</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getUint64</span>()</div>
-<div class="block">Get CBOR <code>uint</code> value.
+<div class="block">Get CBOR <code>uint64</code> object.
  <p>
- This method requires that the object is a
- <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and has a value ranging from
+ If current object is not a
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>, or holds a value outside the range
  <code>0</code> to 
- <code>0xffffffffffffffff</code>.
+ <code>0xffffffffffffffff</code>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -376,15 +443,16 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getInt53()">
 <h3>getInt53</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getInt53</span>()</div>
-<div class="block">Get CBOR <code>int</code> value.
+<div class="block">Get CBOR <code>int53</code> object.
  <p>
- This method requires that the object is a
- <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and has a value ranging from JavaScript's 
+ If current object is not a
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>, or holds a value outside the JavaScript limits
  <code>Number.MIN_SAFE_INTEGER</code> (<code>-9007199254740991</code>) to
- <code>Number.MAX_SAFE_INTEGER</code> (<code>9007199254740991</code>).
+ <code>Number.MAX_SAFE_INTEGER</code> (<code>9007199254740991</code>),
+ a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p>
  <p>
- Since 53-bit integers are specific to JavaScript, this method
+ Since 53-bit integers are specific to JavaScript, <code>int53</code> objects
  should be used with caution in cross-platform scenarios.
  </p></div>
 <dl class="notes">
@@ -392,6 +460,12 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <dd><code>long</code></dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORInt.html#createInt53(long)"><code>CBORInt.createInt53(long)</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -399,18 +473,24 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getInt32()">
 <h3>getInt32</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getInt32</span>()</div>
-<div class="block">Get CBOR <code>int</code> value.
+<div class="block">Get CBOR <code>int32</code> object.
  <p>
- This method requires that the object is a
- <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and has a value ranging from
+ If current object is not a
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>, or holds a value outside the range
  <code>-0x80000000</code> to 
- <code>0x7fffffff</code>.
+ <code>0x7fffffff</code>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><code>int</code></dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORInt.html#createInt32(long)"><code>CBORInt.createInt32(long)</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -418,18 +498,24 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getUint32()">
 <h3>getUint32</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getUint32</span>()</div>
-<div class="block">Get CBOR <code>uint</code> value.
+<div class="block">Get CBOR <code>uint32</code> object.
  <p>
- This method requires that the object is a
- <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and has a value ranging from
+ If current object is not a
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>, or holds a value outside the range
  <code>0</code> to 
- <code>0xffffffff</code>.
+ <code>0xffffffff</code>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><code>long</code></dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORInt.html#createUint32(long)"><code>CBORInt.createUint32(long)</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -437,18 +523,24 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getInt16()">
 <h3>getInt16</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getInt16</span>()</div>
-<div class="block">Get CBOR <code>int</code> value.
+<div class="block">Get CBOR <code>int16</code> object.
  <p>
- This method requires that the object is a
- <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and has a value ranging from
+ If current object is not a
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>, or holds a value outside the range
  <code>-0x8000</code> to 
- <code>0x7fff</code>.
+ <code>0x7fff</code>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><code>int</code></dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORInt.html#createInt16(int)"><code>CBORInt.createInt16(int)</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -456,18 +548,24 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getUint16()">
 <h3>getUint16</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getUint16</span>()</div>
-<div class="block">Get CBOR <code>uint</code> value.
+<div class="block">Get CBOR <code>uint16</code> object.
  <p>
- This method requires that the object is a
- <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and has a value ranging from
+ If current object is not a
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>, or holds a value outside the range
  <code>0</code> to 
- <code>0xffff</code>.
+ <code>0xffff</code>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><code>int</code></dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORInt.html#createUint16(int)"><code>CBORInt.createUint16(int)</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -475,18 +573,24 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getInt8()">
 <h3>getInt8</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getInt8</span>()</div>
-<div class="block">Get CBOR <code>int</code> value.
+<div class="block">Get CBOR <code>int8</code> object.
  <p>
- This method requires that the object is a
- <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and has a value ranging from
+ If current object is not a
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>, or holds a value outside the range
  <code>-0x80</code> to 
- <code>0x7f</code>.
+ <code>0x7f</code>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><code>int</code></dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORInt.html#createInt8(int)"><code>CBORInt.createInt8(int)</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -494,18 +598,24 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getUint8()">
 <h3>getUint8</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getUint8</span>()</div>
-<div class="block">Get CBOR <code>uint</code> value.
+<div class="block">Get CBOR <code>uint8</code> object.
  <p>
- This method requires that the object is a
- <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a> and has a value ranging from
+ If current object is not a
+ <a href="CBORInt.html" title="class in org.webpki.cbor"><code>CBORInt</code></a>, or holds a value outside the range
  <code>0</code> to 
- <code>0xff</code>.
+ <code>0xff</code>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd><code>int</code></dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="CBORInt.html#createUint8(int)"><code>CBORInt.createUint8(int)</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
@@ -513,16 +623,18 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getExtendedFloat64()">
 <h3>getExtendedFloat64</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getExtendedFloat64</span>()</div>
-<div class="block">Get "extended" CBOR <code>float64</code> value.
+<div class="block">Get "extended" CBOR <code>float</code> object.
+ <p>
+ If current object is not a
+ <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a> holding a 64, 32, or 16-bit
+ <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> number, 
+ a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p>
  <p>
  Note that unlike <a href="#getFloat64()"><code>getFloat64()</code></a>, this method also supports the
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Double.html#NaN" title="class or interface in java.lang" class="external-link"><code>Double.NaN</code></a>,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Double.html#POSITIVE_INFINITY" title="class or interface in java.lang" class="external-link"><code>Double.POSITIVE_INFINITY</code></a>, and 
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Double.html#NEGATIVE_INFINITY" title="class or interface in java.lang" class="external-link"><code>Double.NEGATIVE_INFINITY</code></a> non-finite variants.
- </p>
- <p>
- This method requires that the object is a
- <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a> or a <a href="CBORNonFinite.html" title="class in org.webpki.cbor"><code>CBORNonFinite</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -542,15 +654,17 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getFloat64()">
 <h3>getFloat64</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getFloat64</span>()</div>
-<div class="block">Get CBOR <code>float64</code> value.
+<div class="block">Get CBOR <code>float</code> object.
  <p>
- This method requires that the object is a
- <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ If current object is not a
+ <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a> holding a 64, 32, or 16-bit
+ <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> number, 
+ a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p>
  <p>
  Unlike <a href="#getExtendedFloat64()"><code>getExtendedFloat64()</code></a>, this method only accepts "regular" floating-point
  numbers.  This makes it adapted for CBOR protocols that do not consider <code>NaN</code>
- or <code>Infinity</code> valid items.  That is, the latter cause a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a>
+ or <code>Infinity</code> as valid items.  That is, the latter cause a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a>
  to be thrown.
  </p></div>
 <dl class="notes">
@@ -565,11 +679,12 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getFloat32()">
 <h3>getFloat32</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getFloat32</span>()</div>
-<div class="block">Get CBOR <code>float32</code> value.
+<div class="block">Get CBOR <code>float32</code> object.
  <p>
- This method requires that the object is a
- <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a> holding a 16 or 32-bit <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> value, 
- otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ If current object is not a
+ <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a> holding a 32-bit or 16-bit 
+ <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> number, 
+ a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -589,11 +704,12 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getFloat16()">
 <h3>getFloat16</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getFloat16</span>()</div>
-<div class="block">Get CBOR <code>float16</code> value.
+<div class="block">Get CBOR <code>float16</code> object.
  <p>
- This method requires that the object is a
- <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a> holding a 16-bit <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> value, 
- otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ If current object is not a
+ <a href="CBORFloat.html" title="class in org.webpki.cbor"><code>CBORFloat</code></a> holding a 16-bit
+ <span style='white-space:nowrap'><code>IEEE</code> <code>754</code></span> number, 
+ a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -613,11 +729,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getSimple()">
 <h3>getSimple</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getSimple</span>()</div>
-<div class="block">Get CBOR <code>#7.n</code> (simple) value.
+<div class="block">Get CBOR <code>#7.n</code> (simple) object.
  <p>
- This method requires that the object is a
- <a href="CBORSimple.html" title="class in org.webpki.cbor"><code>CBORSimple</code></a>, 
- otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ If current object is not a
+ <a href="CBORSimple.html" title="class in org.webpki.cbor"><code>CBORSimple</code></a>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -631,10 +746,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getBoolean()">
 <h3>getBoolean</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">getBoolean</span>()</div>
-<div class="block">Get CBOR <code>bool</code> value.
+<div class="block">Get CBOR <code>bool</code> object.
  <p>
- This method requires that the object is a
- <a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ If current object is not a
+ <a href="CBORBoolean.html" title="class in org.webpki.cbor"><code>CBORBoolean</code></a>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -650,7 +765,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isNull</span>()</div>
 <div class="block">Check for CBOR <code>null</code>.
  <p>
- If the object is a <a href="CBORNull.html" title="class in org.webpki.cbor"><code>CBORNull</code></a> the call will return
+ If current object is a <a href="CBORNull.html" title="class in org.webpki.cbor"><code>CBORNull</code></a> the call will return
  <code>true</code>, else it will return <code>false</code>.
  </p>
  <p>
@@ -669,8 +784,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getString</span>()</div>
 <div class="block">Get CBOR <code>tstr</code> object.
  <p>
- This method requires that the object is a 
- <a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ If current object is not a 
+ <a href="CBORString.html" title="class in org.webpki.cbor"><code>CBORString</code></a>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -764,8 +879,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">getBytes</span>()</div>
 <div class="block">Get CBOR <code>bstr</code> object.
  <p>
- This method requires that the object is a
- <a href="CBORBytes.html" title="class in org.webpki.cbor"><code>CBORBytes</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ If current object is not a
+ <a href="CBORBytes.html" title="class in org.webpki.cbor"><code>CBORBytes</code></a>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -779,14 +894,17 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getMap()">
 <h3>getMap</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORMap.html" title="class in org.webpki.cbor">CBORMap</a></span>&nbsp;<span class="element-name">getMap</span>()</div>
-<div class="block">Get CBOR <code>map</code> object.
+<div class="block">Get handle to CBOR <code>{}</code> (map) object.
  <p>
- This method requires that the object is a
- <a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ If current object is not a
+ <a href="CBORMap.html" title="class in org.webpki.cbor"><code>CBORMap</code></a>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p>
+ <p>
+ Note: do not replace this method with a cast!
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>CBOR <code>map</code> object</dd>
+<dd>CBOR <code>{}</code> (map) object</dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
 </dl>
@@ -796,14 +914,17 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getArray()">
 <h3>getArray</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORArray.html" title="class in org.webpki.cbor">CBORArray</a></span>&nbsp;<span class="element-name">getArray</span>()</div>
-<div class="block">Get CBOR <code>array</code> object.
+<div class="block">Get handle to CBOR <code>[]</code> (array) object.
  <p>
- This method requires that the object is a
- <a href="CBORArray.html" title="class in org.webpki.cbor"><code>CBORArray</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ If current object is not a
+ <a href="CBORArray.html" title="class in org.webpki.cbor"><code>CBORArray</code></a>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p>
+ <p>
+ Note: do not replace this method with a cast!
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>CBOR <code>array</code> object</dd>
+<dd>CBOR <code>[]</code> (array) object</dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
 </dl>
@@ -813,14 +934,17 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <section class="detail" id="getTag()">
 <h3>getTag</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORTag.html" title="class in org.webpki.cbor">CBORTag</a></span>&nbsp;<span class="element-name">getTag</span>()</div>
-<div class="block">Get CBOR <code>tag</code> object.
+<div class="block">Get handle to CBOR <code>#6.n</code> (tag) object.
  <p>
- This method requires that the object is a
- <a href="CBORTag.html" title="class in org.webpki.cbor"><code>CBORTag</code></a>, otherwise a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ If current object is not a
+ <a href="CBORTag.html" title="class in org.webpki.cbor"><code>CBORTag</code></a>, a <a href="CBORException.html" title="class in org.webpki.cbor"><code>CBORException</code></a> is thrown.
+ </p>
+ <p>
+ Note: do not replace this method with a cast!
  </p></div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>CBOR <code>tag</code> object</dd>
+<dd>CBOR <code>#6.n</code> (tag) object</dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
 </dl>
@@ -832,7 +956,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORObject.html" title="class in org.webpki.cbor">CBORObject</a></span>&nbsp;<span class="element-name">scan</span>()</div>
 <div class="block">Scan CBOR object and mark it as read.
  <p>
- This method sets the status of this object as well as to possible
+ This method sets the status of the current object as well as to possible
  child objects to &quot;read&quot;.
  </p></div>
 <dl class="notes">
@@ -926,7 +1050,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="block">Render CBOR object in
  <a href='package-summary.html#diagnostic-notation' class='webpkilink'>Diagnostic Notation</a>.
  <p>
- If the object (as well as possible
+ If current object (as well as possible
  child objects), conforms to the subset of data types supported by JSON,
  this method can also be used to generate JSON data.
  </p></div>
