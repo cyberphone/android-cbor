@@ -161,6 +161,11 @@
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get CBOR decoder byte count.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMaxNestingLevel(int)" class="member-name-link">setMaxNestingLevel</a><wbr>(int&nbsp;maxLevel)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set max structure nesting level.</div>
+</div>
 </div>
 </div>
 </div>
@@ -263,6 +268,7 @@
  (<i>empty</i> sequences are permitted).</li>
  </ul>
  Note that data that has not yet been decoded, is not verified for correctness.
+ The application note <a href='https://github.com/cyberphone/javaapi/tree/gh-pages/app-notes/large-payloads' class='webpkilink'>Large&nbsp;Payloads</a> shows how this can be utilized.
  <div style='margin-top:0.5em'>See also <a href="CBORArray.html#encodeAsSequence()"><code>CBORArray.encodeAsSequence()</code></a>.</div></div>
 
  <div id='Option-LENIENT_MAP_DECODING' style='margin-top:0.8em'><a href="#LENIENT_MAP_DECODING"><code>LENIENT_MAP_DECODING</code></a>:</div>
@@ -297,6 +303,7 @@
 <dt>See Also:</dt>
 <dd>
 <ul class="tag-list">
+<li><a href="#setMaxNestingLevel(int)"><code>setMaxNestingLevel(int)</code></a></li>
 <li><a href="#getByteCount()"><code>getByteCount()</code></a></li>
 </ul>
 </dd>
@@ -320,12 +327,6 @@
 <dd><code>options</code> - The decoder options.</dd>
 <dt>Throws:</dt>
 <dd><code><a href="CBORException.html" title="class in org.webpki.cbor">CBORException</a></code></dd>
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="#getByteCount()"><code>getByteCount()</code></a></li>
-</ul>
-</dd>
 </dl>
 </section>
 </li>
@@ -337,6 +338,22 @@
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="setMaxNestingLevel(int)">
+<h3>setMaxNestingLevel</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CBORDecoder.html" title="class in org.webpki.cbor">CBORDecoder</a></span>&nbsp;<span class="element-name">setMaxNestingLevel</span><wbr><span class="parameters">(int&nbsp;maxLevel)</span></div>
+<div class="block">Set max structure nesting level.
+ <p>
+ Structure refers to CBOR tags, arrays, and maps. Example: <code>[{}]</code> represents a nesting level of <code>2</code>.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>maxLevel</code> - Set new max level.  Default is <code>100</code>.</dd>
+<dt>Returns:</dt>
+<dd><code>this</code></dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="decodeWithOptions()">
 <h3>decodeWithOptions</h3>

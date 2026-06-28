@@ -38,16 +38,16 @@ import static org.webpki.cbor.CBORInternal.*;
  * {@link #createUint128(BigInteger)}.
  * Note that these methods <i>do not change data</i>; they
  * only verify that data is within expected limits, and if that is the case,
- * finish the operation using the standard constructor.
+ * finish the operation using one of the standard constructors.
  * </p>
  */
 public class CBORInt extends CBORObject {
 
     static final BigInteger MAX_INT_MAGNITUDE = new BigInteger("ffffffffffffffff", 16);
-    static final BigInteger MIN_NEGATIVE      = new BigInteger("-8000000000000000", 16);
+    static final BigInteger MIN_INT_NEGATIVE  = new BigInteger("-8000000000000000", 16);
 
-    static final byte[] UNSIGNED_BIGNUM_TAG = {(byte)MT_BIG_UNSIGNED};
-    static final byte[] NEGATIVE_BIGNUM_TAG = {(byte)MT_BIG_NEGATIVE};
+    static final byte[] UNSIGNED_BIGINT = {(byte)TAG_BIG_UNSIGNED};
+    static final byte[] NEGATIVE_BIGINT = {(byte)TAG_BIG_NEGATIVE};
 
     // "int"
     long value;
@@ -63,14 +63,19 @@ public class CBORInt extends CBORObject {
      * <p>
      * Constructor supporting integers of any size.
      * </p>
+     * <p>
+     * Note that using this constructor or one of the other constrctors
+     * do not affect CBOR encoding; it is only about accommodating integers
+     * of different size.
+     * </p>
      * 
      * @see CBORObject#getBigInteger()
      * @param value Big integer value
      */
     public CBORInt(BigInteger value) {
         // Maintain a Java-optimized solution using as little BigInteger as possible.
-        this.unsigned = value.compareTo(BigInteger.ZERO) >= 0;
-        if (value.compareTo(MIN_NEGATIVE) >= 0 && value.compareTo(MAX_INT_MAGNITUDE) <= 0) {
+        this.unsigned = value.signum() >= 0;
+        if (value.compareTo(MIN_INT_NEGATIVE) >= 0 && value.compareTo(MAX_INT_MAGNITUDE) <= 0) {
             this.value = value.longValue();
         } else {
             bigValue = value;
@@ -302,7 +307,8 @@ public class CBORInt extends CBORObject {
     @Override
     byte[] internalEncode() {
         if (bigValue == null) {
-            return encodeTagAndN(unsigned ? MT_UNSIGNED : MT_NEGATIVE, unsigned ? value : ~value);
+            return encodeTagAndN(unsigned ?  MT_UNSIGNED : MT_NEGATIVE, 
+                                 unsigned ? value : ~value);
         } else {
             BigInteger cborAdjusted = unsigned ? bigValue : bigValue.not();
             byte[] encoded = cborAdjusted.toByteArray();
@@ -316,8 +322,8 @@ public class CBORInt extends CBORObject {
                                      cborAdjusted.longValue());
             }
             // Needs "bigint" encoding.
-            return CBORUtil.concatByteArrays(unsigned ? UNSIGNED_BIGNUM_TAG : NEGATIVE_BIGNUM_TAG, 
-                                             new CBORBytes(encoded).encode());
+            return CBORUtil.concatByteArrays(unsigned ? UNSIGNED_BIGINT : NEGATIVE_BIGINT,
+                                             new CBORBytes(encoded).internalEncode());
         }
     }
 

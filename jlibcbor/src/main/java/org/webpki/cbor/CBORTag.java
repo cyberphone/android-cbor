@@ -20,6 +20,8 @@ import static org.webpki.cbor.CBORInternal.*;
 
 import java.time.Instant;
 
+import java.util.ArrayList;
+
 /**
  * Class for holding CBOR <code>#6.n</code> (tag) objects.
  * <p>
@@ -129,7 +131,7 @@ public class CBORTag extends CBORObject {
     }
 
     private void tagSyntaxError(String tagError) {
-        cborError(tagError + toDiagnostic(false));
+        cborError(tagError, toDiagnostic(false));
     }
 
     /**
@@ -161,10 +163,10 @@ public class CBORTag extends CBORObject {
                 break;
 
             case RESERVED_TAG_COTX:
-                if (object instanceof CBORArray) {
-                    CBORArray holder = object.getArray();
-                    if (holder.size() == 2 && holder.get(0) instanceof CBORString) {
-                        cotxObject = new COTXObject(holder.get(0).getString(), holder.get(1));
+                if (object instanceof CBORArray cborArray && cborArray.objects.size() == 2) {
+                    ArrayList<CBORObject> array = cborArray.objects;
+                    if (array.get(0) instanceof CBORString cotxId) {
+                        cotxObject = new COTXObject(cotxId.textString, array.get(1));
                         return;
                     }
                 }
@@ -235,6 +237,8 @@ public class CBORTag extends CBORObject {
         if (cotxObject == null) {
             tagSyntaxError(STDERR_INVALID_COTX_OBJECT);
         }
+        object.getArray().get(0).getString(); // Set the readFlag.
+        getTag(); // Set the readFlag;
         return cotxObject;
     }
 
@@ -250,7 +254,6 @@ public class CBORTag extends CBORObject {
     @Override
     byte[] internalEncode() {
         return CBORUtil.concatByteArrays(encodeTagAndN(MT_TAG, tagNumber), object.encode());
-
     }
     
     @Override
@@ -269,13 +272,13 @@ public class CBORTag extends CBORObject {
     }
 
     static final String STDERR_INVALID_COTX_OBJECT =
-            "Invalid COTX object: ";
+            "Invalid COTX object: %s";
 
     static final String STDERR_ISO_DATE_TIME =
-            "Invalid ISO date/time object: ";
+            "Invalid ISO date/time object: %s";
 
     static final String STDERR_EPOCH_TIME =
-            "Invalid Epoch time object: ";
+            "Invalid Epoch time object: %s";
 
     static final String STDERR_RESERVED_BIG_INT =
             "Reserved for 'bigint'";

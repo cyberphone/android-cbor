@@ -16,6 +16,10 @@
  */
 package org.webpki.cbor;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UncheckedIOException;
+
 import java.math.BigInteger;
 
 import java.time.Instant;
@@ -51,22 +55,46 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     // True if map key object
     private boolean immutableFlag;
 
-    // This solution is simply to get a JavaDoc that is more logical...
+    // Each wrapper return this.
     abstract byte[] internalEncode();
+
+    /**
+     * Encode (aka "serialize") CBOR object to a stream.
+     * <p>
+     * Note: this method always produce data using 
+     * <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a>.
+     * </p>
+     * <p>
+     * Note: <code>outputStream</code> is not closed after the encoding has been performed.
+     * </p>
+     *
+     * @param outputStream Where to write data
+     * @see CBORArray#encodeAsSequence()
+     * @return The original <code>outputStream</code>
+     */
+    public OutputStream encode(OutputStream outputStream) {
+        try {
+            outputStream.write(internalEncode());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return outputStream;
+    }
 
     /**
      * Encode (aka "serialize") CBOR object.
      * <p>
-     * Note: this method always returns CBOR data using 
+     * Note: this method always produce data using 
      * <a href='package-summary.html#deterministic-encoding' class='webpkilink'>Deterministic&nbsp;Encoding</a>.
      * </p>
      *
      * @see CBORArray#encodeAsSequence()
-     * @return CBOR encoded <code>byteArray</code>
+     * @return CBOR encoded <code>byte-array</code>
      */
     public byte[] encode() {
         return internalEncode();
     }
+
     
     abstract void internalToString(CborPrinter outputBuffer);
     
@@ -114,8 +142,8 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
         if (requestedCborType.isInstance(this)) {
             readFlag = true;
         } else {
-            cborError("Is type: " + this.getClass().getSimpleName() +
-                     ", requested: " + requestedCborType.getSimpleName());
+            cborError("Is type: %s, requested: %s",
+                this.getClass().getSimpleName(), requestedCborType.getSimpleName());
         }
         return this;
     }
@@ -197,7 +225,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
     public long getInt64() {
         CBORInt cborInt = getCBORInt();
         long value = cborInt.value;
-        if (cborInt.bigValue != null || (cborInt.unsigned && (value < 0))) {
+        if (cborInt.bigValue != null || (cborInt.unsigned && value < 0)) {
             outOfRangeError("Int64");
         }
         return value;
@@ -440,13 +468,13 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * a {@link CBORException} is thrown.
      * </p>
      * 
-     * @see CBORFloat#createFloat32(double)
+     * @see CBORFloat#createFloat32(double, boolean)
      * @return <code>float</code>
      * @throws CBORException
      */
     public float getFloat32() {
         CBORFloat floatingPoint = (CBORFloat) getTypeAndMarkAsRead(CBORFloat.class);
-        if (floatingPoint.tag == MT_FLOAT64) {
+        if (floatingPoint.tag == SIMPLE_FLOAT64) {
             outOfRangeError("Float32");
         }
         return (float)floatingPoint.value;
@@ -461,13 +489,13 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * a {@link CBORException} is thrown.
      * </p>
      * 
-     * @see CBORFloat#createFloat16(double)
+     * @see CBORFloat#createFloat16(double, boolean)
      * @return <code>float</code>
      * @throws CBORException
      */
     public float getFloat16() {
         CBORFloat floatingPoint = (CBORFloat) getTypeAndMarkAsRead(CBORFloat.class);
-        if (floatingPoint.tag != MT_FLOAT16) {
+        if (floatingPoint.tag != SIMPLE_FLOAT16) {
             outOfRangeError("Float16");
         }
         return (float)floatingPoint.value;
@@ -591,7 +619,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * <li>The <i>optional</i> sub-second field (<code>.nnn</code>) 
      * features <i>less</i> than ten digits.</li>
      * <li>The date/time object is within the range:
-     * <code style='white-space:nowrap'>"0000-01-01T00:00:00Z"</code> to
+     * <code style='white-space:nowrap'>"1970-01-01T00:00:00Z"</code> to
      * <code style='white-space:nowrap'>"9999-12-31T23:59:59Z"</code>.</li>
      * </ul>
      * </div>
@@ -706,7 +734,7 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * @return <code>this</code>
      */
     public CBORObject scan() {
-        traverse(null, false);
+        traverse(null, null, false);
         return this;
     }
 
@@ -723,33 +751,38 @@ public abstract class CBORObject implements Cloneable, Comparable<CBORObject> {
      * @throws CBORException
      */
     public void checkForUnread() {
-        traverse(null, true);
+        traverse(null, null, true);
     }
 
-    private void traverse(CBORObject holderObject, boolean check) {
+    private void traverse(CBORObject holderObject, CBORObject mapKey, boolean check) {
         // Should use a switch but Android didn't accept it :(
         if (this instanceof CBORMap cborMap) {
             for (CBORMap.Entry entry : cborMap.entries) {
-                entry.object.traverse(entry.key, check);
+                entry.object.traverse(this, entry.key, check);
             }
         } else if (this instanceof CBORArray cborArray) {
             for (CBORObject object : cborArray.objects) {
-                object.traverse(cborArray, check);
+                object.traverse(this, null, check);
             }
         } else if (this instanceof CBORTag cborTag) {
-            cborTag.object.traverse(cborTag, check);
+            cborTag.object.traverse(this, null, check);
         }
         if (check) {
-            if (!readFlag) {
-                cborError((holderObject == null ? "Data" : 
-                            holderObject instanceof CBORArray ? "Array element" :
-                                holderObject instanceof CBORTag ?
-                                "Tagged object " +
-                                Long.toUnsignedString(((CBORTag)holderObject).tagNumber) : 
-                                "Map key " + holderObject.toDiagnostic(false) + " with argument") +                    
-                            " of type=" + this.getClass().getSimpleName() + 
-                            " with value=" + this.toDiagnostic(false) + " was never read");
-            }
+            if (!this.readFlag) {
+                String problemItem = this.getClass().getSimpleName() +
+                    " with value=" + this.toDiagnostic(false) + " was never read";
+                String holder;
+                if (holderObject != null) {
+                    if (holderObject instanceof CBORArray) {
+                        holder = "Array element of type ";
+                    } else if (holderObject instanceof CBORTag cborTag) {
+                        holder = "Tag object " + cborTag.tagNumber + " of type ";
+                    } else {
+                        holder = "Map key " + mapKey.toDiagnostic(false) + " with argument ";
+                    }
+                } else holder = "";
+                cborError(holder + problemItem);
+            }  
         } else {
             readFlag = true;
         }

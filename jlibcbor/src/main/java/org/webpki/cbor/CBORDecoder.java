@@ -48,14 +48,21 @@ public class CBORDecoder {
 
 
     static final BigInteger MIN_INT_VALUE_MINUS_ONE = new BigInteger("-10000000000000001", 16);
+
+    static final int MAX_NESTING_LEVEL              = 100;
    
+    // Configuration data
     private InputStream inputStream;
     private boolean sequenceMode;
     private boolean strictMaps;
     private boolean strictNumbers;
-    private boolean atFirstByte;
     private int maxInputLength;
+    private int maxNestingLevel = MAX_NESTING_LEVEL;  // Default
+
+    // Runtime data
+    private boolean atFirstByte;
     private int byteCount;
+    private int nestingLevel;
 
     /**
     * Create a customized CBOR decoder.
@@ -84,6 +91,8 @@ public class CBORDecoder {
     * (<i>empty</i> sequences are permitted).</li>
     * </ul>
     * Note that data that has not yet been decoded, is not verified for correctness.
+    * The application note <a href='https://github.com/cyberphone/javaapi/tree/gh-pages/app-notes/large-payloads'
+    * class='webpkilink'>Large&nbsp;Payloads</a> shows how this can be utilized.
     * <div style='margin-top:0.5em'>See also {@link CBORArray#encodeAsSequence}.</div></div>
     *
     * <div id='Option-LENIENT_MAP_DECODING' style='margin-top:0.8em'>{@link CBORDecoder#LENIENT_MAP_DECODING}:</div>
@@ -108,10 +117,12 @@ public class CBORDecoder {
     * <i>recommendable</i> setting this as low as possible since malformed
     * CBOR objects may request any amount of memory.
     * </p>
+    * 
     * @param inputStream Stream holding CBOR data. 
     * @param options The decoder options.
     * @param maxInputLength Upper limit in bytes.
     * @throws CBORException
+    * @see #setMaxNestingLevel(int)
     * @see #getByteCount()
     */
     public CBORDecoder(InputStream inputStream, int options, int maxInputLength) {
@@ -129,13 +140,33 @@ public class CBORDecoder {
      * <div class='webpkifloat'>
      * <pre>  CBORDecoder(new ByteArrayInputStream(cbor), 0, cbor.length);</pre>
      * </div>
+     * 
      * @param cbor CBOR binary data
      * @param options The decoder options.
      * @throws CBORException
-     * @see #getByteCount()
      */
     public CBORDecoder(byte[] cbor, int options) {
         this(new ByteArrayInputStream(cbor), options, cbor.length);
+    }
+
+    /**
+     * Set max structure nesting level.
+     * <p>
+     * Structure refers to CBOR tags, arrays, and maps. Example: <code>[{}]</code> represents a nesting level of <code>2</code>.
+     * </p>
+     * 
+     * @param maxLevel Set new max level.  Default is <code>{@value CBORDecoder#MAX_NESTING_LEVEL}</code>.
+     * @return <code>this</code>
+     */
+    public CBORDecoder setMaxNestingLevel(int maxLevel) {
+        this.maxNestingLevel = maxLevel;
+        return this;
+    }
+
+    private void enterLevel() {
+        if (++nestingLevel > maxNestingLevel) {
+            cborError(STDERR_LEVEL_LIMIT, maxNestingLevel);
+        }
     }
     
     private void eofError() {
@@ -197,7 +228,7 @@ public class CBORDecoder {
     }
 
     private void floatDeterminismError(int tag, long bitFormat) {
-        cborError(STDERR_NON_DETERMINISTIC_FLOAT + (4 << (tag - MT_FLOAT16)) + "x", 
+        cborError(STDERR_NON_DETERMINISTIC_FLOAT + (4 << (tag - SIMPLE_FLOAT16)) + "x", 
                   tag, bitFormat);
     }
 
@@ -223,10 +254,10 @@ public class CBORDecoder {
         // Begin with CBOR types that are uniquely defined by the tag byte.
         return switch (tag) {
 
-            case MT_BIG_NEGATIVE, MT_BIG_UNSIGNED -> {
+            case TAG_BIG_NEGATIVE, TAG_BIG_UNSIGNED -> {
                 byte[] byteArray = getObject().getBytes();
                 BigInteger bigInteger = new BigInteger(1, byteArray);
-                CBORInt cborInt = new CBORInt(tag == MT_BIG_UNSIGNED ? 
+                CBORInt cborInt = new CBORInt(tag == TAG_BIG_UNSIGNED ? 
                                                           bigInteger : bigInteger.not());
                 if (strictNumbers && (byteArray.length <= 8 || byteArray[0] == 0)) {
                     cborError(STDERR_NON_DETERMINISTIC_BIGINT);
@@ -234,7 +265,7 @@ public class CBORDecoder {
                 yield cborInt;
             }
 
-            case MT_FLOAT16 -> {
+            case SIMPLE_FLOAT16 -> {
                 long f16bin = getLongFromBytes(2);
                 // Get the exponent.
                 long exponent = f16bin & FLOAT16_POS_INFINITY;
@@ -258,7 +289,7 @@ public class CBORDecoder {
                 yield returnFloat(tag, f16bin, f16bin >= FLOAT16_NEG_ZERO ? -float64 : float64);
             }
 
-            case MT_FLOAT32 -> {
+            case SIMPLE_FLOAT32 -> {
                 long f32bin = getLongFromBytes(4);
                 // Begin with the edge cases.
                 if ((f32bin & FLOAT32_POS_INFINITY) == FLOAT32_POS_INFINITY) {
@@ -269,7 +300,7 @@ public class CBORDecoder {
                 yield returnFloat(tag, f32bin, Float.intBitsToFloat((int)f32bin));
             }
 
-            case MT_FLOAT64 -> {
+            case SIMPLE_FLOAT64 -> {
                 long f64bin = getLongFromBytes(8);
                 // Begin with the edge cases.
                 if ((f64bin & FLOAT64_POS_INFINITY) == FLOAT64_POS_INFINITY) {
@@ -280,9 +311,9 @@ public class CBORDecoder {
                 yield returnFloat(tag, f64bin, Double.longBitsToDouble(f64bin));
             }
 
-            case MT_NULL -> new CBORNull();
+            case SIMPLE_NULL -> new CBORNull();
                 
-            case MT_TRUE, MT_FALSE -> new CBORBoolean(tag == MT_TRUE);
+            case SIMPLE_TRUE, SIMPLE_FALSE -> new CBORBoolean(tag == SIMPLE_TRUE);
 
             default -> {
                 // Then decode CBOR types that blend length of data in the tag byte.
@@ -315,7 +346,12 @@ public class CBORDecoder {
 
                     case MT_SIMPLE -> new CBORSimple(checkLength(n));
 
-                    case MT_TAG -> new CBORTag(n, getObject());
+                    case MT_TAG -> {
+                        enterLevel();
+                        CBORTag cborTag = new CBORTag(n, getObject());
+                        --nestingLevel;
+                        yield cborTag;
+                    }
 
                     case MT_UNSIGNED -> new CBORInt(n, true);
 
@@ -332,18 +368,22 @@ public class CBORDecoder {
                     case MT_STRING -> new CBORString(UTF8.decode(readBytes(checkLength(n))));
 
                     case MT_ARRAY -> {
+                        enterLevel();
                         CBORArray cborArray = new CBORArray();
                         for (int q = checkLength(n); --q >= 0; ) {
                             cborArray.add(getObject());
                         }
+                        --nestingLevel;
                         yield cborArray;
                     }
 
                     case MT_MAP -> {
+                        enterLevel();
                         CBORMap cborMap = new CBORMap().setSortingMode(strictMaps);
                         for (int q = checkLength(n); --q >= 0; ) {
                             cborMap.set(getObject(), getObject());
                         }
+                        --nestingLevel;
                         // Programmatically added elements will be sorted (by default). 
                         yield cborMap.setSortingMode(false);
                     }
@@ -433,5 +473,8 @@ public class CBORDecoder {
     
     static final String STDERR_READING_LIMIT =
             "Reading past input limit";
+
+    static final String STDERR_LEVEL_LIMIT =
+            "Structure nesting level exceeding: %d";
 
 }
