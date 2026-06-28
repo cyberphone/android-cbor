@@ -189,7 +189,7 @@ public class CBORFloat extends CBORObject {
             String type = float16Flag ? "float16" : "float32";
             float f32 = (float) original;
             if (float16Flag) {
-                f32 = Float.float16ToFloat(Float.floatToFloat16(f32));
+                f32 = (float)android.util.Half.toHalf(f32);
             }
             converted = f32;
             if (Double.isFinite(converted)) {

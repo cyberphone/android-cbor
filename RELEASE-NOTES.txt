@@ -75,3 +75,6 @@ Android CBOR - Relese Notes
 - simple(99) replaced signature label
 - Multiple signature support
 - CBORArray.encodeAsSequence()
+
+1.1.4
+- Internal name refactoring
