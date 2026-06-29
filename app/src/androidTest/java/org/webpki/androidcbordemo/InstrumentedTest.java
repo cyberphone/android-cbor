@@ -26,7 +26,9 @@ import org.webpki.cbor.CBORCryptoConstants;
 import org.webpki.cbor.CBORCryptoUtils;
 import org.webpki.cbor.CBORDecoder;
 import org.webpki.cbor.CBORDiagnosticNotation;
+import org.webpki.cbor.CBORFloat;
 import org.webpki.cbor.CBORHmacValidator;
+import org.webpki.cbor.CBORInt;
 import org.webpki.cbor.CBORKeyPair;
 import org.webpki.cbor.CBORMap;
 import org.webpki.cbor.CBORObject;
@@ -422,6 +424,75 @@ public class InstrumentedTest {
         if (Build.VERSION.SDK_INT >= 33) {
             // Protected client keys
             oneShot(ka, kea, cea, ANDROID_KEYSTORE);
+        }
+    }
+
+    void checkException(Exception e, String format, Object... args) {
+        String m = e.getMessage();
+        String full = m;
+        String compareMessage;
+        if (args.length > 0) {
+            compareMessage = String.format(format, args);
+        } else {
+            compareMessage = format;
+            int i = compareMessage.indexOf('%');
+            if (i > 0) {
+                compareMessage = compareMessage.substring(0, i);
+            }
+        }
+        if (compareMessage.length() < m.length()) {
+            m = m.substring(0, compareMessage.length());
+        }
+        if (!m.equals(compareMessage)) {
+            fail("Exception: " + full + "\ncompare: " + compareMessage);
+        }
+    }
+
+    void reducedOneTurn(int length, double value, double result, boolean exact) {
+        boolean ok = length != 0;
+        if (!ok) length = 2;
+        CBORFloat reduced = null;
+        try {
+            reduced = length == 2 ? CBORFloat.createFloat16(value, exact) : CBORFloat.createFloat32(value, exact);
+            assertTrue("Should not", ok);
+            assertTrue("Compare", exact == (reduced.getFloat64() == value));
+            assertTrue("len", reduced.length() <= length);
+            assertTrue("equi", CBORDecoder.decode(reduced.encode()).equals(reduced));
+        } catch (Exception e) {
+            assertFalse("should" + e.toString() + "\n" + (reduced == null ? "null" : reduced.toString()), ok);
+            checkException(e, Double.isFinite(value) ? "Value out of range for" : "Not permitted: 'NaN/Infinity'");
+        }
+    }
+
+    @Test
+    public void reduceFloat() throws Exception {
+        reducedOneTurn(0,    Double.NaN,                   0,                      false);
+        reducedOneTurn(2,    60000,                  60000,                  true);
+        reducedOneTurn(2,    5.960464477539063e-8,   5.960464477539063e-8,   true);
+        reducedOneTurn(2,    3.0e-8,                 5.960464477539063e-8,   false);
+        reducedOneTurn(2,    2.0e-8,                 0,                      false);
+        reducedOneTurn(2,    65504.0,                65504.0,                true);
+        reducedOneTurn(2,    65519.99,               65504.0,                false);
+        reducedOneTurn(2,    -2.0e-9,                -0.0,                   false);
+        reducedOneTurn(4,    65520,                  65520.0,                true);
+        reducedOneTurn(2,    10,                     10,                     true);
+        reducedOneTurn(2,    10.003906,              10,                     false);
+        reducedOneTurn(2,    10.003907,              10.0078125,             false);
+        reducedOneTurn(2,    6.097555160522461e-5,   6.097555160522461e-5,   true);
+        reducedOneTurn(2,    6.097e-5,               6.097555160522461e-5,   false);
+        reducedOneTurn(2,    6.09e-5,                6.091594696044922e-5,   false);
+        reducedOneTurn(2,    2.5,                    2.5,                    true);
+        reducedOneTurn(4,    2.0e-8,                 1.999999987845058e-8,   false);
+        reducedOneTurn(4,    1.401298464324817e-45,  1.401298464324817e-45,  true);
+        reducedOneTurn(4,    3.4028234663852886e+38, 3.4028234663852886e+38, true);
+        reducedOneTurn(4,    3.4028235e+38,          3.4028234663852886e+38, false);
+        reducedOneTurn(0,    3.40282358e+38,         3.4028234663852886e+38, false);
+
+        try {
+            new CBORInt(6).getFloat64();
+            fail("should not");
+        } catch (Exception e) {
+            checkException(e, "Is type: CBORInt, requested: CBORFloat");
         }
     }
 
