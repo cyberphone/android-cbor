@@ -239,15 +239,13 @@ public class InstrumentedTest {
                 new CBORX509Validator((certificatePath, algorithm) ->
                         assertTrue("cert", certificatePath[0].getPublicKey().equals(
                                 RawReader.rsaKeyPair.getPublic()))));
-/*
         signatureTestVector(R.raw.ed25519_ed25519_pub_cbor,
                 new CBORAsymKeyValidator((optionalPublicKey, optionalKeyId, algorithm) -> {
                     assertTrue("kid",
                             optionalKeyId == null);
                     return optionalPublicKey;
                 }));
-*/
-//        Log.i("X.509", RawReader.ed25519CertPath[0].toString());
+        Log.i("X.509", RawReader.ed25519CertPath[0].toString());
     }
 
     void encryptionTestVector(int resource,
