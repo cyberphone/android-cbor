@@ -1,6 +1,7 @@
 package org.webpki.androidcbordemo;
 
 import android.content.Context;
+import android.os.Build;
 
 import org.webpki.cbor.CBORCryptoUtils;
 import org.webpki.cbor.CBORDecoder;
@@ -24,9 +25,11 @@ public class RawReader {
 
     public static String rsaKeyId;
     public static String ecKeyId;
+    public static String ed25519KeyId;
 
     public static KeyPair rsaKeyPair;
     public static KeyPair ecKeyPair;
+    public static KeyPair ed25519KeyPair;
 
     public static X509Certificate[] ecCertPath;
     public static X509Certificate[] ed25519CertPath;
@@ -61,6 +64,10 @@ public class RawReader {
         ecKeyPair = getKeyPair(R.raw.ecprivatekey_cbor_txt);
         rsaKeyId = "example.com:r2048";
         rsaKeyPair = getKeyPair(R.raw.rsaprivatekey_cbor_txt);
+        ed25519KeyId = "example.com:ed25519";
+        if (Build.VERSION.SDK_INT_FULL >= 3600001) {
+            ed25519KeyPair = getKeyPair(R.raw.ed25519privatekey_cbor_txt);
+        }
         dataToBeEncrypted = getRawResource(R.raw.data2beencrypted_txt);
         ecCertPath = CBORCryptoUtils.decodeCertificateArray(
                 getCBORResource(R.raw.ec_certpath_cbor_txt).getArray());

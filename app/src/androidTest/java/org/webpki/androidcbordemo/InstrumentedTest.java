@@ -81,7 +81,6 @@ import javax.crypto.spec.PSource;
 import javax.security.auth.x500.X500Principal;
 
 import static org.junit.Assert.*;
-import static org.webpki.cbor.CBORCryptoConstants.CSF_CONTAINER_LBL;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -381,6 +380,7 @@ public class InstrumentedTest {
                 kpg = KeyPairGenerator.getInstance("EC");
                 kpg.initialize(paramSpec, new SecureRandom());
             } else {
+                // 2026-07-18.  Does not work :(
                 kpg = KeyPairGenerator.getInstance("XDH");
                 kpg.initialize(NamedParameterSpec.X25519, new SecureRandom());
             }
@@ -495,16 +495,16 @@ public class InstrumentedTest {
     }
 
     @Test
-    public void androidKeystore() throws Exception {
+    public void androidKeystoreSignatures() throws Exception {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(
                 KeyProperties.KEY_ALGORITHM_RSA, ANDROID_KEYSTORE);
         kpg.initialize(new KeyGenParameterSpec.Builder(
                 KEY_1,
                 KeyProperties.PURPOSE_SIGN | KeyProperties.PURPOSE_VERIFY)
-                .setAlgorithmParameterSpec(new RSAKeyGenParameterSpec(2048,RSAKeyGenParameterSpec.F4))
+                .setAlgorithmParameterSpec(new RSAKeyGenParameterSpec(2048, RSAKeyGenParameterSpec.F4))
                 .setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
                 .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PSS,
-                                      KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
+                        KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
                 .setCertificateNotBefore(new Date(System.currentTimeMillis() - 600000L))
                 .setCertificateSubject(new X500Principal("CN=Android, SerialNumber=5678"))
                 .build());
@@ -531,16 +531,17 @@ public class InstrumentedTest {
         Log.i("SIGN", signedData.toString());
         new CBORAsymKeyValidator(keyPair.getPublic()).validate(signedData);
         byte[] signature =
-        signedData.getMap().get(CSF_CONTAINER_LBL)
-                .getMap().remove(CBORCryptoConstants.CSF_SIGNATURE_LBL).getBytes();
+                signedData.getMap().get(CBORCryptoConstants.CSF_CONTAINER_LBL)
+                        .getMap().remove(CBORCryptoConstants.CSF_SIGNATURE_LBL).getBytes();
         signature[5]++;
         try {
-            signedData.getMap().get(CSF_CONTAINER_LBL)
+            signedData.getMap().get(CBORCryptoConstants.CSF_CONTAINER_LBL)
                     .getMap().set(CBORCryptoConstants.CSF_SIGNATURE_LBL,
-                                        new CBORBytes(signature));
+                            new CBORBytes(signature));
             new CBORAsymKeyValidator(keyPair.getPublic()).validate(signedData);
             fail("must not");
-        } catch (Exception e) { }
+        } catch (Exception e) {
+        }
 
         kpg = KeyPairGenerator.getInstance(
                 KeyProperties.KEY_ALGORITHM_EC, ANDROID_KEYSTORE);
@@ -611,21 +612,26 @@ public class InstrumentedTest {
             kpg.initialize(keySpec);
             keyPair = kpg.generateKeyPair();
             signedData =
-                new CBORAsymKeySigner(keyPair.getPrivate())
-                        .setPublicKey(keyPair.getPublic())
-                        .sign(RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
+                    new CBORAsymKeySigner(keyPair.getPrivate())
+                            .setPublicKey(keyPair.getPublic())
+                            .sign(RawReader.getCBORResource(R.raw.somedata_cbor_txt).getMap());
             Log.i("ED25", signedData.toString());
             Log.i("ED25", KeyAlgorithms.getKeyAlgorithm(keyPair.getPublic()).toString());
-            Log.i("ED25", "L=" +OkpSupport.public2RawKey(keyPair.getPublic(),
-                                                         KeyAlgorithms.getKeyAlgorithm(
-                                                                 keyPair.getPublic())).length);
+            Log.i("ED25", "L=" + OkpSupport.public2RawKey(keyPair.getPublic(),
+                    KeyAlgorithms.getKeyAlgorithm(
+                            keyPair.getPublic())).length);
             Log.i("ED25", "PK=" + keyPair.getPublic().getClass().getCanonicalName());
 
-/*          As of 2023-01-30 there is no validation support in Android :(
-            new CBORAsymKeyValidator(keyPair.getPublic()).validate(SIGNATURE_LABEL, signedData);
-
- */
+            new CBORAsymKeyValidator(
+                    // 2026-07-18: There are two(!) different Ed25519 public key classes.
+                    // The code below normalizes to the non-AndroidKeystore variant.
+                    CBORPublicKey.convert(CBORPublicKey.convert(keyPair.getPublic())))
+                    .validate(signedData);
         }
+    }
+
+    @Test
+    public void androidKeystoreEncryption() throws Exception {
 
         // Encryption with ECDH
         providerShot(KeyAlgorithms.P_256,

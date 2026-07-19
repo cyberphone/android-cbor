@@ -128,7 +128,8 @@ public class OkpSupport {
             throw new CryptoException("Wrong private key length for: " + keyAlgorithm.toString());
         }
         try {
-            return KeyFactory.getInstance(keyAlgorithm.getKeyType() == KeyTypes.XEC ? "XDH" : "EC")
+            return KeyFactory.getInstance(keyAlgorithm.getKeyType() == KeyTypes.XEC ? "XDH" :
+                    keyAlgorithm.getKeyType().toString())
                     .generatePrivate(new PKCS8EncodedKeySpec(
                         addByteArrays(privKeyPrefix.get(keyAlgorithm), d)));
         } catch (GeneralSecurityException e) {

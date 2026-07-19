@@ -16,6 +16,7 @@
  */
 package org.webpki.androidcbordemo;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Base64;
@@ -150,7 +151,7 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
 </svg></div><div id='domain' style='vertical-align:bottom;display:table-cell'/>
 </body></html>""";
 
-    enum KEY_TYPES {EC_KEY, RSA_KEY, PKI, SYMMETRIC_KEY}
+    enum KEY_TYPES {P256_KEY, ED25519_KEY, RSA_KEY, PKI_P256, SYMMETRIC_KEY}
 
     static final String HTML_HEADER =
         "<html><head><style type='text/css'>" +
@@ -474,10 +475,13 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
     public void signData() throws IOException {
         StringBuilder choices = new StringBuilder();
         for (KEY_TYPES sigType : KEY_TYPES.values()) {
+            String warn = (sigType == KEY_TYPES.ED25519_KEY &&
+                           Build.VERSION.SDK_INT_FULL < 3600001) ?
+                                                  " (API 36.1+)" : "";
             choices.append("<tr><td><input type='radio' name='keyType' value='")
                    .append(sigType.toString())
-                   .append(sigType == KEY_TYPES.EC_KEY ? "' checked>" : "'>")
-                   .append(sigType.toString())
+                   .append(sigType == KEY_TYPES.P256_KEY ? "' checked>" : "'>")
+                   .append(sigType.toString()).append(warn)
                    .append("</td></tr>");
         }
         loadHtml("function getRadio() {\n" +
@@ -500,13 +504,14 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
             final CBORObject dataToBeSigned = CBORDiagnosticNotation.convert(cborData);
             CBORMap cborMap = unwrapOptionalTag(dataToBeSigned);
             CBORSigner<?> signer = switch (sigType) {
-                case EC_KEY, RSA_KEY -> {
+                case P256_KEY, ED25519_KEY, RSA_KEY -> {
                     KeyPair keyPair = sigType == KEY_TYPES.RSA_KEY ?
-                            RawReader.rsaKeyPair : RawReader.ecKeyPair;
+                            RawReader.rsaKeyPair : sigType == KEY_TYPES.P256_KEY ?
+                                                   RawReader.ecKeyPair : RawReader.ed25519KeyPair;
                     yield new CBORAsymKeySigner(keyPair.getPrivate())
                             .setPublicKey(keyPair.getPublic());
                 }
-                case PKI -> new CBORX509Signer(RawReader.ecKeyPair.getPrivate(),
+                case PKI_P256 -> new CBORX509Signer(RawReader.ecKeyPair.getPrivate(),
                         RawReader.ecCertPath);
                 default -> new CBORHmacSigner(RawReader.secretKey,
                         HmacAlgorithms.HMAC_SHA256)
@@ -522,9 +527,10 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
     public void encryptData() {
         StringBuilder choices = new StringBuilder();
         for (KEY_TYPES encType : KEY_TYPES.values()) {
+            if (encType == KEY_TYPES.ED25519_KEY) continue;
             choices.append("<tr><td><input type='radio' name='keyType' value='")
                     .append(encType.toString())
-                    .append(encType == KEY_TYPES.EC_KEY ? "' checked>" : "'>")
+                    .append(encType == KEY_TYPES.P256_KEY ? "' checked>" : "'>")
                     .append(encType.toString())
                     .append("</td></tr>");
         }
@@ -552,7 +558,7 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
             KEY_TYPES encType = KEY_TYPES.valueOf(keyType);
             CBOREncrypter<?> encrypter;
             switch (encType) {
-                case EC_KEY:
+                case P256_KEY:
                 case RSA_KEY:
                     encrypter = new CBORAsymKeyEncrypter(
                             (encType == KEY_TYPES.RSA_KEY ?
@@ -562,7 +568,7 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
                                                           ContentEncryptionAlgorithms.A128GCM)
                         .setPublicKeyOption(true);
                     break;
-                case PKI:
+                case PKI_P256:
                     encrypter = new CBORX509Encrypter(RawReader.ecCertPath,
                                                       KeyEncryptionAlgorithms.ECDH_ES_A256KW,
                                                       ContentEncryptionAlgorithms.A128GCM);
