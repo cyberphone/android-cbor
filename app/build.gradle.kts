@@ -11,8 +11,8 @@ android {
         applicationId = "org.webpki.androidcbordemo"
         minSdk = 29
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.0.4"
+        versionCode = 3
+        versionName = "1.1.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -42,7 +42,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(project(":jlibcbor"))
     implementation(libs.androidx.webkit)
-    //   implementation(files("libs/org.webpki-jlibcbor-1.1.4.aar"))
+    //   implementation(files("libs/org.webpki-jlibcbor-1.1.5.aar"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

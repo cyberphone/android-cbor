@@ -78,3 +78,6 @@ Android CBOR - Relese Notes
 
 1.1.4
 - Internal name refactoring
+
+1.1.5
+- Full Ed25519 support for API 36.1+
