@@ -37,6 +37,9 @@ https://github.com/cyberphone/android-cbor/tree/main/jlibcbor.
 A feature-wise identical implementation can be tested on-line at:
 https://test.webpki.org/csf-lab/home.
 
+### Android Application
+Install from Google Playstore: [CBOR](https://play.google.com/store/apps/details?id=org.webpki.androidcbordemo)
+
 ### Updates
 See https://github.com/cyberphone/android-cbor/tree/main/RELEASE-NOTES.txt.
 
