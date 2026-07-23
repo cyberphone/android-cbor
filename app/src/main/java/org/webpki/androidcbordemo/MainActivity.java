@@ -16,7 +16,6 @@
  */
 package org.webpki.androidcbordemo;
 
-import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Base64;
@@ -63,7 +62,6 @@ import org.webpki.cbor.CBORBoolean;
 import org.webpki.cbor.CBORBytes;
 import org.webpki.cbor.CBORCryptoConstants;
 import org.webpki.cbor.CBORCryptoUtils;
-import org.webpki.cbor.CBORDecoder;
 import org.webpki.cbor.CBORDecrypter;
 import org.webpki.cbor.CBORDiagnosticNotation;
 import org.webpki.cbor.CBOREncrypter;
@@ -74,7 +72,6 @@ import org.webpki.cbor.CBORInt;
 import org.webpki.cbor.CBORMap;
 import org.webpki.cbor.CBORNull;
 import org.webpki.cbor.CBORObject;
-import org.webpki.cbor.CBORPublicKey;
 import org.webpki.cbor.CBORSigner;
 import org.webpki.cbor.CBORSymKeyDecrypter;
 import org.webpki.cbor.CBORSymKeyEncrypter;
@@ -369,75 +366,49 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
         return rawContainer.getMap();
     }
 
+    public KeyPair getEd25519KeyPair() {
+        KeyPair keyPair = RawReader.ed25519KeyPair;
+        if (keyPair == null) {
+            throw new RuntimeException("Ed25519 requires API 36.1+");
+        }
+        return keyPair;
+    }
+
     @JavascriptInterface
     public void doVerify(String cborData) {
         try {
-            // Normally you SHOULD know what to expect so this code is a bit over-the-top
-            CBORObject signedData = CBORDiagnosticNotation.convert(cborData);
-            CBORMap coreMap = unwrapOptionalTag(signedData);
-            CBORObject csfLabel = null;
-            publicKey = null;
-            certificatePath = null;
-            algorithm = 0;
-            keyId = null;
-            for (CBORObject key : coreMap.getKeys()) {
-                CBORObject value = coreMap.get(key);
-                if (!(value instanceof CBORMap)) continue;
-                CBORMap csfCandidate = value.getMap();
-                if (!csfCandidate.containsKey(CBORCryptoConstants.CXF_ALGORITHM_LBL)) continue;
-                value = csfCandidate.get(CBORCryptoConstants.CXF_ALGORITHM_LBL);
-                if (!(value instanceof CBORInt)) continue;
-                int tempAlgorithm = value.getInt32();
-                CBORObject tempKeyId = null;
-                if (csfCandidate.containsKey(CBORCryptoConstants.CXF_KEY_ID_LBL)) {
-                    tempKeyId = csfCandidate.get(CBORCryptoConstants.CXF_KEY_ID_LBL);
-                }
-                if (!csfCandidate.containsKey(CBORCryptoConstants.CSF_SIGNATURE_LBL)) continue;
-                value = csfCandidate.get(CBORCryptoConstants.CSF_SIGNATURE_LBL);
-                if (!(value instanceof CBORBytes)) continue;
-                PublicKey tempPublicKey = null;
-                if (csfCandidate.containsKey(CBORCryptoConstants.CXF_PUBLIC_KEY_LBL)) {
-                    try {
-                        tempPublicKey = CBORPublicKey.convert(
-                                csfCandidate.get(CBORCryptoConstants.CXF_PUBLIC_KEY_LBL));
-                    } catch (Exception e) {
-                        continue;
-                    }
-                }
-                X509Certificate[] tempCertificatePath = null;
-                if (csfCandidate.containsKey(CBORCryptoConstants.CXF_CERT_PATH_LBL)) {
-                    try {
-                        tempCertificatePath = CBORCryptoUtils.decodeCertificateArray(
-                                csfCandidate.get(CBORCryptoConstants.CXF_CERT_PATH_LBL).getArray());
-                    } catch (Exception e) {
-                        continue;
-                    }
-                }
-                if (csfLabel != null) {
-                    throw new IOException("Multiple CSFs?");
-                }
-                csfLabel = key;
-                keyId = tempKeyId;
-                publicKey = tempPublicKey;
-                algorithm = tempAlgorithm;
-                certificatePath = tempCertificatePath;
+            // This is certainly not what you would do in an application...
+            CBORObject destroyedCopy = CBORDiagnosticNotation.convert(cborData).clone();
+            CBORMap unwrapped = unwrapOptionalTag(destroyedCopy);
+            CBORObject rawSignatures = unwrapped.getConditionally(CBORCryptoConstants.CSF_CONTAINER_LBL, null);
+            if (rawSignatures == null) {
+                throw new IllegalArgumentException("No signature found!");
             }
-            if (csfLabel == null) {
-                throw new IOException("Didn't find any CSF object!");
-            }
-            boolean hmacFlag = false;
-            for (HmacAlgorithms hmacAlg : HmacAlgorithms.values()) {
-                if (hmacAlg != HmacAlgorithms.HMAC_SHA1 && hmacAlg.getCoseAlgorithmId() == algorithm) {
-                    hmacFlag = true;
-                    break;
+            CBORMap csfContainer;
+            if (rawSignatures instanceof CBORArray) {
+                CBORArray csfList = rawSignatures.getArray();
+                rawSignatures = rawSignatures.clone();
+                if (csfList.size() == 0) {
+                    throw new IllegalArgumentException("No signature found!");
                 }
+                csfContainer = csfList.get(csfList.size() - 1).getMap();
+                unwrapped.update(CBORCryptoConstants.CSF_CONTAINER_LBL, new CBORArray().add(csfContainer), true);
+            } else {
+                csfContainer = rawSignatures.getMap();
             }
+            boolean hmacFlag =
+                    csfContainer.get(CBORCryptoConstants.CXF_ALGORITHM_LBL).getInt32() > 0;
+
+            boolean x509flag = csfContainer.containsKey(CBORCryptoConstants.CXF_CERT_PATH_LBL);
+
             CBORValidator<?> validator = null;
             if (hmacFlag) {
                 validator = new CBORHmacValidator(RawReader.secretKey);
                 keyInfo = HexaDecimal.encode(RawReader.secretKey);
                 signatureType = "HMAC";
-            } else if (certificatePath != null) {
+            } else if (x509flag) {
+                certificatePath = CBORCryptoUtils.decodeCertificateArray(
+                        csfContainer.get(CBORCryptoConstants.CXF_CERT_PATH_LBL).getArray());
                 validator = new CBORX509Validator((certificatePath, algorithm) -> { });
                 keyInfo = certificatePath[0].toString();
                 signatureType = "CERTIFICATE";
@@ -447,7 +418,9 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
                                                       algorithm) -> {
                     if (optionalPublicKey == null) {
                         publicKey = (algorithm.getKeyType() == KeyTypes.EC ?
-                                RawReader.ecKeyPair : RawReader.rsaKeyPair).getPublic();
+                                RawReader.ecKeyPair :
+                                algorithm.getKeyType() == KeyTypes.RSA ?
+                                RawReader.rsaKeyPair : getEd25519KeyPair()).getPublic();
                     } else {
                         publicKey = optionalPublicKey;
                     }
@@ -456,10 +429,21 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
                 });
                 signatureType = "ASYMMETRIC";
             }
-            // Clone the data to make sure the not-read check can do its work
-            validator.setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
-                     .setCustomDataPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
-                     .validate(CBORDecoder.decode(signedData.encode()));
+            // This is it!
+            validator
+                .setCustomDataPolicy(CBORCryptoUtils.POLICY.OPTIONAL,
+                    new CBORCryptoUtils.Collector() {
+                        @Override
+                        public void foundData(CBORObject data) {
+                            if (data != null) {
+                                data.scan();
+                            }
+                        }
+                    })
+                .setTagPolicy(CBORCryptoUtils.POLICY.OPTIONAL, null)
+                .setUnprotectedDataPolicy(CBORCryptoUtils.POLICY.OPTIONAL)
+                .setMultiSignatureMode(rawSignatures instanceof CBORArray)
+                .validate(destroyedCopy);
 
             loadHtml("",
                     "Valid Signature!",
@@ -475,13 +459,10 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
     public void signData() throws IOException {
         StringBuilder choices = new StringBuilder();
         for (KEY_TYPES sigType : KEY_TYPES.values()) {
-            String warn = (sigType == KEY_TYPES.ED25519_KEY &&
-                           Build.VERSION.SDK_INT_FULL < 3600001) ?
-                                                  " (API 36.1+)" : "";
             choices.append("<tr><td><input type='radio' name='keyType' value='")
                    .append(sigType.toString())
                    .append(sigType == KEY_TYPES.P256_KEY ? "' checked>" : "'>")
-                   .append(sigType.toString()).append(warn)
+                   .append(sigType.toString())
                    .append("</td></tr>");
         }
         loadHtml("function getRadio() {\n" +
@@ -507,7 +488,7 @@ h 9.414063 q 4.804687,0 7.382812,2.1875 2.597652,2.1875 2.597652,6.3671871 0,\
                 case P256_KEY, ED25519_KEY, RSA_KEY -> {
                     KeyPair keyPair = sigType == KEY_TYPES.RSA_KEY ?
                             RawReader.rsaKeyPair : sigType == KEY_TYPES.P256_KEY ?
-                                                   RawReader.ecKeyPair : RawReader.ed25519KeyPair;
+                                                   RawReader.ecKeyPair : getEd25519KeyPair();
                     yield new CBORAsymKeySigner(keyPair.getPrivate())
                             .setPublicKey(keyPair.getPublic());
                 }
